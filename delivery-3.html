@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>சிட்டை Delivery</title>
+<meta name="theme-color" content="#1e3a8a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="சிட்டை Delivery">
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%20%22%E0%AE%9A%E0%AE%BF%E0%AE%9F%E0%AF%8D%E0%AE%9F%E0%AF%88%20Delivery%22%2C%20%22short_name%22%3A%20%22%E0%AE%9A%E0%AE%BF%E0%AE%9F%E0%AF%8D%E0%AE%9F%E0%AF%88%20Delivery%22%2C%20%22start_url%22%3A%20%22.%22%2C%20%22display%22%3A%20%22standalone%22%2C%20%22orientation%22%3A%20%22portrait%22%2C%20%22background_color%22%3A%20%22%231e3a8a%22%2C%20%22theme_color%22%3A%20%22%231e3a8a%22%2C%20%22icons%22%3A%20%5B%7B%22src%22%3A%20%22data%3Aimage/svg%2Bxml%2C%253Csvg%2520xmlns%253D%2527http%253A//www.w3.org/2000/svg%2527%2520viewBox%253D%25270%25200%2520100%2520100%2527%253E%253Ctext%2520y%253D%2527.9em%2527%2520font-size%253D%252790%2527%253E%25F0%259F%259B%25B5%253C/text%253E%253C/svg%253E%22%2C%20%22sizes%22%3A%20%22any%22%2C%20%22type%22%3A%20%22image/svg%2Bxml%22%7D%5D%7D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#eef2f0;--card:#fff;--soft:#f5f7f6;--bd:#dde4e1;--tx:#13201c;--mu:#6b7a75;--mu2:#45534e;
+  --g:#0f8a6c;--g2:#1e3a8a;--gs:rgba(15,138,108,.10);
+  --or:#d97706;--ors:rgba(217,119,6,.12);--bl:#2563eb;--bls:rgba(37,99,235,.10);
+  --rd:#dc2626;--rds:rgba(220,38,38,.10);
+}
+html,body{background:var(--bg);}
+body{font-family:'Noto Sans Tamil',sans-serif;color:var(--tx);max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;padding-bottom:30px;}
+button{font-family:inherit;cursor:pointer;}
+input{font-family:inherit;}
+.hide{display:none!important;}
+
+/* auth */
+.auth{padding:56px 22px 30px;}
+.auth-logo{width:76px;height:76px;border-radius:22px;background:var(--g2);color:#fff;font-size:38px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.auth h1{text-align:center;font-size:22px;font-weight:800;}
+.auth p.sub{text-align:center;color:var(--mu);font-size:13px;margin:4px 0 22px;}
+.seg{display:flex;background:var(--soft);border:1px solid var(--bd);border-radius:12px;padding:4px;margin-bottom:16px;}
+.seg button{flex:1;border:none;background:none;padding:10px;border-radius:9px;font-weight:700;font-size:13.5px;color:var(--mu2);}
+.seg button.on{background:var(--card);color:var(--g2);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.lbl{display:block;font-size:11.5px;font-weight:700;color:var(--mu2);margin:0 0 6px;}
+.inp{width:100%;border:1.5px solid var(--bd);border-radius:12px;padding:13px 14px;font-size:15px;background:var(--card);color:var(--tx);outline:none;margin-bottom:12px;}
+.inp:focus{border-color:var(--g);}
+.btn{width:100%;border:none;border-radius:13px;padding:14px;font-size:15px;font-weight:800;background:var(--g);color:#fff;}
+.btn:disabled{opacity:.6;}
+.btn.ghost{background:var(--card);color:var(--mu2);border:1.5px solid var(--bd);margin-top:10px;}
+.msg{font-size:12.5px;font-weight:700;margin-top:12px;text-align:center;line-height:1.5;}
+.msg.err{color:var(--rd);} .msg.ok{color:var(--g2);}
+.wait{padding:70px 24px;text-align:center;}
+.wait .ic{font-size:52px;margin-bottom:10px;}
+.wait h2{font-size:18px;font-weight:800;margin-bottom:8px;}
+.wait p{font-size:13px;color:var(--mu2);line-height:1.6;margin-bottom:20px;}
+
+/* header */
+.hdr{background:var(--g2);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:20;}
+.hdr-top{display:flex;align-items:center;gap:10px;}
+.hdr-nm{flex:1;min-width:0;font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hdr-ic{background:rgba(255,255,255,.14);border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:17px;display:flex;align-items:center;justify-content:center;position:relative;}
+.hdr-ic.on::after{content:'';position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#7CFFB2;}
+.sw-row{display:flex;gap:8px;margin-top:10px;}
+.sw{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:12px;padding:9px 11px;font-size:12.5px;font-weight:700;text-align:left;}
+.tg{width:38px;height:22px;border-radius:11px;background:rgba(255,255,255,.3);position:relative;flex-shrink:0;transition:background .2s;}
+.tg::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;}
+.sw.on .tg{background:#34d399;} .sw.on .tg::after{transform:translateX(16px);}
+.conn{font-size:10.5px;opacity:.85;margin-top:8px;display:flex;align-items:center;gap:6px;}
+.dot{width:7px;height:7px;border-radius:50%;background:#fbbf24;} .dot.live{background:#34d399;} .dot.off{background:#f87171;}
+
+/* sound banner */
+.snd{margin:12px 14px 0;background:#fff7ed;border:1.5px solid #fdba74;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center;}
+.snd b{display:block;font-size:13.5px;} .snd small{font-size:11.5px;color:var(--mu2);}
+.snd button{margin-left:auto;background:var(--or);color:#fff;border:none;border-radius:10px;padding:10px 13px;font-weight:800;font-size:12.5px;white-space:nowrap;}
+
+/* tabs */
+.tabs{display:flex;gap:6px;padding:12px 14px 4px;position:sticky;top:var(--hh,118px);z-index:15;background:var(--bg);}
+.tab{flex:1;border:1.5px solid var(--bd);background:var(--card);border-radius:12px;padding:9px 4px;font-size:12px;font-weight:800;color:var(--mu2);position:relative;}
+.tab.on{background:var(--g);border-color:var(--g);color:#fff;}
+.tab .n{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--rd);color:#fff;font-size:10.5px;margin-left:3px;}
+.tab.on .n{background:#fff;color:var(--g2);}
+
+/* orders */
+.list{padding:8px 14px;}
+.empty{text-align:center;padding:50px 20px;color:var(--mu);}
+.empty .ic{font-size:40px;margin-bottom:8px;}
+.oc{background:var(--card);border:1.5px solid var(--bd);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.oc.new{border-color:var(--or);box-shadow:0 0 0 3px var(--ors);animation:pulse 1.6s ease-in-out infinite;}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(217,119,6,.06);}}
+.oc-top{display:flex;align-items:center;gap:8px;}
+.oc-no{font-size:15px;font-weight:800;}
+.oc-ago{font-size:11.5px;color:var(--mu);margin-left:auto;}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;margin-top:6px;}
+.p-new{background:var(--ors);color:var(--or);} .p-go{background:var(--bls);color:var(--bl);}
+.p-ok{background:var(--gs);color:var(--g2);} .p-bad{background:var(--rds);color:var(--rd);}
+.cu{margin-top:10px;padding:10px 12px;background:var(--soft);border-radius:12px;font-size:13px;line-height:1.55;}
+.cu b{font-size:14px;}
+.cu-act{display:flex;gap:8px;margin-top:8px;}
+.cu-act a{flex:1;text-align:center;text-decoration:none;font-size:12.5px;font-weight:800;border-radius:10px;padding:8px;border:1.5px solid var(--bd);color:var(--g2);background:var(--card);}
+.its{margin-top:10px;border-top:1px dashed var(--bd);padding-top:8px;}
+.it{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:3px 0;}
+.it span:first-child{flex:1;}
+.it .q{font-weight:800;color:var(--g2);margin-right:4px;}
+.tot{display:flex;justify-content:space-between;font-size:16px;font-weight:800;border-top:1px solid var(--bd);margin-top:6px;padding-top:8px;}
+.note{margin-top:8px;font-size:12.5px;background:#fffbeb;border-radius:10px;padding:8px 10px;color:#7c5a00;}
+.acts{display:flex;gap:8px;margin-top:12px;}
+.a{flex:1;border:none;border-radius:12px;padding:13px 8px;font-size:14px;font-weight:800;}
+.a.pri{background:var(--g);color:#fff;} .a.blue{background:var(--bl);color:#fff;}
+.a.no{flex:0 0 auto;background:var(--rds);color:var(--rd);padding:13px 15px;}
+.a:disabled{opacity:.55;}
+.info{margin-top:10px;font-size:12px;color:var(--mu2);text-align:center;}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.st{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 8px;text-align:center;}
+.st b{display:block;font-size:19px;font-weight:800;}
+.st small{font-size:10.5px;color:var(--mu);font-weight:700;}
+
+/* products */
+.ps{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:10px;}
+.ps input{flex:1;border:none;outline:none;font-size:14px;background:none;color:var(--tx);}
+.pr{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px;margin-bottom:8px;}
+.pr.off{opacity:.55;}
+.pr-im{width:46px;height:46px;border-radius:12px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;flex-shrink:0;}
+.pr-im img{width:100%;height:100%;object-fit:cover;}
+.pr-nm{font-size:13.5px;font-weight:800;}
+.pr-br{font-size:11px;color:var(--mu);}
+.pr-bt{display:flex;flex-direction:column;gap:5px;margin-left:auto;flex-shrink:0;}
+.pb{border:none;border-radius:9px;padding:7px 10px;font-size:11.5px;font-weight:800;min-width:96px;}
+.pb.av{background:var(--gs);color:var(--g2);} .pb.na{background:var(--rds);color:var(--rd);}
+.pb.lw{background:var(--ors);color:var(--or);} .pb.okk{background:var(--soft);color:var(--mu2);}
+
+/* dialog + toast */
+.dlg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:flex;align-items:center;justify-content:center;padding:22px;}
+.dlg-b{background:var(--card);border-radius:18px;padding:20px;max-width:360px;width:100%;text-align:center;}
+.dlg-b p{font-size:14.5px;font-weight:700;line-height:1.6;margin-bottom:16px;}
+.dlg-b .acts{margin-top:0;}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f2a27;color:#fff;padding:11px 18px;border-radius:10px;font-size:13.5px;font-weight:700;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center;}
+.toast.show{opacity:1;}
+.foot{display:flex;justify-content:center;gap:16px;padding:16px;}
+.foot button{background:none;border:none;color:var(--mu);font-size:12.5px;font-weight:700;text-decoration:underline;}
+
+/* parcel flow */
+.pname{margin-top:10px;background:var(--gs);border:1.5px dashed var(--g);border-radius:12px;padding:10px 12px;}
+.pname small{display:block;font-size:11px;font-weight:700;color:var(--g2);}
+.pname b{font-size:18px;font-weight:800;}
+.dlv{margin-top:8px;font-size:12.5px;font-weight:700;color:var(--bl);background:var(--bls);border-radius:10px;padding:7px 10px;}
+.dlv.none{color:var(--mu2);background:var(--soft);}
+.it{cursor:pointer;border-radius:8px;padding:7px 6px;margin:0 -6px;}
+.it .ck{display:inline-flex;width:20px;height:20px;border-radius:6px;border:2px solid var(--bd);margin-right:8px;align-items:center;justify-content:center;font-size:12px;vertical-align:-4px;flex-shrink:0;}
+.it.done{background:var(--gs);}
+.it.done .ck{background:var(--g);border-color:var(--g);color:#fff;}
+.it.done .nm{text-decoration:line-through;color:var(--mu);}
+.prog{font-size:11.5px;font-weight:700;color:var(--mu2);margin-top:6px;}
+.newtag{margin-left:6px;background:var(--or);color:#fff;font-size:10px;font-weight:800;border-radius:6px;padding:2px 6px;}
+
+.blk{margin-top:10px;background:var(--soft);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55;}
+.blk small{display:block;font-size:11px;font-weight:800;color:var(--mu2);margin-bottom:2px;}
+.blk b{font-size:14.5px;}
+.blk .ok{color:var(--g);font-weight:800;} .blk .wt{color:var(--or);font-weight:800;}
+.cash{margin-top:10px;display:flex;justify-content:space-between;align-items:center;background:#fffbeb;border:1.5px solid #fcd34d;border-radius:12px;padding:10px 12px;}
+.cash span{font-size:12.5px;font-weight:800;color:#7c5a00;} .cash b{font-size:22px;font-weight:800;}
+.steps{display:flex;gap:6px;margin-top:8px;}
+.steps span{flex:1;text-align:center;font-size:10.5px;font-weight:800;padding:5px 2px;border-radius:8px;background:var(--soft);color:var(--mu);}
+.steps span.on{background:var(--gs);color:var(--g2);} .steps span.cur{background:var(--g2);color:#fff;}
+.a.sec{background:var(--card);color:var(--g2);border:1.5px solid var(--g2);}
+.newtag{margin-left:6px;background:var(--or);color:#fff;font-size:10px;font-weight:800;border-radius:6px;padding:2px 6px;}
+.its .it .q{font-weight:800;color:var(--g2);margin-right:4px;}
+</style>
+</head>
+<body>
+
+<div id="v-auth" class="auth hide">
+  <div class="auth-logo" style="background:#1e3a8a">🛵</div>
+  <h1>சிட்டை Delivery</h1>
+  <p class="sub">Delivery நண்பர்களுக்கான app</p>
+  <div class="seg"><button id="sg-in" class="on" onclick="authMode('in')">உள்நுழை</button><button id="sg-up" onclick="authMode('up')">புதிய கணக்கு</button></div>
+  <div id="up-only" class="hide">
+    <label class="lbl">உங்கள் பெயர்</label><input class="inp" id="a-nm" type="text" autocomplete="name" placeholder="பெயர்">
+    <label class="lbl">மொபைல் எண்</label><input class="inp" id="a-ph" type="tel" inputmode="numeric" maxlength="10" placeholder="9XXXXXXXXX" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)">
+  </div>
+  <label class="lbl">Email</label><input class="inp" id="a-em" type="email" autocomplete="username" placeholder="you@example.com">
+  <label class="lbl">Password</label><input class="inp" id="a-pw" type="password" autocomplete="current-password" placeholder="குறைந்தது 6 எழுத்து" onkeydown="if(event.key==='Enter')authGo()">
+  <button class="btn" id="a-go" onclick="authGo()" style="background:#1e3a8a">உள்நுழை →</button>
+  <div class="msg" id="a-msg"></div>
+</div>
+
+<div id="v-wait" class="wait hide">
+  <div class="ic">⏳</div>
+  <h2 id="w-ttl">அனுமதிக்காக காத்திருக்கிறது</h2>
+  <p id="w-txt"></p>
+  <button class="btn" onclick="boot()" style="background:#1e3a8a">🔄 மீண்டும் சரிபார்</button>
+  <button class="btn ghost" onclick="logout()">வெளியேறு</button>
+</div>
+
+<div id="v-main" class="hide">
+  <div class="hdr" id="hdr" style="background:#1e3a8a">
+    <div class="hdr-top">
+      <div class="hdr-nm" id="h-nm">🛵</div>
+      <button class="hdr-ic" id="h-wake" onclick="toggleWake()" title="திரை அணையாமல்">💡</button>
+      <button class="hdr-ic" id="h-snd" onclick="toggleSound()" title="ஒலி">🔔</button>
+      <button class="hdr-ic" onclick="refresh(true)" title="புதுப்பி">🔄</button>
+    </div>
+    <div class="conn"><span class="dot" id="c-dot"></span><span id="c-txt">இணைக்கிறது...</span></div>
+  </div>
+  <div class="snd" id="snd-bnr">
+    <div><b>🔔 புது delivery ஒலியை இயக்குங்கள்</b><small>Admin உங்களுக்கு order ஒதுக்கியதும் phone ஒலிக்கும்</small></div>
+    <button onclick="enableSound()">இயக்கு</button>
+  </div>
+  <div class="snd hide" id="push-bnr" style="background:#eff6ff;border-color:#93c5fd">
+    <div><b>📲 App மூடியிருந்தாலும் தெரிய</b><small>உங்களுக்கு delivery ஒதுக்கியதும் phone-க்கு notification வரும்</small></div>
+    <button onclick="pushOn()" style="background:#2563eb">இயக்கு</button>
+  </div>
+  <div class="tabs">
+    <button class="tab on" id="t-act" onclick="setTab('act')">🛵 செய்ய வேண்டியவை<span class="n hide" id="n-act"></span></button>
+    <button class="tab" id="t-done" onclick="setTab('done')">✅ இன்று முடிந்தவை</button>
+  </div>
+  <div class="list" id="list"></div>
+  <div class="foot"><button onclick="logout()">வெளியேறு</button></div>
+</div>
+
+<div id="dlg" class="dlg hide"><div class="dlg-b"><p id="dlg-t"></p><div class="acts"><button class="a no" style="flex:1" onclick="dlgClose(false)">இல்லை</button><button class="a pri" style="flex:1" id="dlg-y" onclick="dlgClose(true)">ஆம்</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── சிட்டை Delivery app ──
+// Shows ONLY the orders the admin assigned to this delivery account (database policy, flow.sql).
+// Steps: shop marks parcel ready → "🛵 பார்சல் எடுத்தேன்" → deliver, collect cash → "✅ கொடுத்தேன்".
+const SB_URL='https://cerstnckjygvcfekfxcp.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcnN0bmNranlndmNmZWtmeGNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTY2NDEsImV4cCI6MjA5Mzk3MjY0MX0.Yl-5QyyEyiwmXG9u1kL08CxIanU-22Fx-HicEe2VYi8';
+let sb=null;
+try{sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'sitta_delivery_auth'}});}catch(e){}
+
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rs=n=>{const v=Math.round((+n||0)*100)/100;return v.toFixed(2).replace(/\.?0+$/,'');};
+let _tt=null;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2600);}
+function show(v){['v-auth','v-wait','v-main'].forEach(x=>$(x).classList.toggle('hide',x!==v));}
+function lsGet(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch{return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+const tel=p=>{const d=String(p||'').replace(/\D/g,'').slice(-10);return d.length===10?d:'';};
+const mapUrl=a=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a||'');
+
+let me=null,uid=null,orders=[],shops={},tab='act',busy={},chan=null,pollT=null,chanLive=false;
+let seen=new Set(lsGet('sitta_dlv_seen',[]));
+
+// ── AUTH ──
+let aMode='in';
+function authMode(m){
+  aMode=m;$('sg-in').classList.toggle('on',m==='in');$('sg-up').classList.toggle('on',m==='up');
+  $('up-only').classList.toggle('hide',m!=='up');$('a-go').textContent=m==='up'?'கணக்கு உருவாக்கு →':'உள்நுழை →';
+  $('a-pw').autocomplete=m==='up'?'new-password':'current-password';$('a-msg').textContent='';
+}
+async function authGo(){
+  const em=$('a-em').value.trim(),pw=$('a-pw').value,msg=$('a-msg'),b=$('a-go');
+  msg.className='msg err';
+  if(!/^\S+@\S+\.\S+$/.test(em)){msg.textContent='சரியான email உள்ளிடுங்கள்';return;}
+  if(pw.length<6){msg.textContent='Password குறைந்தது 6 எழுத்து';return;}
+  let nm='',ph='';
+  if(aMode==='up'){
+    nm=$('a-nm').value.trim();ph=$('a-ph').value.trim();
+    if(!nm){msg.textContent='பெயரை உள்ளிடுங்கள்';return;}
+    if(!/^[6-9]\d{9}$/.test(ph)){msg.textContent='சரியான 10 இலக்க மொபைல் எண்';return;}
+  }
+  b.disabled=true;msg.className='msg';msg.textContent='⏳ சரிபார்க்கிறது...';
+  try{
+    if(aMode==='up'){
+      const {data,error}=await sb.auth.signUp({email:em,password:pw,options:{data:{full_name:nm,phone:ph}}});
+      if(error)throw error;
+      if(!data.session){msg.className='msg ok';msg.textContent='✅ கணக்கு உருவாக்கப்பட்டது. Email-ல் வந்த உறுதி link-ஐ தட்டி, பிறகு உள்நுழையுங்கள்.';authMode('in');return;}
+    }else{
+      const {error}=await sb.auth.signInWithPassword({email:em,password:pw});
+      if(error)throw error;
+    }
+    $('a-pw').value='';
+    await boot();
+  }catch(e){
+    msg.className='msg err';
+    const t=String(e&&e.message||'');
+    msg.textContent=/invalid login/i.test(t)?'❌ Email அல்லது password தவறு'
+      :/already registered/i.test(t)?'இந்த email-க்கு ஏற்கனவே கணக்கு உள்ளது — உள்நுழையுங்கள்'
+      :/not confirmed/i.test(t)?'Email உறுதி செய்யப்படவில்லை — inbox-ல் உள்ள link-ஐ தட்டுங்கள்'
+      :/rate limit/i.test(t)?'⚠️ இப்போது அதிக கோரிக்கைகள் — சிறிது நேரம் கழித்து முயற்சிக்கவும் (அல்லது சிட்டை admin-இடம் கணக்கு உருவாக்கச் சொல்லுங்கள்)'
+      :/signups.*disabled/i.test(t)?'⚠️ புதிய கணக்கு உருவாக்குவது தற்போது நிறுத்தப்பட்டுள்ளது — சிட்டை admin-ஐ தொடர்பு கொள்ளுங்கள்'
+      :'❌ '+(t||'Network பிரச்சனை');
+  }finally{b.disabled=false;}
+}
+async function logout(){
+  stopLive();stopRing();
+  await pushOff();
+  try{await sb.auth.signOut();}catch{}
+  me=null;uid=null;orders=[];
+  show('v-auth');authMode('in');
+}
+
+// ── BOOT ──
+async function boot(){
+  if(!sb){show('v-auth');$('a-msg').className='msg err';$('a-msg').textContent='⚠️ Internet இணைப்பு இல்லை — page-ஐ refresh செய்யுங்கள்';return;}
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){show('v-auth');return;}
+  const {data:p,error}=await sb.from('profiles').select('id,full_name,role,approved').eq('id',session.user.id).maybeSingle();
+  if(error){show('v-wait');$('w-ttl').textContent='இணைக்க முடியவில்லை';$('w-txt').textContent='Network சரிபார்த்து மீண்டும் முயற்சிக்கவும்.';return;}
+  me=p;
+  if(!p||!p.approved||p.role!=='delivery'){
+    show('v-wait');
+    if(p&&p.approved&&p.role==='merchant'){$('w-ttl').textContent='இது கடைக்காரர் கணக்கு';$('w-txt').textContent='கடைக்காரர் app-ல் (shop.html) உள்நுழையுங்கள்.';}
+    else if(p&&p.approved&&p.role==='admin'){$('w-ttl').textContent='இது admin கணக்கு';$('w-txt').textContent='Delivery கணக்கில் உள்நுழையுங்கள்.';}
+    else{$('w-ttl').textContent='அனுமதிக்காக காத்திருக்கிறது';$('w-txt').textContent='சிட்டை admin உங்கள் கணக்கை ('+(session.user.email||'')+') delivery நபராக அனுமதித்ததும், உங்களுக்கு ஒதுக்கப்படும் order-கள் இங்கே தெரியும்.';}
+    return;
+  }
+  uid=p.id;
+  $('h-nm').textContent='🛵 '+(p.full_name||'Delivery');
+  show('v-main');renderHdr();
+  $('snd-bnr').classList.toggle('hide',soundOn&&audioOk());
+  const {data:sh}=await sb.from('shops').select('id,name,logo,phone,address');
+  shops={};(sh||[]).forEach(s=>shops[s.id]=s);
+  setTab(tab);
+  await refresh();
+  startLive();
+  pushSilent();
+}
+function renderHdr(){
+  $('h-snd').textContent=soundOn?'🔔':'🔕';$('h-snd').classList.toggle('on',soundOn&&audioOk());
+  $('h-wake').classList.toggle('on',!!wakeLock);
+  document.documentElement.style.setProperty('--hh',$('hdr').offsetHeight+'px');
+}
+
+// ── DATA ──
+let _refBusy=false;
+async function refresh(manual){
+  if(!uid||_refBusy)return;_refBusy=true;
+  try{
+    const since=new Date(Date.now()-3*864e5).toISOString();
+    const {data,error}=await sb.from('orders').select('*,order_items(*)').eq('delivery_partner_id',uid).gte('created_at',since).order('created_at',{ascending:false}).limit(200);
+    if(error){setConn('off','இணைப்பு இல்லை — மீண்டும் முயற்சிக்கிறது');if(manual)toast('⚠️ ஏற்ற முடியவில்லை');return;}
+    orders=data||[];
+    setConn(chanLive?'live':'',chanLive?'நேரடி இணைப்பு — புது order உடனே வரும்':'புதுப்பிக்கப்பட்டது '+new Date().toLocaleTimeString('ta-IN',{hour:'2-digit',minute:'2-digit'}));
+    const ids=new Set(orders.map(o=>o.id));seen=new Set([...seen].filter(x=>ids.has(x)));lsSet('sitta_dlv_seen',[...seen]);
+    render();checkRing();
+    if(manual)toast('🔄 புதுப்பிக்கப்பட்டது');
+  }finally{_refBusy=false;}
+}
+function setConn(cls,t){const d=$('c-dot');if(!d)return;d.className='dot'+(cls?' '+cls:'');$('c-txt').textContent=t;}
+let _rt=null;
+function startLive(){
+  stopLive();
+  try{
+    chan=sb.channel('dlv-'+uid)
+      .on('postgres_changes',{event:'*',schema:'public',table:'orders',filter:'delivery_partner_id=eq.'+uid},()=>{clearTimeout(_rt);_rt=setTimeout(refresh,400);})
+      .subscribe(st=>{chanLive=(st==='SUBSCRIBED');if(chanLive)setConn('live','நேரடி இணைப்பு — புது order உடனே வரும்');});
+  }catch{}
+  pollT=setInterval(()=>refresh(),20000); // backup (and catches shop "ready" updates)
+}
+function stopLive(){try{if(chan)sb.removeChannel(chan);}catch{}chan=null;chanLive=false;clearInterval(pollT);pollT=null;}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&uid){refresh();if(wakeWanted)reqWake();}});
+window.addEventListener('online',()=>{if(uid){refresh();startLive();}});
+window.addEventListener('offline',()=>setConn('off','📴 இணைய இணைப்பு இல்லை'));
+
+// ── SOUND ──
+let soundOn=localStorage.getItem('sitta_dlv_snd')!=='0',ac=null,ringT=null,titleT=null,titleOn=false;
+function audioOk(){return !!(ac&&ac.state==='running');}
+function enableSound(){
+  try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume();}catch{}
+  soundOn=true;localStorage.setItem('sitta_dlv_snd','1');
+  chime();$('snd-bnr').classList.add('hide');renderHdr();checkRing();
+}
+function toggleSound(){
+  if(!soundOn||!audioOk()){enableSound();toast('🔔 ஒலி இயக்கப்பட்டது');return;}
+  soundOn=false;localStorage.setItem('sitta_dlv_snd','0');stopRing();renderHdr();toast('🔕 ஒலி நிறுத்தப்பட்டது');
+}
+function chime(){
+  if(!ac)return;
+  try{
+    [[660,0],[990,.16],[1320,.32]].forEach(([f,t])=>{
+      const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);
+      o.type='square';o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.35,ac.currentTime+t+.02);
+      g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+t+.28);
+      o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.3);
+    });
+  }catch{}
+}
+const ACTIVE=['SHOP_ACCEPTED','PREPARING','READY_FOR_PICKUP','DELIVERY_ASSIGNED','OUT_FOR_DELIVERY'];
+function unseen(){return orders.filter(o=>ACTIVE.includes(o.order_status)&&!seen.has(o.id));}
+function checkRing(){
+  if(unseen().length){
+    if(!ringT){
+      const ring=()=>{if(soundOn)chime();try{navigator.vibrate&&navigator.vibrate([300,150,300]);}catch{}};
+      ring();ringT=setInterval(ring,4000);
+      titleT=setInterval(()=>{titleOn=!titleOn;document.title=titleOn?'🔔 புது delivery!':'சிட்டை Delivery';},1000);
+    }
+  }else stopRing();
+}
+function stopRing(){clearInterval(ringT);ringT=null;clearInterval(titleT);titleT=null;document.title='சிட்டை Delivery';try{navigator.vibrate&&navigator.vibrate(0);}catch{}}
+document.addEventListener('pointerdown',()=>{if(uid&&ringT)setTimeout(()=>{unseen().forEach(o=>seen.add(o.id));lsSet('sitta_dlv_seen',[...seen]);stopRing();render();},150);},true);
+
+// ── KEEP SCREEN ON ──
+let wakeLock=null,wakeWanted=false;
+async function reqWake(){try{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null;renderHdr();});}catch{wakeLock=null;}renderHdr();}
+async function toggleWake(){
+  if(!('wakeLock' in navigator)){toast('இந்த phone-ல் இந்த வசதி இல்லை');return;}
+  if(wakeLock){wakeWanted=false;try{await wakeLock.release();}catch{}wakeLock=null;renderHdr();toast('💡 திரை தானாக அணையும்');return;}
+  wakeWanted=true;await reqWake();toast(wakeLock?'💡 திரை அணையாமல் இருக்கும்':'இயக்க முடியவில்லை');
+}
+
+// ── RENDER ──
+function isToday(d){return d&&new Date(d).toDateString()===new Date().toDateString();}
+function ago(d){const m=Math.max(0,Math.round((Date.now()-new Date(d))/60000));if(m<1)return 'இப்போது';if(m<60)return m+' நிமிடம் முன்';const h=Math.floor(m/60);if(h<24)return h+' மணி '+(m%60)+' நி. முன்';return new Date(d).toLocaleDateString('ta-IN',{day:'numeric',month:'short'});}
+function setTab(t){tab=t;['act','done'].forEach(k=>$('t-'+k).classList.toggle('on',k===t));render();window.scrollTo({top:0});}
+function render(){
+  if(!uid)return;
+  const act=orders.filter(o=>ACTIVE.includes(o.order_status)).sort((a,b)=>{
+    const r=s=>s==='OUT_FOR_DELIVERY'?0:s==='READY_FOR_PICKUP'?1:2; // on the way first, then ready to pick up
+    return r(a.order_status)-r(b.order_status)||new Date(a.created_at)-new Date(b.created_at);});
+  $('n-act').textContent=act.length;$('n-act').classList.toggle('hide',!act.length);
+  const L=$('list');
+  if(tab==='done'){
+    const del=orders.filter(o=>o.order_status==='DELIVERED'&&isToday(o.delivered_at||o.created_at));
+    const canc=orders.filter(o=>o.order_status==='CANCELLED'&&isToday(o.updated_at||o.created_at));
+    const cash=del.reduce((s,o)=>s+(+o.total||0),0);
+    L.innerHTML=`<div class="stats"><div class="st"><b>${del.length}</b><small>டெலிவரி செய்தவை</small></div><div class="st"><b>₹${rs(cash)}</b><small>வாங்கிய பணம்</small></div><div class="st"><b>${canc.length}</b><small>ரத்து</small></div></div>`
+      +(del.concat(canc).length?del.concat(canc).map(cardHTML).join(''):`<div class="empty"><div class="ic">📋</div>இன்று இன்னும் டெலிவரி இல்லை</div>`);
+    return;
+  }
+  L.innerHTML=act.length?act.map(cardHTML).join(''):`<div class="empty"><div class="ic">🛵</div>உங்களுக்கு ஒதுக்கப்பட்ட delivery இல்லை<br><small>Admin ஒதுக்கியதும் இங்கே வரும்${soundOn&&audioOk()?', ஒலியும் வரும்':''}</small></div>`;
+}
+const ST={SHOP_ACCEPTED:['🏪 கடை பார்சல் செய்கிறது','p-new'],PREPARING:['🏪 கடை பார்சல் செய்கிறது','p-new'],DELIVERY_ASSIGNED:['🏪 கடை பார்சல் செய்கிறது','p-new'],READY_FOR_PICKUP:['📦 பார்சல் ரெடி — கடையில் வாங்குங்கள்','p-go'],OUT_FOR_DELIVERY:['🛵 Customer-இடம் கொண்டு செல்லுங்கள்','p-go'],DELIVERED:['🎉 டெலிவரி முடிந்தது','p-ok'],CANCELLED:['❌ ரத்து செய்யப்பட்டது','p-bad']};
+function cardHTML(o){
+  const st=ST[o.order_status]||[esc(o.order_status),'p-go'];
+  const s=shops[o.shop_id]||{name:o.shop_id};
+  const sp=tel(s.phone),cp=tel(o.customer_phone);
+  const picked=['OUT_FOR_DELIVERY','DELIVERED'].includes(o.order_status);
+  const ready=o.order_status==='READY_FOR_PICKUP';
+  const isNew=ACTIVE.includes(o.order_status)&&!seen.has(o.id);
+  const b=busy[o.id]?' disabled':'';
+  const its=(o.order_items||[]).map(i=>`<div class="it"><span><span class="q">${esc(i.quantity)}×</span>${esc(i.product_name)}${i.pack_size?' · '+esc(i.pack_size):''}</span><span>₹${rs(i.total_price)}</span></div>`).join('');
+  let act='';
+  if(['SHOP_ACCEPTED','PREPARING','DELIVERY_ASSIGNED'].includes(o.order_status))act=`<div class="acts"><button class="a sec"${b} onclick="pick('${o.id}',false)">🛵 பார்சல் எடுத்தேன்</button></div><div class="info">கடை "பார்சல் ரெடி" என்று குறித்ததும் இந்த order மேலே வரும்</div>`;
+  else if(ready)act=`<div class="acts"><button class="a pri"${b} onclick="pick('${o.id}',true)">🛵 பார்சல் எடுத்தேன்</button></div>`;
+  else if(o.order_status==='OUT_FOR_DELIVERY')act=`<div class="acts"><button class="a pri"${b} onclick="deliver('${o.id}')">✅ கொடுத்தேன் · ₹${rs(o.total)} வாங்கினேன்</button></div>`;
+  const step=picked?(o.order_status==='DELIVERED'?3:2):1;
+  return `<div class="oc${isNew?' new':''}">
+    <div class="oc-top"><span class="oc-no">${esc(o.order_number||'')}</span>${isNew?'<span class="newtag">புதுசு</span>':''}<span class="oc-ago">${ago(o.created_at)}</span></div>
+    <span class="pill ${st[1]}">${st[0]}</span>
+    ${o.order_status!=='CANCELLED'?`<div class="steps"><span class="${step>1?'on':'cur'}">1. கடையில் வாங்கு</span><span class="${step>2?'on':step===2?'cur':''}">2. Customer-க்கு கொடு</span></div>`:''}
+    <div class="blk"><small>🏪 எங்கே வாங்குவது</small><b>${esc((s.logo||'🏪')+' '+(s.name||''))}</b>${s.address?'<br>'+esc(s.address):''}
+      <br>${ready||picked?'<span class="ok">✅ பார்சல் ரெடி</span>':'<span class="wt">⏳ கடை பார்சல் செய்கிறது</span>'}
+      <div class="cu-act">${sp?`<a href="tel:+91${sp}">📞 கடையை அழை</a>`:''}${s.address?`<a href="${mapUrl(s.address)}" target="_blank" rel="noopener">🗺️ வழி</a>`:''}</div>
+    </div>
+    <div class="blk"><small>👤 யாருக்கு கொடுப்பது</small><b>${esc(o.customer_name)}</b><br>🏠 ${esc(o.customer_address)}
+      <div class="cu-act">${cp?`<a href="tel:+91${cp}">📞 அழை</a><a href="https://wa.me/91${cp}?text=${encodeURIComponent('வணக்கம், சிட்டை delivery — உங்கள் ஆர்டர் '+(o.order_number||'')+' கொண்டு வருகிறேன்.')}" target="_blank" rel="noopener">💬 WhatsApp</a>`:''}<a href="${mapUrl(o.customer_address)}" target="_blank" rel="noopener">🗺️ வழி</a></div>
+    </div>
+    <div class="its">${its}${+o.delivery_fee>0?`<div class="it" style="color:var(--mu2)"><span>🚚 Delivery கட்டணம்</span><span>₹${rs(o.delivery_fee)}</span></div>`:''}</div>
+    ${o.customer_note?`<div class="note">🗒️ ${esc(o.customer_note)}</div>`:''}
+    ${o.order_status!=='CANCELLED'?`<div class="cash"><span>💵 Customer-இடம் வாங்க வேண்டியது (COD)</span><b>₹${rs(o.total)}</b></div>`:''}
+    ${act}
+  </div>`;
+}
+
+// ── ACTIONS ──
+let _dlgCb=null;
+function confirmDlg(t,cb){$('dlg-t').textContent=t;_dlgCb=cb;$('dlg').classList.remove('hide');}
+function dlgClose(y){$('dlg').classList.add('hide');const cb=_dlgCb;_dlgCb=null;if(y&&cb)cb();}
+function pick(id,ready){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  confirmDlg(ready?`${o.order_number} பார்சலை கடையில் வாங்கிவிட்டீர்களா?`:`கடை இன்னும் "பார்சல் ரெடி" என்று குறிக்கவில்லை. ${o.order_number} பார்சலை உண்மையில் வாங்கிவிட்டீர்களா?`,()=>setSt(id,'OUT_FOR_DELIVERY'));
+}
+function deliver(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  confirmDlg(`${o.customer_name}-இடம் பார்சலைக் கொடுத்து ₹${rs(o.total)} வாங்கிவிட்டீர்களா?`,()=>setSt(id,'DELIVERED'));
+}
+async function setSt(id,st){
+  if(busy[id])return;busy[id]=1;render();
+  try{
+    const {data,error}=await sb.rpc('delivery_set_status',{p_id:id,p_status:st});
+    if(error)throw error;
+    if(data&&data.ok){const o=orders.find(x=>x.id===id);if(o)o.order_status=st;toast(st==='DELIVERED'?'🎉 டெலிவரி முடிந்தது — நன்றி!':'🛵 Customer-இடம் கொண்டு செல்லுங்கள்');}
+    else toast('ℹ️ '+((data&&data.msg)||'மாற்ற முடியவில்லை'));
+  }catch(e){toast('⚠️ Network பிரச்சனை — மீண்டும் முயற்சிக்கவும்');}
+  finally{delete busy[id];await refresh();}
+}
+
+
+// ── PUSH NOTIFICATIONS (app மூடியிருந்தாலும்) — uses sw.js next to this file + "notify" Edge Function ──
+const VAPID_PUBLIC='BJswFvjL6cZ1OAy1xpuxXqBVrfv_8baBOlNaYhRNDTglz-FyKz41smq-PP47srMVhU-9YCwhrklrmLx160_BLx4';
+function _b64u(s){const p='='.repeat((4-s.length%4)%4);const b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));const a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;}
+function pushSupported(){return ('serviceWorker' in navigator)&&('PushManager' in window)&&('Notification' in window);}
+async function pushGetSub(ask){
+  if(!pushSupported())throw new Error('unsupported');
+  if(ask){const p=await Notification.requestPermission();if(p!=='granted')throw new Error('denied');}
+  else if(Notification.permission!=='granted')return null;
+  const reg=await navigator.serviceWorker.register('sw.js');await navigator.serviceWorker.ready;
+  let sub=await reg.pushManager.getSubscription();
+  if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:_b64u(VAPID_PUBLIC)});
+  return sub;
+}
+function pushErrMsg(e){
+  const m=String(e&&e.message||e);
+  if(m==='unsupported')return /iPhone|iPad/.test(navigator.userAgent)?'iPhone-ல்: Safari Share ⬆️ → "Add to Home Screen" செய்து, அங்கிருந்து app-ஐத் திறந்து மீண்டும் முயற்சிக்கவும்':'இந்த browser-ல் notification வசதி இல்லை — Chrome பயன்படுத்துங்கள்';
+  if(m==='denied')return 'Notification அனுமதி மறுக்கப்பட்டது — Chrome ⋮ → Settings → Site settings → Notifications-ல் இந்த site-ஐ "Allow" செய்யுங்கள்';
+  return 'இயக்க முடியவில்லை — '+m;
+}
+
+const PUSH_APP='delivery';
+function pushKey(){return 'sitta_push_'+PUSH_APP+'_'+(uid||'');}
+function pushBanner(){const b=$('push-bnr');if(!b)return;const ok=pushSupported()&&Notification.permission==='granted'&&localStorage.getItem(pushKey())==='1';b.classList.toggle('hide',ok);}
+async function pushSave(sub){
+  const j=sub.toJSON();
+  const {data,error}=await sb.rpc('save_push_subscription',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_app:PUSH_APP});
+  if(error||!data||!data.ok)throw new Error((data&&data.msg)||'சேமிக்க முடியவில்லை');
+  localStorage.setItem(pushKey(),'1');
+}
+async function pushOn(){
+  try{const sub=await pushGetSub(true);await pushSave(sub);pushBanner();toast('✅ Notification இயக்கப்பட்டது — app மூடியிருந்தாலும் வரும்');}
+  catch(e){toast('⚠️ '+pushErrMsg(e));}
+}
+async function pushSilent(){ // keep this phone linked to the logged-in account (no prompt)
+  try{const sub=await pushGetSub(false);if(sub)await pushSave(sub);}catch(e){}
+  pushBanner();
+}
+async function pushOff(){
+  try{if(!pushSupported())return;const reg=await navigator.serviceWorker.getRegistration('sw.js');const sub=reg&&await reg.pushManager.getSubscription();
+    if(sub)await sb.rpc('remove_push_subscription',{p_endpoint:sub.endpoint});}catch(e){}
+  try{localStorage.removeItem(pushKey());}catch(e){}
+}
+
+// ── START ──
+authMode('in');
+if(sb){sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_OUT'&&uid){stopLive();stopRing();uid=null;show('v-auth');}});}
+setInterval(()=>{if(uid)render();},60000);
+boot();
+</script>
+</body>
+</html>
