@@ -18,7 +18,11 @@ self.addEventListener('push', function (e) {
 
 self.addEventListener('notificationclick', function (e) {
   e.notification.close();
-  var url = new URL((e.notification.data && e.notification.data.url) || './', self.registration.scope).href;
+  var url = self.registration.scope;
+  try {
+    var u = new URL((e.notification.data && e.notification.data.url) || './', self.registration.scope);
+    if (u.origin === self.location.origin) url = u.href;   // only open pages of this app — never another website
+  } catch (err) {}
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (wins) {
     for (var i = 0; i < wins.length; i++) {
       if (wins[i].url.split('#')[0].split('?')[0] === url && 'focus' in wins[i]) return wins[i].focus();
