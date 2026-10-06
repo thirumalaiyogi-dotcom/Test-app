@@ -64,6 +64,7 @@ self.addEventListener('notificationclick', function (e) {
   try {
     var u = new URL((e.notification.data && e.notification.data.url) || './', self.registration.scope);
     if (u.origin === self.location.origin) url = u.href;   // only open pages of this app — never another website
+    if (url === self.registration.scope) url = self.registration.scope + 'index.html'; // customer app lives at index.html (its own install scope)
   } catch (err) {}
   e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (wins) {
     for (var i = 0; i < wins.length; i++) {
