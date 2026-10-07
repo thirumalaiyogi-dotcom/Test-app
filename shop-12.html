@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>சிட்டை கடை</title>
+<meta name="theme-color" content="#0a4f40">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="சிட்டை கடை">
+<link rel="manifest" href="manifest-shop.webmanifest">
+<link rel="apple-touch-icon" href="icon-shop-192.png">
+<meta name="apple-mobile-web-app-title" content="சிட்டை கடை">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#f3f5f4;--card:#fff;--soft:#f5f7f6;--soft2:#eef2f0;--bd:#e3e8e6;--bd2:#d5ddd9;
+  --tx:#101a17;--mu:#6b7873;--mu2:#45524d;
+  --g:#0f8a6c;--g2:#0b5d4b;--gs:#e7f5f0;
+  --or:#c2410c;--ors:#fff1e6;--bl:#1d4ed8;--bls:#e8efff;
+  --rd:#dc2626;--rds:#fdecec;--yl:#a16207;--yls:#fef6dc;
+  --sh1:0 1px 2px rgba(16,26,23,.05),0 1px 3px rgba(16,26,23,.06);
+  --sh2:0 6px 20px rgba(16,26,23,.08);
+  --r:16px;--nav:68px;
+}
+html,body{background:var(--bg);}
+body{font-family:'Noto Sans Tamil',system-ui,sans-serif;color:var(--tx);max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;font-size:14px;line-height:1.45;}
+button{font-family:inherit;cursor:pointer;color:inherit;}
+input{font-family:inherit;}
+.hide{display:none!important;}
+svg{flex-shrink:0;}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+
+/* ── auth ── */
+.auth{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
+.auth-hero{background:linear-gradient(160deg,var(--brand2) 0%,var(--brand) 100%);color:#fff;padding:54px 24px 64px;text-align:center;position:relative;overflow:hidden;}
+.auth-hero::before,.auth-hero::after{content:'';position:absolute;border-radius:50%;background:rgba(255,255,255,.07);}
+.auth-hero::before{width:220px;height:220px;top:-90px;right:-70px;}
+.auth-hero::after{width:150px;height:150px;bottom:-70px;left:-40px;}
+.auth-logo{width:78px;height:78px;border-radius:24px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;z-index:1;}
+.auth-hero h1{font-size:23px;font-weight:800;position:relative;z-index:1;}
+.auth-hero p{font-size:13px;opacity:.85;margin-top:4px;position:relative;z-index:1;}
+.auth-card{background:var(--card);margin:-36px 16px 24px;border-radius:22px;padding:20px 18px;box-shadow:var(--sh2);position:relative;z-index:2;}
+.seg{display:flex;background:var(--soft2);border-radius:13px;padding:4px;margin-bottom:18px;}
+.seg button{flex:1;border:none;background:none;padding:10px;border-radius:10px;font-weight:700;font-size:13.5px;color:var(--mu2);}
+.seg button.on{background:var(--card);color:var(--brand);box-shadow:var(--sh1);}
+.lbl{display:block;font-size:12px;font-weight:700;color:var(--mu2);margin:0 0 6px;}
+.inp{width:100%;border:1.5px solid var(--bd);border-radius:13px;padding:13px 14px;font-size:15px;background:var(--soft);color:var(--tx);outline:none;margin-bottom:14px;transition:border-color .15s,background .15s;}
+.inp:focus{border-color:var(--brand);background:var(--card);}
+.btn{width:100%;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 16px var(--brandsh);}
+.btn:active{transform:scale(.99);}
+.btn:disabled{opacity:.6;}
+.btn.ghost{background:var(--card);color:var(--mu2);border:1.5px solid var(--bd);margin-top:10px;box-shadow:none;}
+.msg{font-size:12.5px;font-weight:700;margin-top:12px;text-align:center;line-height:1.55;}
+.msg:empty{display:none;}
+.msg.err{color:var(--rd);} .msg.ok{color:var(--g2);}
+.auth-foot{text-align:center;font-size:11.5px;color:var(--mu);padding:0 24px 24px;}
+.wait{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+.wait .ill{margin-bottom:18px;}
+.wait h2{font-size:19px;font-weight:800;margin-bottom:8px;}
+.wait p{font-size:13.5px;color:var(--mu2);line-height:1.65;margin-bottom:22px;max-width:330px;}
+.wait .btn{max-width:330px;}
+
+/* ── app bar + status ── */
+.hdr{background:linear-gradient(160deg,var(--brand2),var(--brand));color:#fff;padding:12px 14px 14px;position:sticky;top:0;z-index:20;box-shadow:0 2px 12px rgba(0,0,0,.12);}
+.hdr-top{display:flex;align-items:center;gap:10px;}
+.hdr-av{width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden;}
+.hdr-tt{flex:1;min-width:0;}
+.hdr-nm{font-size:16.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25;}
+.hdr-sub{font-size:11px;font-weight:600;opacity:.8;display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hdr-ic{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);color:#fff;width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.hdr-ic:active{background:rgba(255,255,255,.22);}
+.hdr-ic.on::after{content:'';position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#86efac;box-shadow:0 0 0 2px var(--brand);}
+.hdr-ic.spin svg{animation:spin .8s linear;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.dot{width:7px;height:7px;border-radius:50%;background:#fbbf24;flex-shrink:0;} .dot.live{background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.25);} .dot.off{background:#f87171;}
+.sw-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.sw{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:14px;padding:10px 10px 10px 12px;text-align:left;min-width:0;}
+.sw.on{background:rgba(255,255,255,.17);}
+.sw-t{flex:1;min-width:0;display:flex;flex-direction:column;}
+.sw-t small{font-size:10.5px;font-weight:600;opacity:.75;}
+#c-txt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sw-t b{font-size:13px;font-weight:800;line-height:1.3;word-break:keep-all;overflow-wrap:normal;}
+.tg{width:40px;height:23px;border-radius:12px;background:rgba(255,255,255,.28);position:relative;flex-shrink:0;transition:background .2s;}
+.tg::after{content:'';position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25);}
+.sw.on .tg{background:#22c55e;} .sw.on .tg::after{transform:translateX(17px);}
+
+/* ── alert bars ── */
+.bar{margin:12px 14px 0;border-radius:14px;padding:11px 12px;display:flex;gap:11px;align-items:center;background:var(--card);box-shadow:var(--sh1);border:1px solid var(--bd);}
+.bar-ic{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bar-t{flex:1;min-width:0;}
+.bar-t b{display:block;font-size:13px;font-weight:800;line-height:1.35;}
+.bar-t small{display:block;font-size:11.5px;color:var(--mu);line-height:1.4;}
+.bar button{border:none;border-radius:10px;padding:9px 13px;font-weight:800;font-size:12.5px;white-space:nowrap;color:#fff;}
+.bar.amber .bar-ic{background:var(--ors);color:var(--or);} .bar.amber button{background:var(--or);}
+.bar.blue .bar-ic{background:var(--bls);color:var(--bl);} .bar.blue button{background:var(--bl);}
+
+/* ── section header ── */
+.sec{display:flex;align-items:center;gap:8px;padding:16px 16px 8px;}
+.sec h2{font-size:15px;font-weight:800;}
+.sec .cnt{font-size:11.5px;font-weight:800;background:var(--soft2);color:var(--mu2);border-radius:20px;padding:1px 9px;}
+.sec .sub{margin-left:auto;font-size:11.5px;color:var(--mu);font-weight:600;}
+
+/* ── list + cards ── */
+.list{padding:0 14px calc(var(--nav) + 24px + env(safe-area-inset-bottom));}
+.oc{background:var(--card);border:1px solid var(--bd);border-radius:20px;margin-bottom:12px;box-shadow:var(--sh1);overflow:hidden;}
+.oc.new{border-color:#fb923c;box-shadow:0 0 0 3px rgba(251,146,60,.18),var(--sh1);animation:pulse 1.8s ease-in-out infinite;}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(251,146,60,.08),var(--sh1);}}
+.oc-hd{display:flex;align-items:center;gap:8px;padding:13px 14px 0;}
+.oc-no{font-size:14.5px;font-weight:800;letter-spacing:.01em;}
+.oc-ago{font-size:11.5px;color:var(--mu);margin-left:auto;display:flex;align-items:center;gap:4px;white-space:nowrap;}
+.newtag{background:#f97316;color:#fff;font-size:10px;font-weight:800;border-radius:6px;padding:2px 7px;letter-spacing:.02em;}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+.pill i{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.p-new{background:var(--ors);color:var(--or);} .p-go{background:var(--bls);color:var(--bl);}
+.p-ok{background:var(--gs);color:var(--g2);} .p-bad{background:var(--rds);color:var(--rd);}
+.oc-bd{padding:10px 14px 14px;}
+.cu-act{display:flex;gap:8px;margin-top:10px;}
+.cu-act a,.cu-act button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-size:12.5px;font-weight:800;border-radius:12px;padding:10px 6px;border:1.5px solid var(--bd);color:var(--tx);background:var(--card);white-space:nowrap;}
+.its{margin-top:12px;}
+.it{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--soft2);}
+.it:last-of-type,.it:has(+.tot){border-bottom:none;}
+.it>span:first-child{flex:1;min-width:0;}
+.it .q{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:22px;border-radius:7px;background:var(--soft2);font-weight:800;font-size:12px;color:var(--mu2);margin-right:8px;padding:0 5px;}
+.it .ipr{font-weight:700;color:var(--mu2);white-space:nowrap;}
+.it.na .nm,.it.na .q,.it.na .ipr{opacity:.55;} .it.na .ipr{text-decoration:line-through;}
+.it .na-b{display:inline-block;max-width:100%;margin-top:5px;text-decoration:none;border:1.5px solid var(--bd);background:var(--card);color:var(--mu2);border-radius:9px;padding:5px 8px;font-size:11.5px;font-weight:800;font-family:inherit;}
+.it .na-b.on{border-color:var(--rd);background:var(--rds);color:var(--rd);opacity:1;}
+.it.na .nm{text-decoration:line-through;} .it.na .nm .na-b{text-decoration:none;}
+.it .na-b:disabled{opacity:.5;}
+.na-note{margin-top:8px;font-size:12px;font-weight:700;color:var(--rd);background:var(--rds);border-radius:10px;padding:8px 10px;line-height:1.5;}
+.rsn{margin-top:10px;font-size:12.5px;font-weight:700;color:var(--rd);background:var(--rds);border-radius:12px;padding:9px 11px;line-height:1.5;}
+.rj-ch{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:2px 0 12px;}
+.rj-ch button{border:1.5px solid var(--bd);background:var(--card);color:var(--tx);border-radius:20px;padding:7px 12px;font-size:12.5px;font-weight:700;font-family:inherit;}
+.rj-ch button.on{border-color:var(--rd);background:var(--rds);color:var(--rd);}
+#rj-in{width:100%;box-sizing:border-box;border:1.5px solid var(--bd);border-radius:12px;padding:11px 12px;font:inherit;font-size:14px;margin-bottom:14px;background:var(--card);color:var(--tx);}
+.tot{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:800;border-top:1.5px dashed var(--bd2);margin-top:6px;padding-top:10px;}
+.note{margin-top:10px;font-size:12.5px;background:var(--yls);border-radius:12px;padding:9px 11px;color:#713f12;display:flex;gap:8px;line-height:1.5;}
+.acts{display:flex;gap:8px;margin-top:14px;}
+.a{flex:1;border:none;border-radius:14px;padding:14px 10px;font-size:14.5px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;}
+.a:active{transform:scale(.99);}
+.a.pri{background:var(--brand);color:#fff;box-shadow:0 6px 14px var(--brandsh);}
+.a.no{flex:0 0 auto;background:var(--rds);color:var(--rd);padding:14px 16px;}
+.a.sec{background:var(--soft2);color:var(--tx);}
+.a:disabled{opacity:.55;}
+.info{margin-top:12px;font-size:12px;color:var(--mu2);background:var(--soft);border-radius:12px;padding:9px 11px;display:flex;align-items:center;gap:8px;}
+
+/* ── empty ── */
+.empty{text-align:center;padding:44px 24px 20px;color:var(--mu);}
+.empty .ill{margin:0 auto 14px;}
+.empty b{display:block;font-size:15px;color:var(--tx);font-weight:800;margin-bottom:4px;}
+.empty small{font-size:12.5px;line-height:1.6;}
+
+/* ── stats ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0 6px;}
+.st{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px 10px;box-shadow:var(--sh1);min-width:0;}
+.st-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+.st b{display:block;font-size:19px;font-weight:800;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.st small{display:block;font-size:11px;color:var(--mu);font-weight:700;line-height:1.35;}
+.st.g .st-ic{background:var(--gs);color:var(--g2);} .st.b .st-ic{background:var(--bls);color:var(--bl);} .st.r .st-ic{background:var(--rds);color:var(--rd);} .st.o .st-ic{background:var(--ors);color:var(--or);}
+
+/* ── bottom nav ── */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:520px;margin:0 auto;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--bd);display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom));}
+.nv{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 2px;color:var(--mu);font-size:11.5px;font-weight:700;position:relative;min-width:0;}
+.nv .pi{width:56px;height:30px;border-radius:15px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.nv.on{color:var(--brand);}
+.nv.on .pi{background:var(--brandsoft);}
+.nv span.l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.nv .n{position:absolute;top:0;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--rd);color:#fff;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
+
+/* ── dialog / sheet + toast ── */
+.dlg{position:fixed;inset:0;background:rgba(10,20,17,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center;animation:fade .15s;}
+.dlg-b{background:var(--card);border-radius:24px 24px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));max-width:520px;width:100%;text-align:center;animation:up .22s ease-out;}
+.dlg-b::before{content:'';display:block;width:40px;height:4px;border-radius:2px;background:var(--bd2);margin:0 auto 16px;}
+.dlg-ic{width:54px;height:54px;border-radius:17px;background:var(--brandsoft);color:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+.dlg-b p{font-size:15px;font-weight:700;line-height:1.6;margin-bottom:18px;}
+.dlg-b .acts{margin-top:0;}
+@keyframes fade{from{opacity:0}} @keyframes up{from{transform:translateY(40px);opacity:.4}}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav) + 16px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(8px);background:#16211e;color:#fff;padding:12px 16px;border-radius:14px;font-size:13.5px;font-weight:700;z-index:60;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;width:max-content;max-width:calc(100% - 32px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.foot{display:flex;justify-content:center;padding:6px 16px 0;}
+.foot button{background:none;border:1.5px solid var(--bd);border-radius:12px;color:var(--mu2);font-size:12.5px;font-weight:700;padding:9px 16px;display:flex;align-items:center;gap:6px;}
+@media(max-width:350px){.sw{padding:9px 8px 9px 10px;gap:6px}.sw-t b{font-size:12px}.tg{width:36px;height:21px}.tg::after{width:15px;height:15px}.sw.on .tg::after{transform:translateX(15px)}.hdr-ic{width:34px;height:34px}.nv{font-size:10.5px}.nv .pi{width:48px}}
+.ill-c{width:96px;height:96px;border-radius:50%;background:var(--brandsoft);color:var(--c);display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 0 0 10px rgba(0,0,0,.025);}
+@supports (background:color-mix(in srgb,red 10%,white)){.ill-c{background:color-mix(in srgb,var(--c) 11%,#fff);box-shadow:0 0 0 10px color-mix(in srgb,var(--c) 5%,transparent);}}
+
+:root{--brand:#0d7a5f;--brand2:#0a4f40;--brandsoft:#dcf3ea;--brandsh:rgba(13,122,95,.28);}
+/* parcel label */
+.pname{margin-top:12px;border:1.5px dashed #9fd9c4;background:linear-gradient(180deg,#f2fbf7,#e8f7f0);border-radius:14px;padding:10px 12px 11px;position:relative;}
+.pname-l{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--g2);letter-spacing:.02em;}
+.pname-n{font-size:21px;font-weight:800;line-height:1.3;margin-top:2px;word-break:break-word;}
+.pname-o{font-size:12px;font-weight:700;color:var(--mu2);}
+.dlv{margin-top:10px;font-size:12.5px;font-weight:700;color:var(--bl);background:var(--bls);border-radius:12px;padding:9px 11px;display:flex;align-items:center;gap:8px;}
+.dlv.none{color:var(--mu2);background:var(--soft);}
+/* packing progress */
+.prog{margin-top:12px;}
+.prog-t{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--mu2);margin-bottom:6px;}
+.prog-t b{color:var(--tx);}
+.prog-b{height:7px;border-radius:4px;background:var(--soft2);overflow:hidden;}
+.prog-b i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#34d399,var(--brand));transition:width .25s;}
+.it.tk{cursor:pointer;margin:0 -8px;padding:9px 8px;border-radius:12px;border-bottom:none;}
+.it.tk+.it.tk{margin-top:2px;}
+.it.tk:active{background:var(--soft);}
+.ck{width:24px;height:24px;border-radius:8px;border:2px solid var(--bd2);margin-right:10px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;transition:all .15s;}
+.it.done{background:var(--gs);}
+.it.done .ck{background:var(--brand);border-color:var(--brand);}
+.it.done .nm{text-decoration:line-through;color:var(--mu);}
+.it .lft{display:flex;align-items:center;min-width:0;}
+.it .nm{min-width:0;}
+/* products */
+.ptools{position:sticky;top:var(--hh,120px);z-index:12;background:var(--bg);padding:12px 0 6px;margin:0 -14px;padding-left:14px;padding-right:14px;}
+.ps{display:flex;align-items:center;gap:9px;background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:11px 13px;color:var(--mu);box-shadow:var(--sh1);}
+.ps:focus-within{border-color:var(--brand);}
+.ps input{flex:1;border:none;outline:none;font-size:14.5px;background:none;color:var(--tx);min-width:0;}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-top:10px;scrollbar-width:none;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;border:1.5px solid var(--bd);background:var(--card);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:800;color:var(--mu2);white-space:nowrap;}
+.chip.on{background:var(--tx);border-color:var(--tx);color:#fff;}
+.chip.r.on{background:var(--rd);border-color:var(--rd);} .chip.o.on{background:var(--or);border-color:var(--or);}
+.pr{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:12px;margin-bottom:10px;box-shadow:var(--sh1);}
+.pr.off{background:var(--soft);}
+.pr.off .pr-im,.pr.off .pr-tx{opacity:.5;}
+.pr-top{display:flex;align-items:center;gap:11px;}
+.pr-im{width:52px;height:52px;border-radius:14px;background:var(--soft2);display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;flex-shrink:0;}
+.pr-im img{width:100%;height:100%;object-fit:cover;}
+.pr-tx{flex:1;min-width:0;}
+.pr-nm{font-size:14px;font-weight:800;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.pr-br{font-size:11.5px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vis{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;font-size:10.5px;font-weight:800;color:var(--mu2);flex-shrink:0;min-width:54px;}
+.vis .tg{background:var(--bd2);}
+.vis.on .tg{background:#22c55e;} .vis.on .tg::after{transform:translateX(17px);}
+.stk{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--soft2);border-radius:12px;padding:4px;margin-top:11px;}
+.stk button{border:none;background:none;border-radius:9px;padding:8px 4px;font-size:12px;font-weight:800;color:var(--mu2);display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;}
+.stk button.on.ok{background:#fff;color:var(--g2);box-shadow:var(--sh1);}
+.stk button.on.low{background:#fff;color:var(--or);box-shadow:var(--sh1);}
+.stk button.on.out{background:var(--rd);color:#fff;}
+.stk button i{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.8;}
+.pr-hid{font-size:11.5px;font-weight:700;color:var(--mu2);margin-top:9px;display:flex;align-items:center;gap:6px;}
+
+/* ── text-safety: nothing may spill out of its box (checked with the real Noto Sans Tamil font) ── */
+.pill{white-space:normal;max-width:100%;line-height:1.35;align-items:center;}
+.pill i{flex-shrink:0;}
+.it .nm,.pname-n,.pr-nm,.pr-br,.stop-b b,.stop-b p,.note span{overflow-wrap:anywhere;}
+.st small{overflow-wrap:anywhere;}
+@media(max-width:350px){.st{padding:10px 8px}.st b{font-size:16.5px}.st small{font-size:10.5px}.st-ic{width:26px;height:26px;margin-bottom:6px}}
+
+.sec{flex-wrap:wrap;row-gap:2px;}
+.sec h2{white-space:nowrap;}
+.sec .sub{white-space:nowrap;}
+.st b{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;font-size:clamp(14px,4.9vw,19px);}
+
+.earn{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:12px 14px;margin:4px 0 10px;box-shadow:var(--sh1);}
+.earn-h{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:var(--g2);margin-bottom:4px;}
+.earn-r{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--soft2);}
+.earn-r span{font-size:13px;font-weight:700;color:var(--mu2);min-width:0;}
+.earn-r b{font-size:15px;font-weight:800;white-space:nowrap;}
+.earn-due{margin-top:10px;background:var(--gs);border-radius:14px;padding:11px 12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 10px;}
+.earn-due span{font-size:13px;font-weight:800;color:var(--g2);}
+.earn-due b{font-size:20px;font-weight:800;color:var(--g2);}
+.earn-due small{width:100%;font-size:11.5px;color:var(--mu2);font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN / SIGNUP -->
+<div id="v-auth" class="auth hide">
+  <div class="auth-hero">
+    <div class="auth-logo"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2 2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/></svg></div>
+    <h1>சிட்டை கடை</h1>
+    <p>ஆர்டர்களைப் பார்சல் செய்ய · பொருட்களை நிர்வகிக்க</p>
+  </div>
+  <div class="auth-card">
+    <div class="seg"><button id="sg-in" class="on" onclick="authMode('in')">உள்நுழை</button><button id="sg-up" onclick="authMode('up')">புதிய கணக்கு</button></div>
+    <div id="up-only" class="hide">
+      <label class="lbl">உங்கள் பெயர்</label><input class="inp" id="a-nm" type="text" autocomplete="name" placeholder="பெயர்">
+      <label class="lbl">மொபைல் எண்</label><input class="inp" id="a-ph" type="tel" inputmode="numeric" maxlength="10" placeholder="9XXXXXXXXX" oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)">
+    </div>
+    <label class="lbl">Email</label><input class="inp" id="a-em" type="email" autocomplete="username" placeholder="you@example.com">
+    <label class="lbl">Password</label><input class="inp" id="a-pw" type="password" autocomplete="current-password" placeholder="குறைந்தது 6 எழுத்து" onkeydown="if(event.key==='Enter')authGo()">
+    <button class="btn" id="a-go" onclick="authGo()">உள்நுழை →</button>
+    <div class="msg" id="a-msg"></div>
+  </div>
+  <div class="auth-foot">புதிய கடைக்காரரா? கணக்கு உருவாக்கியதும் சிட்டை admin அனுமதிப்பார்</div>
+</div>
+
+<!-- WAITING FOR APPROVAL -->
+<div id="v-wait" class="wait hide">
+  <div class="ill"><div class="ill-c" style="--c:var(--brand)"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></div></div>
+  <h2 id="w-ttl">அனுமதிக்காக காத்திருக்கிறது</h2>
+  <p id="w-txt"></p>
+  <button class="btn" onclick="boot()"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg> மீண்டும் சரிபார்</button>
+  <button class="btn ghost" onclick="logout()">வெளியேறு</button>
+</div>
+
+<!-- MAIN -->
+<div id="v-main" class="hide">
+  <div class="hdr" id="hdr">
+    <div class="hdr-top">
+      <div class="hdr-av" id="h-av"></div>
+      <div class="hdr-tt"><div class="hdr-nm" id="h-nm"></div><div class="hdr-sub"><span class="dot" id="c-dot"></span><span id="c-txt">இணைக்கிறது...</span></div></div>
+      <button class="hdr-ic" id="h-wake" onclick="toggleWake()" title="திரை அணையாமல்" aria-label="திரை அணையாமல்"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></button>
+      <button class="hdr-ic" id="h-snd" onclick="toggleSound()" title="ஒலி" aria-label="ஒலி"></button>
+      <button class="hdr-ic" id="h-ref" onclick="refresh(true)" title="புதுப்பி" aria-label="புதுப்பி"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg></button>
+    </div>
+    <div class="sw-row">
+      <button class="sw" id="sw-open" onclick="toggleShop('is_open')"><span class="sw-t"><small>கடை நிலை</small><b id="sw-open-t">கடை</b></span><span class="tg"></span></button>
+      <button class="sw" id="sw-acc" onclick="toggleShop('accepting_orders')"><span class="sw-t"><small>புது ஆர்டர்</small><b id="sw-acc-t">ஆர்டர்</b></span><span class="tg"></span></button>
+    </div>
+  </div>
+  <div class="bar amber" id="snd-bnr">
+    <div class="bar-ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div>
+    <div class="bar-t"><b>புது ஆர்டர் ஒலியை இயக்குங்கள்</b><small>ஆர்டர் வந்ததும் phone ஒலிக்கும்</small></div>
+    <button onclick="enableSound()">இயக்கு</button>
+  </div>
+  <div class="bar blue hide" id="push-bnr">
+    <div class="bar-ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg></div>
+    <div class="bar-t"><b>App மூடியிருந்தாலும் தெரிய</b><small>புது ஆர்டருக்கு notification வரும்</small></div>
+    <button onclick="pushOn()">இயக்கு</button>
+  </div>
+  <div id="sec"></div>
+  <div class="list" id="list"></div>
+  <nav class="nav">
+    <button class="nv on" id="t-new" onclick="setTab('new')"><span class="pi"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg></span><span class="l">பார்சல்</span><span class="n hide" id="n-new"></span></button>
+    <button class="nv" id="t-act" onclick="setTab('act')"><span class="pi"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></svg></span><span class="l">காத்திருப்பு</span><span class="n hide" id="n-act"></span></button>
+    <button class="nv" id="t-done" onclick="setTab('done')"><span class="pi"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span><span class="l">இன்று</span></button>
+    <button class="nv" id="t-prod" onclick="setTab('prod')"><span class="pi"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg></span><span class="l">பொருட்கள்</span></button>
+  </nav>
+</div>
+
+<div id="dlg" class="dlg hide" onclick="if(event.target===this)dlgClose(false)"><div class="dlg-b"><div class="dlg-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg></div><p id="dlg-t"></p><div class="acts"><button class="a sec" style="flex:1" onclick="dlgClose(false)">இல்லை</button><button class="a pri" style="flex:1.4" id="dlg-y" onclick="dlgClose(true)">ஆம், ரெடி</button></div></div></div>
+<div id="rj" class="dlg hide" onclick="if(event.target===this)rejClose()"><div class="dlg-b"><div class="dlg-ic" style="background:var(--rds);color:var(--rd)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></div><p id="rj-t" style="margin-bottom:10px"></p><div class="rj-ch" id="rj-ch"></div><input id="rj-in" maxlength="120" placeholder="காரணம் (வாடிக்கையாளருக்குத் தெரியும்)" autocomplete="off"><div class="acts"><button class="a sec" style="flex:1" onclick="rejClose()">வேண்டாம்</button><button class="a pri" style="flex:1.4;background:var(--rd);box-shadow:none" onclick="rejGo()">நிராகரி</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── சிட்டை கடை (shop owner app) ──
+// Flow: customer orders → admin OKs → THIS app shows it (items + customer name only) → shop packs → "📦 பார்சல் ரெடி" → delivery boy picks up.
+// The shop never sees customer phone / address: orders come through the shop_orders() database function (flow.sql).
+const SB_URL='https://cerstnckjygvcfekfxcp.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcnN0bmNranlndmNmZWtmeGNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTY2NDEsImV4cCI6MjA5Mzk3MjY0MX0.Yl-5QyyEyiwmXG9u1kL08CxIanU-22Fx-HicEe2VYi8';
+// ── icons (stroke SVG, inherit text colour) ──
+const P={
+  pkg:'<path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/>',
+  bike:'<circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>',
+  done:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>',
+  store:'<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2 2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/>',
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  belloff:'<path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5"/><path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="m2 2 20 20"/>',
+  bulb:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
+  ref:'<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',
+  phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  nav:'<polygon points="3 11 22 2 13 21 11 13 3 11"/>',
+  chat:'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  cash:'<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+  xc:'<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+  tag:'<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r="1"/>',
+  note:'<path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v6h6"/>',
+  wait:'<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',
+  eye:'<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  eyeoff:'<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><path d="m2 2 20 20"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  mobile:'<rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  chart:'<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
+  warn:'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v11a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9"/>',
+  lock:'<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  arrow:'<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>'
+};
+const ic=(n,s,w)=>`<svg width="${s||20}" height="${s||20}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w||2}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]||''}</svg>`;
+const ill=(n,c)=>`<div class="ill"><div class="ill-c" style="--c:${c||'var(--brand)'}">${ic(n,40,1.6)}</div></div>`;
+
+let sb=null;
+try{sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'sitta_shop_auth'}});}catch(e){}
+
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rs=n=>{const v=Math.round((+n||0)*100)/100;return v.toFixed(2).replace(/\.?0+$/,'');};
+let _tt=null;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2600);}
+function show(v){['v-auth','v-wait','v-main'].forEach(x=>$(x).classList.toggle('hide',x!==v));}
+function lsGet(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch{return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+let me=null,shop=null,orders=[],prods=[],tab='new',prodQ='',busy={},pollT=null;
+let seen=new Set(lsGet('sitta_shop_seen',[]));      // order ids the shop has already noticed (stops the ringing)
+let ticks=lsGet('sitta_shop_ticks',{});            // {orderId:[itemIndex,...]} items already put in the bag
+
+// ── AUTH ──
+let aMode='in';
+function authMode(m){
+  aMode=m;$('sg-in').classList.toggle('on',m==='in');$('sg-up').classList.toggle('on',m==='up');
+  $('up-only').classList.toggle('hide',m!=='up');$('a-go').textContent=m==='up'?'கணக்கு உருவாக்கு →':'உள்நுழை →';
+  $('a-pw').autocomplete=m==='up'?'new-password':'current-password';$('a-msg').textContent='';
+}
+async function authGo(){
+  const em=$('a-em').value.trim(),pw=$('a-pw').value,msg=$('a-msg'),b=$('a-go');
+  msg.className='msg err';
+  if(!/^\S+@\S+\.\S+$/.test(em)){msg.textContent='சரியான email உள்ளிடுங்கள்';return;}
+  if(pw.length<6){msg.textContent='Password குறைந்தது 6 எழுத்து';return;}
+  let nm='',ph='';
+  if(aMode==='up'){
+    nm=$('a-nm').value.trim();ph=$('a-ph').value.trim();
+    if(!nm){msg.textContent='பெயரை உள்ளிடுங்கள்';return;}
+    if(!/^[6-9]\d{9}$/.test(ph)){msg.textContent='சரியான 10 இலக்க மொபைல் எண்';return;}
+  }
+  b.disabled=true;msg.className='msg';msg.textContent='⏳ சரிபார்க்கிறது...';
+  try{
+    if(aMode==='up'){
+      const {data,error}=await sb.auth.signUp({email:em,password:pw,options:{data:{full_name:nm,phone:ph}}});
+      if(error)throw error;
+      if(!data.session){msg.className='msg ok';msg.textContent='✅ கணக்கு உருவாக்கப்பட்டது. உங்கள் email-க்கு வந்த உறுதி link-ஐ தட்டி, பிறகு இங்கே உள்நுழையுங்கள்.';authMode('in');return;}
+    }else{
+      const {error}=await sb.auth.signInWithPassword({email:em,password:pw});
+      if(error)throw error;
+    }
+    $('a-pw').value='';
+    await boot();
+  }catch(e){
+    msg.className='msg err';
+    const t=String(e&&e.message||'');
+    msg.textContent=/invalid login/i.test(t)?'❌ Email அல்லது password தவறு'
+      :/already registered/i.test(t)?'இந்த email-க்கு ஏற்கனவே கணக்கு உள்ளது — உள்நுழையுங்கள்'
+      :/not confirmed/i.test(t)?'Email உறுதி செய்யப்படவில்லை — inbox-ல் உள்ள link-ஐ தட்டுங்கள்'
+      :/rate limit/i.test(t)?'⚠️ இப்போது அதிக கோரிக்கைகள் — சிறிது நேரம் கழித்து முயற்சிக்கவும் (அல்லது சிட்டை admin-இடம் கணக்கு உருவாக்கச் சொல்லுங்கள்)'
+      :/signups.*disabled/i.test(t)?'⚠️ புதிய கணக்கு உருவாக்குவது தற்போது நிறுத்தப்பட்டுள்ளது — சிட்டை admin-ஐ தொடர்பு கொள்ளுங்கள்'
+      :'❌ '+(t||'Network பிரச்சனை');
+  }finally{b.disabled=false;}
+}
+async function logout(){
+  stopLive();stopRing();
+  await pushOff();
+  try{await sb.auth.signOut();}catch{}
+  me=null;shop=null;orders=[];prods=[];
+  show('v-auth');authMode('in');
+}
+
+// ── BOOT ──
+async function boot(){
+  if(!sb){show('v-auth');$('a-msg').className='msg err';$('a-msg').textContent='⚠️ Internet இணைப்பு இல்லை — page-ஐ refresh செய்யுங்கள்';return;}
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){show('v-auth');return;}
+  const {data:p,error}=await sb.from('profiles').select('id,full_name,role,shop_id,approved').eq('id',session.user.id).maybeSingle();
+  if(error){show('v-wait');$('w-ttl').textContent='இணைக்க முடியவில்லை';$('w-txt').textContent='Network சரிபார்த்து மீண்டும் முயற்சிக்கவும்.';return;}
+  me=p;
+  if(!p||!p.approved||p.role!=='merchant'||!p.shop_id){
+    show('v-wait');
+    if(p&&p.approved&&p.role==='admin'){$('w-ttl').textContent='இது admin கணக்கு';$('w-txt').textContent='கடைக்காரர் கணக்கில் உள்நுழையுங்கள். Admin வேலைகள் admin app-ல்.';}
+    else if(p&&p.approved&&p.role==='delivery'){$('w-ttl').textContent='இது delivery கணக்கு';$('w-txt').textContent='Delivery app-ல் (delivery.html) உள்நுழையுங்கள்.';}
+    else{$('w-ttl').textContent='அனுமதிக்காக காத்திருக்கிறது';$('w-txt').textContent='சிட்டை admin உங்கள் கணக்கை ('+(session.user.email||'')+') அனுமதித்து, உங்கள் கடையை ஒதுக்கியதும் இங்கே order-கள் தெரியும்.';}
+    return;
+  }
+  const {data:s}=await sb.from('shops').select('id,name,logo,is_open,accepting_orders').eq('id',p.shop_id).maybeSingle();
+  shop=s||{id:p.shop_id,name:p.shop_id};
+  show('v-main');renderHdr();
+  $('snd-bnr').classList.toggle('hide',soundOn&&audioOk());
+  setTab(tab);
+  await refresh();
+  startLive();
+  pushSilent();
+}
+
+// ── HEADER / SHOP SWITCHES ──
+function renderHdr(){
+  $('h-nm').textContent=shop.name||'';$('h-av').textContent=shop.logo||'🏪';
+  const o=shop.is_open!==false,a=shop.accepting_orders!==false;
+  $('sw-open').classList.toggle('on',o);$('sw-open-t').textContent=o?'திறந்தது':'மூடியது';
+  $('sw-acc').classList.toggle('on',a);$('sw-acc-t').textContent=a?'ஏற்கிறது':'நிறுத்தம்';
+  $('h-snd').innerHTML=ic(soundOn?'bell':'belloff',19);$('h-snd').classList.toggle('on',soundOn&&audioOk());
+  $('h-wake').classList.toggle('on',!!wakeLock);
+  document.documentElement.style.setProperty('--hh',$('hdr').offsetHeight+'px');
+}
+async function toggleShop(k){
+  if(busy['sh'])return;busy['sh']=1;
+  const nv=!(shop[k]!==false);
+  try{
+    const {data,error}=await sb.from('shops').update({[k]:nv}).eq('id',shop.id).select('is_open,accepting_orders');
+    if(error||!data||!data.length)throw error||new Error('0');
+    Object.assign(shop,data[0]);renderHdr();
+    toast(k==='is_open'?(nv?'🟢 கடை திறக்கப்பட்டது':'🔴 கடை மூடப்பட்டது'):(nv?'✅ ஆர்டர் ஏற்பது தொடங்கியது':'⛔ ஆர்டர் ஏற்பது நிறுத்தப்பட்டது'));
+  }catch(e){toast('⚠️ மாற்ற முடியவில்லை — மீண்டும் முயற்சிக்கவும்');}
+  finally{delete busy['sh'];}
+}
+
+// ── DATA (every 15 s; the shop has no direct access to the orders table) ──
+let _refBusy=false;
+let shopSum=null;
+async function loadShopSum(){try{const {data,error}=await sb.rpc('shop_summary');if(!error&&data&&data.ok)shopSum=data;}catch(e){}}
+async function refresh(manual){
+  if(!shop||_refBusy)return;_refBusy=true;
+  loadShopSum().then(()=>{if(shop&&tab==='done')render();});
+  if(manual){const r=$('h-ref');r.classList.remove('spin');void r.offsetWidth;r.classList.add('spin');}
+  try{
+    const {data,error}=await sb.rpc('shop_orders',{p_days:3});
+    if(error){setConn('off','இணைப்பு இல்லை — மீண்டும் முயற்சிக்கிறது');if(manual)toast('⚠️ ஏற்ற முடியவில்லை');return;}
+    orders=Array.isArray(data)?data:[];
+    setConn('live','நேரலை · '+new Date().toLocaleTimeString('ta-IN',{hour:'2-digit',minute:'2-digit'}));
+    // forget ticks / seen for orders no longer listed
+    const ids=new Set(orders.map(o=>o.id));
+    Object.keys(ticks).forEach(k=>{if(!ids.has(k))delete ticks[k];});lsSet('sitta_shop_ticks',ticks);
+    seen=new Set([...seen].filter(x=>ids.has(x)));lsSet('sitta_shop_seen',[...seen]);
+    render();checkRing();
+    if(manual)toast('🔄 புதுப்பிக்கப்பட்டது');
+  }finally{_refBusy=false;}
+}
+async function loadProds(){
+  const {data,error}=await sb.from('products').select('id,name,brand,emoji,photo,hidden,stock').eq('shop_id',shop.id).order('name');
+  if(error){toast('⚠️ பொருட்களை ஏற்ற முடியவில்லை');return;}
+  prods=data||[];if(tab==='prod')prodList();
+}
+function setConn(cls,t){const d=$('c-dot');if(!d)return;d.className='dot'+(cls?' '+cls:'');$('c-txt').textContent=t;}
+function startLive(){stopLive();pollT=setInterval(()=>refresh(),15000);}
+function stopLive(){clearInterval(pollT);pollT=null;}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&shop){refresh();if(wakeWanted)reqWake();}});
+window.addEventListener('online',()=>{if(shop)refresh();});
+window.addEventListener('offline',()=>setConn('off','📴 இணைய இணைப்பு இல்லை'));
+
+// ── SOUND: rings while a new parcel order hasn't been looked at; any tap on the screen = "seen" ──
+let soundOn=localStorage.getItem('sitta_shop_snd')!=='0',ac=null,ringT=null,titleT=null,titleOn=false;
+function audioOk(){return !!(ac&&ac.state==='running');}
+function enableSound(){
+  try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume();}catch{}
+  soundOn=true;localStorage.setItem('sitta_shop_snd','1');
+  chime();$('snd-bnr').classList.add('hide');renderHdr();checkRing();
+}
+function toggleSound(){
+  if(!soundOn||!audioOk()){enableSound();toast('🔔 ஒலி இயக்கப்பட்டது');return;}
+  soundOn=false;localStorage.setItem('sitta_shop_snd','0');stopRing();renderHdr();toast('🔕 ஒலி நிறுத்தப்பட்டது');
+}
+function chime(){
+  if(!ac)return;
+  try{
+    [[880,0],[1175,.18],[1568,.36]].forEach(([f,t])=>{
+      const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);
+      o.type='triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.6,ac.currentTime+t+.02);
+      g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+t+.32);
+      o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.34);
+    });
+  }catch{}
+}
+const TOPACK=['SHOP_ACCEPTED','PREPARING'];
+function unseen(){return orders.filter(o=>TOPACK.includes(o.order_status)&&!seen.has(o.id));}
+function checkRing(){
+  const n=unseen().length;
+  if(n>0){
+    if(!ringT){
+      const ring=()=>{if(soundOn)chime();try{navigator.vibrate&&navigator.vibrate([300,150,300]);}catch{}};
+      ring();ringT=setInterval(ring,4000);
+      titleT=setInterval(()=>{titleOn=!titleOn;document.title=titleOn?'🔔 ('+unseen().length+') புது order!':'சிட்டை கடை';},1000);
+    }
+  }else stopRing();
+}
+function stopRing(){clearInterval(ringT);ringT=null;clearInterval(titleT);titleT=null;document.title='சிட்டை கடை';try{navigator.vibrate&&navigator.vibrate(0);}catch{}}
+function markSeen(){
+  const u=unseen();if(!u.length)return;
+  u.forEach(o=>seen.add(o.id));lsSet('sitta_shop_seen',[...seen]);stopRing();
+}
+document.addEventListener('pointerdown',()=>{if(shop&&ringT)setTimeout(()=>{markSeen();render();},150);},true);
+
+// ── KEEP SCREEN ON ──
+let wakeLock=null,wakeWanted=false;
+async function reqWake(){try{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null;renderHdr();});}catch{wakeLock=null;}renderHdr();}
+async function toggleWake(){
+  if(!('wakeLock' in navigator)){toast('இந்த phone-ல் இந்த வசதி இல்லை');return;}
+  if(wakeLock){wakeWanted=false;try{await wakeLock.release();}catch{}wakeLock=null;renderHdr();toast('💡 திரை தானாக அணையும்');return;}
+  wakeWanted=true;await reqWake();toast(wakeLock?'💡 திரை அணையாமல் இருக்கும்':'இயக்க முடியவில்லை');
+}
+
+// ── RENDER ──
+function isToday(d){return d&&new Date(d).toDateString()===new Date().toDateString();}
+function ago(d){const m=Math.max(0,Math.round((Date.now()-new Date(d))/60000));if(m<1)return 'இப்போது';if(m<60)return m+' நிமிடம் முன்';const h=Math.floor(m/60);if(h<24)return h+' மணி '+(m%60)+' நி. முன்';return new Date(d).toLocaleDateString('ta-IN',{day:'numeric',month:'short'});}
+function setTab(t){
+  if(t!=='prod'&&$('pq'))$('list').innerHTML='';
+  tab=t;['new','act','done','prod'].forEach(k=>$('t-'+k).classList.toggle('on',k===t));
+  try{document.activeElement&&document.activeElement.blur();}catch{}
+  if(t==='prod'&&!prods.length&&shop)loadProds();
+  if(t==='prod')$('list').innerHTML='';
+  render();window.scrollTo({top:0});
+}
+function secHTML(t,n,sub){return `<div class="sec"><h2>${t}</h2>${n!=null?`<span class="cnt">${n}</span>`:''}${sub?`<span class="sub">${sub}</span>`:''}</div>`;}
+const FOOT=()=>`<div class="foot"><button onclick="logout()">${ic('out',16)} வெளியேறு</button></div><div style="text-align:center;font-size:11px;color:var(--mu2);padding:8px 0 4px">பதிப்பு 07-10-2026.2</div>`;
+function render(){
+  if(!shop)return;
+  const by=(a,b)=>new Date(a.approved_at||a.created_at)-new Date(b.approved_at||b.created_at);
+  const pack=orders.filter(o=>TOPACK.includes(o.order_status)).sort(by);
+  const wait=orders.filter(o=>o.order_status==='READY_FOR_PICKUP').sort(by);
+  const done=orders.filter(o=>['OUT_FOR_DELIVERY','DELIVERED','CANCELLED'].includes(o.order_status)&&isToday(o.approved_at||o.created_at));
+  [['n-new',pack.length],['n-act',wait.length]].forEach(([id,n])=>{$(id).textContent=n;$(id).classList.toggle('hide',!n);});
+  const L=$('list'),S=$('sec');
+  if(tab==='prod'){S.innerHTML='';if(!$('pq'))L.innerHTML=prodHTML();prodList();return;}
+  if(tab==='done'){
+    const today=orders.filter(o=>isToday(o.approved_at||o.created_at));
+    const ok=today.filter(o=>o.order_status!=='CANCELLED');
+    const sales=ok.reduce((s,o)=>s+(+o.subtotal||0),0);
+    S.innerHTML=secHTML('இன்றைய சுருக்கம்',null,new Date().toLocaleDateString('ta-IN',{day:'numeric',month:'long'}));
+    const SS=shopSum;
+    L.innerHTML=`<div class="stats"><div class="st g"><div class="st-ic">${ic('pkg',17)}</div><b class="num">${ok.length}</b><small>இன்றைய ஆர்டர்</small></div><div class="st b"><div class="st-ic">${ic('cash',17)}</div><b class="num">₹${rs(sales)}</b><small>பொருட்கள் மதிப்பு</small></div><div class="st r"><div class="st-ic">${ic('xc',17)}</div><b class="num">${today.length-ok.length}</b><small>ரத்து</small></div></div>`
+      +(SS?`<div class="earn"><div class="earn-h">${ic('cash',18)} உங்கள் வரவு</div>
+        <div class="earn-r"><span>இன்று டெலிவரி ஆன விற்பனை</span><b class="num">₹${rs(SS.today_sales)}</b></div>
+        <div class="earn-r"><span>சிட்டை கமிஷன் (${+SS.pct||0}%)</span><b class="num" style="color:var(--rd)">− ₹${rs(SS.today_commission)}</b></div>
+        <div class="earn-r"><span><b>இன்று உங்களுக்கு</b></span><b class="num" style="color:var(--g2)">₹${rs(SS.today_payout)}</b></div>
+        <div class="earn-r"><span>கடந்த 7 நாள் உங்களுக்கு</span><b class="num">₹${rs(SS.week_payout)}</b></div>
+        <div class="earn-due"><span>சிட்டையிடமிருந்து வர வேண்டியது</span><b class="num">₹${rs(SS.due)}</b>${SS.last_paid?`<small>கடைசியாக பெற்றது ₹${rs(SS.last_paid.amount)} · ${new Date(SS.last_paid.at).toLocaleDateString('ta-IN',{day:'numeric',month:'short'})}</small>`:''}</div></div>`:'')
+      +(done.length?secHTML('அனுப்பியவை',done.length).replace('class="sec"','class="sec" style="padding-left:2px;padding-right:2px"')+done.map(cardHTML).join('')
+        :`<div class="empty">${ill('chart')}<b>இன்னும் அனுப்பிய பார்சல் இல்லை</b><small>Delivery நபர் எடுத்துச் சென்றதும் இங்கே வரும்</small></div>`)+FOOT();
+    return;
+  }
+  const arr=tab==='new'?pack:wait;
+  S.innerHTML=tab==='new'?secHTML('பார்சல் செய்ய வேண்டியவை',arr.length,arr.length?'பழையது முதலில்':''):secHTML('Delivery-க்காக காத்திருப்பவை',arr.length);
+  L.innerHTML=(arr.length?arr.map(cardHTML).join(''):(tab==='new'
+    ?`<div class="empty">${ill('pkg')}<b>பார்சல் செய்ய ஆர்டர் இல்லை</b><small>Admin OK செய்ததும் இங்கே வரும்${soundOn&&audioOk()?' — ஒலியும் வரும்':''}</small></div>`
+    :`<div class="empty">${ill('bike','#1d4ed8')}<b>காத்திருக்கும் பார்சல் இல்லை</b><small>"பார்சல் ரெடி" செய்தவை delivery நபர் வரும் வரை இங்கே இருக்கும்</small></div>`))+FOOT();
+}
+const ST={SHOP_ACCEPTED:['பார்சல் செய்ய வேண்டும்','p-new'],PREPARING:['பார்சல் செய்ய வேண்டும்','p-new'],READY_FOR_PICKUP:['ரெடி · delivery வர வேண்டும்','p-go'],DELIVERY_ASSIGNED:['Delivery ஒதுக்கப்பட்டது','p-go'],OUT_FOR_DELIVERY:['Delivery எடுத்துச் சென்றார்','p-ok'],DELIVERED:['டெலிவரி முடிந்தது','p-ok'],CANCELLED:['ரத்து','p-bad']};
+function cardHTML(o){
+  const st=ST[o.order_status]||[esc(o.order_status),'p-go'];
+  const canPack=TOPACK.includes(o.order_status);
+  const tk=new Set(ticks[o.id]||[]);
+  const items=o.order_items||[];
+  const nNa=items.filter(i=>i.unavailable).length;
+  const its=items.map((i,ix)=>{
+    const na=!!i.unavailable,d=!na&&tk.has(ix),cp=canPack&&!na,bk=busy['na'+o.id+ix]?' disabled':'';
+    return `<div class="it${cp?' tk':''}${d?' done':''}${na?' na':''}"${cp?` onclick="tick('${o.id}',${ix})"`:''}><span class="lft">${canPack?`<span class="ck">${d?ic('check',15,3):''}</span>`:''}<span class="q">${esc(i.quantity)}×</span><span class="nm">${esc(i.product_name)}${i.pack_size?' · '+esc(i.pack_size):''}${canPack&&i.product_id!=null?`<br><button class="na-b${na?' on':''}"${bk} onclick="event.stopPropagation();itemNa('${o.id}',${ix})">${na?'இல்லை ✕ · சேர்':'இல்லையா?'}</button>`:(na?'<br><span class="na-b on">கடையில் இல்லை</span>':'')}</span></span><span class="ipr num">₹${rs(i.total_price)}</span></div>`;
+  }).join('');
+  const isNew=canPack&&!seen.has(o.id);
+  const b=busy[o.id]?' disabled':'';
+  const nAv=items.length-nNa,nTk=items.filter((i,ix)=>!i.unavailable&&tk.has(ix)).length;
+  const pct=nAv?Math.round(nTk*100/nAv):0;
+  return `<div class="oc${isNew?' new':''}">
+    <div class="oc-hd"><span class="oc-no">${esc(o.order_number||'')}</span>${isNew?'<span class="newtag">புதுசு</span>':''}<span class="oc-ago">${ic('clock',13)}${ago(o.approved_at||o.created_at)}</span></div>
+    <div class="oc-bd">
+    <span class="pill ${st[1]}"><i></i>${st[0]}</span>
+    <div class="pname"><div class="pname-l">${ic('tag',13)} பார்சலில் எழுத வேண்டியது</div><div class="pname-n">${esc(o.customer_name||'')}</div><div class="pname-o">${esc(o.order_number||'')}</div></div>
+    <div class="dlv${o.delivery_name?'':' none'}">${ic('bike',16)}${o.delivery_name?'எடுக்க வருபவர்: '+esc(o.delivery_name):'Delivery நபர் இன்னும் ஒதுக்கப்படவில்லை'}</div>
+    ${canPack&&items.length?`<div class="prog"><div class="prog-t"><span>பையில் வைத்தவை — தொட்டு டிக் செய்யுங்கள்</span><b class="num">${nTk}/${nAv}</b></div><div class="prog-b"><i style="width:${pct}%"></i></div></div>`:''}
+    <div class="its">${its}
+      <div class="tot"><span>பொருட்கள் மதிப்பு</span><span class="num">₹${rs(o.subtotal)}</span></div>
+      ${nNa?`<div class="na-note">${nNa} பொருள் இல்லை — வாடிக்கையாளர் கட்ட வேண்டிய தொகை தானாக குறைந்தது</div>`:''}</div>
+    ${o.order_status==='CANCELLED'&&o.cancel_reason?`<div class="rsn">ரத்து காரணம்: ${esc(o.cancel_reason)}</div>`:''}
+    ${o.customer_note?`<div class="note">${ic('note',16)}<span>${esc(o.customer_note)}</span></div>`:''}
+    ${canPack?`<div class="acts"><button class="a no"${b} onclick="rejOpen('${o.id}')" aria-label="ஆர்டரை நிராகரி">${ic('xc',19)}</button><button class="a pri"${b} onclick="markReady('${o.id}')">${ic('pkg',19)} பார்சல் ரெடி</button></div>`:''}
+    ${o.order_status==='READY_FOR_PICKUP'?`<div class="info">${ic('bike',16)}Delivery நபர் வந்ததும் பார்சலைக் கொடுங்கள்</div>`:''}
+    </div>
+  </div>`;
+}
+function tick(id,ix){
+  const a=new Set(ticks[id]||[]);a.has(ix)?a.delete(ix):a.add(ix);
+  ticks[id]=[...a];lsSet('sitta_shop_ticks',ticks);render();
+}
+
+// ── "📦 பார்சல் ரெடி" ──
+let _dlgCb=null;
+function confirmDlg(t,cb,yes){$('dlg-t').textContent=t;$('dlg-y').textContent=yes||'ஆம், ரெடி';_dlgCb=cb;$('dlg').classList.remove('hide');}
+function dlgClose(y){$('dlg').classList.add('hide');const cb=_dlgCb;_dlgCb=null;if(y&&cb)cb();}
+function markReady(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  const its=o.order_items||[],n=its.filter(i=>!i.unavailable).length,t=its.filter((i,ix)=>!i.unavailable&&(ticks[id]||[]).includes(ix)).length;
+  const go=()=>doReady(id);
+  if(n&&t<n)confirmDlg(`${n-t} பொருட்கள் இன்னும் டிக் செய்யப்படவில்லை. பார்சல் முழுமையாக ரெடியா?`,go);
+  else confirmDlg(`${o.customer_name||''} — ${o.order_number||''} பார்சல் ரெடியா?`,go);
+}
+async function doReady(id){
+  if(busy[id])return;busy[id]=1;render();
+  try{
+    const {data,error}=await sb.rpc('shop_mark_ready',{p_id:id});
+    if(error)throw error;
+    if(data&&data.ok){const o=orders.find(x=>x.id===id);if(o)o.order_status='READY_FOR_PICKUP';toast('✅ பார்சல் ரெடி — delivery நபருக்கு தெரிவிக்கப்பட்டது');}
+    else toast('ℹ️ '+((data&&data.msg)||'மாற்ற முடியவில்லை'));
+  }catch(e){toast('⚠️ Network பிரச்சனை — மீண்டும் முயற்சிக்கவும்');}
+  finally{delete busy[id];await refresh();}
+}
+
+// ── பொருள் இல்லை: தொகை server-ல் தானாக மாறும் (order_item_unavailable — flow_fix.sql) ──
+async function itemNa(id,ix){
+  const o=orders.find(x=>x.id===id);if(!o)return;const it=(o.order_items||[])[ix];if(!it)return;
+  const k='na'+id+ix;if(busy[k])return;
+  const go=async()=>{
+    busy[k]=1;render();
+    try{
+      const want=!it.unavailable;
+      const {data,error}=await sb.rpc('order_item_unavailable',{p_id:id,p_product_id:it.product_id,p_pack:it.pack_size,p_unavail:want});
+      if(error){toast(error.code==='PGRST202'?'⚠️ flow_fix.sql இன்னும் run செய்யப்படவில்லை':'⚠️ மாற்ற முடியவில்லை');}
+      else if(data&&data.ok){it.unavailable=want;o.subtotal=data.subtotal;toast(it.unavailable?`✅ "${it.product_name}" இல்லை — புதிய மதிப்பு ₹${rs(data.subtotal)}`:'✅ மீண்டும் சேர்க்கப்பட்டது');}
+      else if(data&&data.code==='ALL_GONE'){toast('ℹ️ எல்லா பொருளும் இல்லை என்றால் ✕ தட்டி ஆர்டரை நிராகரியுங்கள்');}
+      else toast('ℹ️ '+((data&&data.msg)||'மாற்ற முடியவில்லை'));
+    }catch(e){toast('⚠️ Network பிரச்சனை — மீண்டும் முயற்சிக்கவும்');}
+    finally{delete busy[k];render();}
+  };
+  if(it.unavailable)go();
+  else confirmDlg(`"${it.product_name}" கடையில் இல்லையா? வாடிக்கையாளர் கட்ட வேண்டிய தொகையிலிருந்து ₹${rs(it.total_price)} குறையும்.`,go,'ஆம், இல்லை');
+}
+// ── ஆர்டரை நிராகரி (காரணம் வாடிக்கையாளருக்குத் தெரியும்) ──
+let rjId=null;
+const RJ=['பொருட்கள் இல்லை','கடை மூடப்படுகிறது','அதிக ஆர்டர் — நேரம் இல்லை','விலை மாறியுள்ளது'];
+function rejOpen(id){
+  rjId=id;const o=orders.find(x=>x.id===id)||{};
+  $('rj-t').textContent=`${o.customer_name||''} — ${o.order_number||''} ஆர்டரை நிராகரிக்கவா?`;
+  $('rj-ch').innerHTML=RJ.map(r=>`<button onclick="rjPick(this)">${esc(r)}</button>`).join('');
+  $('rj-in').value='';$('rj').classList.remove('hide');
+}
+function rjPick(b){$('rj-in').value=b.textContent;[...$('rj-ch').children].forEach(x=>x.classList.toggle('on',x===b));}
+function rejClose(){$('rj').classList.add('hide');rjId=null;}
+async function rejGo(){
+  const id=rjId,r=$('rj-in').value.trim();if(!id)return;
+  if(!r){toast('காரணத்தைத் தேர்வு செய்யுங்கள் அல்லது எழுதுங்கள்');$('rj-in').focus();return;}
+  rejClose();busy[id]=1;render();
+  try{
+    const {data,error}=await sb.rpc('shop_reject_order',{p_id:id,p_reason:r});
+    if(error)toast(error.code==='PGRST202'?'⚠️ flow_fix.sql இன்னும் run செய்யப்படவில்லை':'⚠️ நிராகரிக்க முடியவில்லை');
+    else if(data&&data.ok){const o=orders.find(x=>x.id===id);if(o){o.order_status='CANCELLED';o.cancel_reason='கடை: '+r;}toast('✅ ஆர்டர் நிராகரிக்கப்பட்டது — வாடிக்கையாளருக்கு காரணம் தெரியும்');}
+    else toast('ℹ️ '+((data&&data.msg)||'நிராகரிக்க முடியவில்லை'));
+  }catch(e){toast('⚠️ Network பிரச்சனை — மீண்டும் முயற்சிக்கவும்');}
+  finally{delete busy[id];await refresh();}
+}
+
+// ── PRODUCTS: show / hide + stock (OK · குறைவு · இல்லை) ──
+let prodF='all';
+function prodCounts(){return {all:prods.length,out:prods.filter(p=>p.stock==='out').length,low:prods.filter(p=>p.stock==='low').length,hid:prods.filter(p=>p.hidden).length};}
+function prodHTML(){
+  return `<div class="ptools"><div class="ps">${ic('search',18)}<input id="pq" type="search" placeholder="பொருளைத் தேடுங்கள்..." value="${esc(prodQ)}" oninput="prodQ=this.value;prodList()" autocomplete="off"></div><div class="chips" id="pchips"></div></div><div id="plist"></div>`+FOOT();
+}
+function setProdF(f){prodF=f;prodList();}
+function prodList(){
+  const c=prodCounts(),ch=$('pchips'),pl=$('plist');if(!pl)return;
+  ch.innerHTML=[['all','எல்லாம்',''],['out','⛔ இல்லை','r'],['low','⚠️ குறைவு','o'],['hid','மறைத்தவை','']].map(([k,t,cl])=>`<button class="chip ${cl}${prodF===k?' on':''}" onclick="setProdF('${k}')">${t} · ${c[k]}</button>`).join('');
+  const q=prodQ.trim().toLowerCase();
+  let list=q?prods.filter(p=>(p.name+' '+(p.brand||'')).toLowerCase().includes(q)):prods;
+  if(prodF==='out')list=list.filter(p=>p.stock==='out');else if(prodF==='low')list=list.filter(p=>p.stock==='low');else if(prodF==='hid')list=list.filter(p=>p.hidden);
+  pl.innerHTML=list.length?list.map(p=>{const b=busy['p'+p.id]?' disabled':'';const s=p.stock==='low'?'low':p.stock==='out'?'out':'ok';
+    return `<div class="pr${p.hidden?' off':''}">
+      <div class="pr-top"><div class="pr-im">${p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy">`:esc(p.emoji||'🛒')}</div>
+        <div class="pr-tx"><div class="pr-nm">${esc(p.name)}</div><div class="pr-br">${esc(p.brand||'')}</div></div>
+        <button class="vis${p.hidden?'':' on'}"${b} onclick="setProd(${p.id},{hidden:${!p.hidden}})" aria-label="வாடிக்கையாளருக்குக் காட்டு"><span class="tg"></span>${p.hidden?'மறைவு':'தெரியும்'}</button></div>
+      <div class="stk">${[['ok','இருக்கு'],['low','குறைவு'],['out','இல்லை']].map(([k,t])=>`<button class="${k}${s===k?' on':''}"${b} onclick="${s===k?'':`setProd(${p.id},{stock:'${k}'})`}"><i></i>${t}</button>`).join('')}</div>
+      ${p.hidden?`<div class="pr-hid">${ic('eyeoff',14)}வாடிக்கையாளருக்குத் தெரியாது</div>`:''}
+    </div>`;}).join(''):`<div class="empty">${ill('grid')}<b>${prods.length?'பொருள் கிடைக்கவில்லை':'பொருட்கள் இல்லை'}</b><small>${prods.length?'வேறு பெயரில் தேடுங்கள்':''}</small></div>`;
+}
+async function setProd(id,patch){
+  if(busy['p'+id])return;busy['p'+id]=1;
+  try{
+    prodList();
+    const {data,error}=await sb.from('products').update(patch).eq('id',id).select('id,hidden,stock');
+    if(error||!data||!data.length)throw error||new Error('0');
+    const p=prods.find(x=>x.id===id);if(p)Object.assign(p,data[0]);
+    toast('hidden' in patch?(patch.hidden?'🚫 Customer-களுக்கு மறைக்கப்பட்டது':'✅ மீண்டும் கிடைக்கிறது'):(patch.stock==='out'?'⛔ கையிருப்பு இல்லை — வாடிக்கையாளர் ஆர்டர் செய்ய முடியாது':patch.stock==='low'?'⚠️ குறைவு என குறிக்கப்பட்டது':'✅ Stock OK'));
+  }catch(e){toast('⚠️ மாற்ற முடியவில்லை');}
+  finally{delete busy['p'+id];prodList();}
+}
+
+
+// ── PUSH NOTIFICATIONS (app மூடியிருந்தாலும்) — uses sw.js next to this file + "notify" Edge Function ──
+const VAPID_PUBLIC='BJswFvjL6cZ1OAy1xpuxXqBVrfv_8baBOlNaYhRNDTglz-FyKz41smq-PP47srMVhU-9YCwhrklrmLx160_BLx4';
+function _b64u(s){const p='='.repeat((4-s.length%4)%4);const b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/'));const a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;}
+function pushSupported(){return ('serviceWorker' in navigator)&&('PushManager' in window)&&('Notification' in window);}
+async function pushGetSub(ask){
+  if(!pushSupported())throw new Error('unsupported');
+  if(ask){const p=await Notification.requestPermission();if(p!=='granted')throw new Error('denied');}
+  else if(Notification.permission!=='granted')return null;
+  const reg=await navigator.serviceWorker.register('sw.js');await navigator.serviceWorker.ready;
+  let sub=await reg.pushManager.getSubscription();
+  if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:_b64u(VAPID_PUBLIC)});
+  return sub;
+}
+function pushErrMsg(e){
+  const m=String(e&&e.message||e);
+  if(m==='unsupported')return /iPhone|iPad/.test(navigator.userAgent)?'iPhone-ல்: Safari Share ⬆️ → "Add to Home Screen" செய்து, அங்கிருந்து app-ஐத் திறந்து மீண்டும் முயற்சிக்கவும்':'இந்த browser-ல் notification வசதி இல்லை — Chrome பயன்படுத்துங்கள்';
+  if(m==='denied')return 'Notification அனுமதி மறுக்கப்பட்டது — Chrome ⋮ → Settings → Site settings → Notifications-ல் இந்த site-ஐ "Allow" செய்யுங்கள்';
+  return 'இயக்க முடியவில்லை — '+m;
+}
+
+const PUSH_APP='shop';
+function pushKey(){return 'sitta_push_'+PUSH_APP+'_'+(me&&me.id||'');}
+function pushBanner(){const b=$('push-bnr');if(!b)return;const ok=pushSupported()&&Notification.permission==='granted'&&localStorage.getItem(pushKey())==='1';b.classList.toggle('hide',ok);}
+async function pushSave(sub){
+  const j=sub.toJSON();
+  const {data,error}=await sb.rpc('save_push_subscription',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_app:PUSH_APP});
+  if(error||!data||!data.ok)throw new Error((data&&data.msg)||'சேமிக்க முடியவில்லை');
+  localStorage.setItem(pushKey(),'1');
+}
+async function pushOn(){
+  try{const sub=await pushGetSub(true);await pushSave(sub);pushBanner();toast('✅ Notification இயக்கப்பட்டது — app மூடியிருந்தாலும் வரும்');}
+  catch(e){toast('⚠️ '+pushErrMsg(e));}
+}
+async function pushSilent(){ // keep this phone linked to the logged-in account (no prompt)
+  try{const sub=await pushGetSub(false);if(sub)await pushSave(sub);}catch(e){}
+  pushBanner();
+}
+async function pushOff(){
+  try{if(!pushSupported())return;const reg=await navigator.serviceWorker.getRegistration('sw.js');const sub=reg&&await reg.pushManager.getSubscription();
+    if(sub)await sb.rpc('remove_push_subscription',{p_endpoint:sub.endpoint});}catch(e){}
+  try{localStorage.removeItem(pushKey());}catch(e){}
+}
+
+// ── START ──
+authMode('in');
+if(sb){sb.auth.onAuthStateChange((ev)=>{if(ev==='SIGNED_OUT'&&shop){stopLive();stopRing();shop=null;show('v-auth');}});}
+setInterval(()=>{if(shop&&tab!=='prod')render();},60000);
+window.addEventListener('resize',()=>{if(shop)document.documentElement.style.setProperty('--hh',$('hdr').offsetHeight+'px');});
+boot();
+</script>
+<script>
+// ── 👁 password show / hide: every password box gets a small eye button (also boxes drawn later) ──
+(function(){
+  var sv=function(p){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';};
+  var EYE=sv('<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>');
+  var OFF=sv('<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><path d="m2 2 20 20"/>');
+  var st=document.createElement('style');
+  st.textContent='.pwt{position:relative;display:block;width:100%}.pwt>input{padding-right:50px!important;width:100%}.pwt-b{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:none;background:none;color:#6b7873;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:10px;padding:0;-webkit-tap-highlight-color:transparent}.pwt-b:active{background:rgba(0,0,0,.06)}.pwt-b.on{color:#0f766e}';
+  document.head.appendChild(st);
+  function wrap(inp){
+    if(inp.getAttribute('data-pwt'))return;inp.setAttribute('data-pwt','1');
+    var cs=getComputedStyle(inp),w=document.createElement('span');w.className='pwt';
+    w.style.marginBottom=cs.marginBottom;w.style.marginTop=cs.marginTop;inp.style.marginBottom='0';inp.style.marginTop='0';
+    inp.parentNode.insertBefore(w,inp);w.appendChild(inp);
+    var b=document.createElement('button');b.type='button';b.className='pwt-b';b.innerHTML=EYE;b.setAttribute('aria-label','கடவுச்சொல்லைக் காட்டு');
+    b.addEventListener('mousedown',function(e){e.preventDefault();}); // keep the keyboard open
+    b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();
+      var show=inp.type==='password';inp.type=show?'text':'password';
+      b.innerHTML=show?OFF:EYE;b.classList.toggle('on',show);b.setAttribute('aria-label',show?'கடவுச்சொல்லை மறை':'கடவுச்சொல்லைக் காட்டு');try{inp.focus();}catch(e){}});
+    w.appendChild(b);
+  }
+  function scan(){var l=document.querySelectorAll('input[type=password]:not([data-pwt])');for(var i=0;i<l.length;i++)wrap(l[i]);}
+  scan();
+  try{new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});}catch(e){}
+  // after sign-in the box is emptied: hide it again so the next person can't see it
+  setInterval(function(){var l=document.querySelectorAll('input[data-pwt][type=text]');for(var i=0;i<l.length;i++){if(!l[i].value&&document.activeElement!==l[i]){l[i].type='password';var b=l[i].parentNode.querySelector('.pwt-b');if(b){b.innerHTML=EYE;b.classList.remove('on');}}}},1500);
+})();
+
+// PWA: register the service worker on every open so the app is installable (notifications still need 🔔 இயக்கு)
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+</script>
+<script>
+window.SA_CFG={"kind": "shop", "name": "சிட்டை கடை", "color": "#0a4f40", "icon": "icon-shop-192.png", "perks": ["⚡ ஒரே தட்டில் கடை app திறக்கும்", "🔔 புது ஆர்டர் வந்தவுடன் phone ஒலிக்கும்", "📱 App மூடியிருந்தாலும் தகவல் வரும்"], "notif": ["🆕 உங்கள் கடைக்கு புது ஆர்டர் வந்தவுடன்", "⏰ 10 நிமிடம் ரெடி ஆகாவிட்டால் நினைவூட்டல்", "📱 App மூடியிருந்தாலும் வரும்"]};
+// ═══ சிட்டை: "App-ஆக நிறுவு" + install ஆனதும் notification இயக்கு (எல்லா 4 app-களிலும் ஒரே code) ═══
+(function(){
+  var C=window.SA_CFG||{kind:'customer',name:'சிட்டை',color:'#0d9488',icon:'icon-customer-192.png'};
+  var K='sa_'+C.kind+'_';
+  function lsG(k){try{return localStorage.getItem(K+k);}catch(e){return null;}}
+  function lsS(k,v){try{localStorage.setItem(K+k,String(v));}catch(e){}}
+  function snoozed(k,ms){var t=+lsG(k)||0;return Date.now()-t<ms;}
+  function standalone(){return (window.matchMedia&&(matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches))||navigator.standalone===true;}
+  var IOS=/iPad|iPhone|iPod/.test(navigator.userAgent||'')&&!window.MSStream;
+  var H=3600*1000;
+
+  // the old small install bar is replaced by this sheet
+  try{if(typeof window.pwaBar==='function')window.pwaBar=function(){};}catch(e){}
+
+  var st=document.createElement('style');
+  st.textContent='#pwa-bar{display:none!important}'+
+  '.sa-ov{position:fixed;inset:0;z-index:99990;background:rgba(15,23,42,.5);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .2s}'+
+  '.sa-ov.on{opacity:1}'+
+  '.sa-cd{width:100%;max-width:480px;background:#fff;color:#0f172a;border-radius:22px 22px 0 0;padding:22px 20px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.25);transform:translateY(30px);transition:transform .25s;font-family:inherit}'+
+  '.sa-ov.on .sa-cd{transform:none}'+
+  '.sa-hd{display:flex;align-items:center;gap:14px;margin-bottom:12px}'+
+  '.sa-hd img{width:58px;height:58px;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.18);flex-shrink:0}'+
+  '.sa-hd .sa-em{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}'+
+  '.sa-hd b{display:block;font-size:18px;font-weight:800;line-height:1.3}'+
+  '.sa-hd small{display:block;font-size:12.5px;color:#64748b;margin-top:2px}'+
+  '.sa-ls{list-style:none;margin:6px 0 16px;padding:0}'+
+  '.sa-ls li{font-size:14px;line-height:1.5;padding:5px 0;display:flex;gap:9px;align-items:flex-start}'+
+  '.sa-st{background:#f1f5f9;border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.7;margin:4px 0 16px}'+
+  '.sa-bt{display:flex;gap:10px}'+
+  '.sa-bt button{flex:1;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer}'+
+  '.sa-no{background:#f1f5f9;color:#475569}'+
+  '.sa-yes{color:#fff}';
+  document.head.appendChild(st);
+
+  // ஒரு தடவை திறக்கும்போது ஒரே popup: முதல் முறை Welcome மட்டும் · வேறு திரை / sheet மேல் வராது · Install/Notification-க்குப் பிறகு Poster வராது
+  var FIRST_RUN=!lsG('seen');lsS('seen',Date.now());
+  function gate(){
+    if(FIRST_RUN)return 'skip'; // the very first open: setup only, no extra popups
+    try{if(typeof puShownThisRun!=='undefined'&&puShownThisRun)return 'skip';}catch(e){}
+    try{if(typeof puBusyScreen==='function'&&puBusyScreen())return 'wait';}catch(e){}
+    if(document.querySelector('.wl.open,.pu-ov.open'))return 'wait';
+    return 'go';
+  }
+  function claim(){try{if(typeof puShownThisRun!=='undefined')puShownThisRun=true;}catch(e){}}
+  var cur=null;
+  function close(){if(!cur)return;var o=cur;cur=null;o.classList.remove('on');setTimeout(function(){o.remove();},220);}
+  function sheet(o){
+    if(cur)close();
+    var ov=document.createElement('div');ov.className='sa-ov';
+    var head=o.emoji?'<span class="sa-em" style="background:'+C.color+'1f">'+o.emoji+'</span>':'<img src="'+C.icon+'" alt="">';
+    ov.innerHTML='<div class="sa-cd" role="dialog"><div class="sa-hd">'+head+'<div><b>'+o.title+'</b><small>'+(o.sub||'')+'</small></div></div>'+
+      (o.items?'<ul class="sa-ls">'+o.items.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>':'')+
+      (o.steps?'<div class="sa-st">'+o.steps+'</div>':'')+
+      '<div class="sa-bt">'+(o.no?'<button class="sa-no">'+o.no+'</button>':'')+'<button class="sa-yes" style="background:'+C.color+'">'+o.yes+'</button></div></div>';
+    ov.addEventListener('click',function(e){if(e.target===ov){close();o.onNo&&o.onNo();}});
+    var n=ov.querySelector('.sa-no');if(n)n.onclick=function(){close();o.onNo&&o.onNo();};
+    ov.querySelector('.sa-yes').onclick=function(){o.onYes?o.onYes():close();};
+    document.body.appendChild(ov);cur=ov;
+    requestAnimationFrame(function(){requestAnimationFrame(function(){ov.classList.add('on');});});
+  }
+
+  // ① App-ஆக நிறுவு (browser-ல் திறந்திருக்கும்போது மட்டும்)
+  var dp=null,loaded=false,shownInstall=false;
+  var instTries=0;
+  function maybeInstall(){
+    if(shownInstall||!dp||!loaded||standalone()||snoozed('inst_no',2*24*H))return;
+    var g=gate();if(g==='skip'){shownInstall=true;return;}
+    if(g==='wait'){if(++instTries<12)setTimeout(maybeInstall,3000);return;}
+    shownInstall=true;claim();
+    sheet({title:C.name+' App-ஆக நிறுவுங்கள்',sub:'Play Store தேவையில்லை · இலவசம்',
+      items:C.perks,no:'பிறகு',yes:'📲 நிறுவு',
+      onNo:function(){lsS('inst_no',Date.now());},
+      onYes:function(){
+        var p=dp;dp=null;close();if(!p)return;
+        try{p.prompt();p.userChoice.then(function(r){if(r&&r.outcome!=='accepted')lsS('inst_no',Date.now());}).catch(function(){});}catch(e){}
+      }});
+  }
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;try{window.deferredPrompt=e;}catch(x){}maybeInstall();});
+  window.addEventListener('appinstalled',function(){
+    dp=null;
+    sheet({emoji:'✅',title:'App நிறுவப்பட்டது!',sub:'Home screen-ல் "'+C.name+'" icon வந்துவிட்டது',
+      steps:'இனி அந்த <b>icon-லிருந்தே</b> திறங்கள்.<br>முதல் முறை திறக்கும்போது <b>Notification-ஐ "Allow"</b> செய்யுங்கள்.',yes:'சரி'});
+  });
+  function onLoad(){
+    setTimeout(function(){loaded=true;maybeInstall();
+      if(IOS&&!standalone()&&!snoozed('ios_no',7*24*H)&&gate()==='go'){
+        shownInstall=true;claim();
+        sheet({title:C.name+' App-ஆக நிறுவுங்கள்',sub:'iPhone-ல் 3 படிகள்',
+          steps:'1) கீழே உள்ள <b>Share ⬆️</b> பட்டனைத் தட்டுங்கள்<br>2) <b>"Add to Home Screen"</b> தேர்ந்தெடுங்கள்<br>3) Home screen icon-லிருந்து திறங்கள்',
+          no:'பிறகு',yes:'சரி',onNo:function(){lsS('ios_no',Date.now());},onYes:function(){lsS('ios_no',Date.now());close();}});
+      }
+    },3500);
+    if(standalone())setTimeout(notifCheck,2500);
+  }
+  if(document.readyState==='complete')onLoad();else window.addEventListener('load',onLoad);
+
+  // ② install ஆன app-ல்: notification அனுமதி கேட்டல் + இணைத்தல்
+  var DENY_STEPS='Phone <b>Settings</b> → <b>Apps</b> → <b>'+C.name+'</b> → <b>Notifications</b> → <b>Allow / ON</b><br><small style="color:#64748b">பிறகு இந்த app-ஐ மூடி மீண்டும் திறங்கள்.</small>';
+  function deniedSheet(){
+    sheet({emoji:'🔕',title:'Notification தடுக்கப்பட்டுள்ளது',sub:'இதை phone settings-ல் மட்டுமே திறக்க முடியும்',
+      steps:DENY_STEPS,no:'பிறகு',yes:'சரி',onNo:function(){lsS('deny_no',Date.now());},onYes:function(){lsS('deny_no',Date.now());close();}});
+  }
+  function afterGrant(silent){
+    var linked=true;
+    try{
+      if(C.kind==='customer'){
+        if(typeof cpushOn==='function'&&typeof ordLocal==='function'){
+          var done=typeof cpushDone==='function'?cpushDone():[];
+          ordLocal().filter(function(o){return o&&o.oid&&o.ph&&o.ts&&Date.now()-o.ts<3*24*H&&done.indexOf(o.oid)<0;})
+            .slice(0,5).forEach(function(o){cpushOn(o.oid,o.ph,true);});
+        }
+      }else{
+        if(C.kind==='admin'){try{_pushSynced=false;}catch(e){}try{linked=!!aOK;}catch(e){linked=false;}}
+        else{try{linked=!!me;}catch(e){linked=false;}}
+        if(typeof pushSilent==='function')pushSilent();
+      }
+    }catch(e){}
+    if(!silent){
+      sheet({emoji:'🔔',title:'Notification இயக்கப்பட்டது',sub:'',
+        steps:C.kind==='customer'?'இனி ஆர்டர் செய்யும் ஒவ்வொரு முறையும் அதன் நிலை மாறியதும் phone-க்கு தகவல் வரும் — app மூடியிருந்தாலும்.':
+          (linked?'App மூடியிருந்தாலும் புது ஆர்டர் வந்ததும் phone-க்கு notification வரும்.':'Login செய்ததும் இந்த phone தானாக இணைக்கப்படும்.'),
+        yes:'சரி'});
+    }
+  }
+  var nTries=0;
+  function notifCheck(){
+    if(!('Notification' in window)||!('serviceWorker' in navigator))return;
+    var p=Notification.permission;
+    if(p==='granted'){afterGrant(true);return;}
+    var g=gate();if(g==='skip')return;
+    if(g==='wait'){if(++nTries<12)setTimeout(notifCheck,3000);return;}
+    if(p==='denied'?snoozed('deny_no',24*H):snoozed('ask_no',12*H))return;
+    claim();
+    if(p==='denied'){if(!snoozed('deny_no',24*H))deniedSheet();return;}
+    if(snoozed('ask_no',12*H))return;
+    sheet({emoji:'🔔',title:'Notification-ஐ இயக்குங்கள்',sub:'ஒரே ஒரு முறை மட்டும்',
+      items:C.notif,no:'பிறகு',yes:'🔔 இயக்கு',
+      onNo:function(){lsS('ask_no',Date.now());},
+      onYes:function(){
+        close();
+        Promise.resolve(Notification.requestPermission()).then(function(r){
+          if(r==='granted')afterGrant(false);
+          else if(r==='denied')deniedSheet();
+          else lsS('ask_no',Date.now());
+        }).catch(function(){});
+      }});
+  }
+  window.saNotifCheck=notifCheck;
+  // Poster இதைக் கேட்டு, Install / Notification திரை வர இருந்தால் காத்திருக்கும்
+  window.saWants=function(){
+    if(standalone())return ('Notification' in window)&&Notification.permission!=='granted'&&nTries<12&&!(Notification.permission==='denied'?snoozed('deny_no',24*H):snoozed('ask_no',12*H));
+    return !!dp&&!shownInstall&&instTries<12&&!snoozed('inst_no',2*24*H);
+  };
+
+  // பழைய "Chrome settings-ல் Allow" செய்தி: install ஆன app-ல் சரியான வழியைக் காட்டு
+  try{
+    if(typeof window.pushErrMsg==='function'){
+      var _pe=window.pushErrMsg;
+      window.pushErrMsg=function(e){var m=String(e&&e.message||e);if(m==='denied'&&standalone()){setTimeout(deniedSheet,50);return 'Notification தடுக்கப்பட்டுள்ளது — Phone Settings → Apps → '+C.name+' → Notifications → Allow';}return _pe.apply(this,arguments);};
+    }
+  }catch(e){}
+  window.saStandalone=standalone;
+  window.saDeniedSheet=deniedSheet;
+})();
+</script>
+</body>
+</html>
