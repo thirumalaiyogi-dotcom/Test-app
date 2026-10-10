@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1e1b4b">
+<meta name="robots" content="noindex,nofollow">
+<title>சிட்டை Boss</title>
+<link rel="icon" href="icon-admin-192.png">
+<link rel="apple-touch-icon" href="icon-admin-192.png">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f3f4f8;--card:#fff;--bd:#e5e7eb;--tx:#111827;--mu:#6b7280;--pr:#4338ca;--g:#16a34a;--gl:#dcfce7;--o:#d97706;--ol:#fef3c7;--r:#dc2626;--rl:#fee2e2;--b:#2563eb;--bl:#dbeafe}
+html,body{background:var(--bg)}
+body{font-family:'Noto Sans Tamil',system-ui,sans-serif;color:var(--tx);min-height:100vh;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+/* header */
+.hd{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#1e1b4b,#4338ca);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px}
+.hd-r{display:flex;align-items:center;gap:10px}
+.hd h1{font-size:18px;font-weight:800;flex:1}
+.hd .lv{font-size:11px;font-weight:700;opacity:.9;display:flex;align-items:center;gap:5px}
+.hd .lv i{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 0 rgba(74,222,128,.7);animation:lv 2s infinite}
+.hd .lv.off i{background:#f87171;animation:none}
+@keyframes lv{70%{box-shadow:0 0 0 7px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.hd button{border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:10px;width:36px;height:36px;font-size:17px}
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.kp div{background:rgba(255,255,255,.12);border-radius:12px;padding:7px 2px;text-align:center}
+.kp b{display:block;font-size:17px;font-weight:800;line-height:1.2}
+.kp small{font-size:10.5px;font-weight:600;opacity:.85}
+.wrap{max-width:640px;margin:0 auto;padding:12px 12px 20px}
+/* bottom tabs */
+.tb{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--card);border-top:1px solid var(--bd);display:grid;grid-template-columns:repeat(4,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+.tb button{border:0;background:none;padding:6px 2px;border-radius:12px;font-size:11.5px;font-weight:800;color:var(--mu);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+.tb button span{font-size:20px;line-height:1}
+.tb button.on{color:var(--pr);background:#eef2ff}
+.tb em{position:absolute;top:2px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:9px;background:var(--r);color:#fff;font-style:normal;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.sec{font-size:12.5px;font-weight:800;color:var(--mu);margin:16px 4px 8px;display:flex;align-items:center;gap:6px}
+.sec:first-child{margin-top:4px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px;margin-bottom:10px}
+.empty{text-align:center;padding:40px 16px;color:var(--mu);font-weight:700;font-size:14px}
+.empty b{display:block;font-size:42px;margin-bottom:6px}
+/* alerts */
+.al{border-left:5px solid var(--b);display:flex;flex-direction:column;gap:8px}
+.al.l1{border-left-color:var(--r);background:linear-gradient(90deg,#fff5f5,#fff 40%)}
+.al.l2{border-left-color:var(--o)}
+.al-h{display:flex;gap:10px;align-items:flex-start}
+.al-i{font-size:24px;line-height:1.1;flex-shrink:0}
+.al-t{flex:1;min-width:0}
+.al-t b{display:block;font-size:14.5px;font-weight:800;line-height:1.35}
+.al-t small{display:block;font-size:12.5px;color:var(--mu);font-weight:600;margin-top:2px;line-height:1.45}
+.al-tm{font-size:11.5px;font-weight:800;color:var(--r);white-space:nowrap}
+.al.l2 .al-tm{color:var(--o)}.al.l3 .al-tm{color:var(--b)}
+.ct{display:flex;flex-wrap:wrap;gap:6px}
+.ct a,.ct button{display:inline-flex;align-items:center;gap:5px;border-radius:10px;padding:8px 11px;font-size:12.5px;font-weight:800;border:0;min-height:38px}
+.ct .cl{background:var(--g);color:#fff}
+.ct .wa{background:#25d366;color:#fff}
+.ct .ok{background:#f1f5f9;color:#334155;margin-left:auto}
+.ct .no{background:#f1f5f9;color:#94a3b8}
+.snz{text-align:center;margin:6px 0}
+.snz button{border:0;background:none;color:var(--pr);font-weight:800;font-size:12.5px;padding:8px}
+/* order flow */
+.of{display:grid;grid-template-columns:repeat(6,1fr)}
+.on_{position:relative;text-align:center;min-width:0}
+.on_:not(:first-child)::before{content:'';position:absolute;top:16px;right:50%;width:100%;height:3px;background:#e5e7eb}
+.on_.d:not(:first-child)::before,.on_.c:not(:first-child)::before{background:var(--g)}
+.on_.x:not(:first-child)::before{background:#fca5a5}
+.oo{position:relative;z-index:1;width:34px;height:34px;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;background:#f1f5f9;border:2px solid #e2e8f0;filter:grayscale(1);opacity:.5}
+.on_.d .oo{background:var(--gl);border-color:var(--g);filter:none;opacity:1}
+.on_.c .oo{background:var(--ol);border-color:var(--o);filter:none;opacity:1;animation:pu 1.6s infinite}
+.on_.c.late .oo{background:var(--rl);border-color:var(--r);animation:pr 1.2s infinite}
+.on_.x .oo{background:var(--rl);border-color:var(--r);filter:none;opacity:1}
+@keyframes pu{70%{box-shadow:0 0 0 9px rgba(217,119,6,0)}0%{box-shadow:0 0 0 0 rgba(217,119,6,.5)}}
+@keyframes pr{70%{box-shadow:0 0 0 10px rgba(220,38,38,0)}0%{box-shadow:0 0 0 0 rgba(220,38,38,.55)}}
+.ol{font-size:10.5px;font-weight:700;color:var(--mu);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 1px}
+.on_.d .ol,.on_.c .ol{color:var(--tx)}.on_.x .ol{color:var(--r)}
+.ot{font-size:11px;font-weight:800;color:var(--g);white-space:nowrap}
+.on_.c .ot{color:var(--o)}.on_.c.late .ot{color:var(--r)}.on_.x .ot{color:var(--r)}
+.og{font-size:9.5px;font-weight:700;color:#9ca3af}
+.oh{display:flex;align-items:baseline;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.oh b{font-size:14.5px;font-weight:800}
+.oh span{font-size:12px;color:var(--mu);font-weight:700}
+.oh em{margin-left:auto;font-style:normal;font-weight:800;font-size:14px}
+.card.st{border-color:#fca5a5;box-shadow:0 0 0 2px rgba(220,38,38,.08)}
+.tg{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.tg span{font-size:11.5px;font-weight:700;border-radius:8px;padding:3px 8px;background:#f1f5f9;color:#334155}
+.tg .w{background:var(--ol);color:#92400e}.tg .r{background:var(--rl);color:#991b1b}.tg .s{background:#e0e7ff;color:#3730a3}.tg .n{background:var(--bl);color:#1e40af}
+.oc{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd)}
+.oc a{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:4px;border-radius:10px;padding:8px 4px;font-size:12px;font-weight:800;background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.oc a.na{background:#f8fafc;color:#cbd5e1;border-color:#e2e8f0;pointer-events:none}
+/* money flow */
+.mf{display:flex;flex-direction:column;align-items:stretch}
+.mb{background:var(--card);border:2px solid var(--bd);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.mb .ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;background:#f1f5f9;flex-shrink:0}
+.mb .tx{flex:1;min-width:0}
+.mb .tx b{display:block;font-size:14px;font-weight:800}
+.mb .tx small{display:block;font-size:12px;color:var(--mu);font-weight:600;line-height:1.4}
+.mb .am{font-size:19px;font-weight:800;white-space:nowrap}
+.mb.ok{border-color:#86efac}.mb.ok .ic{background:var(--gl)}.mb.ok .am{color:var(--g)}
+.mb.wt{border-color:#fcd34d}.mb.wt .ic{background:var(--ol)}.mb.wt .am{color:var(--o)}
+.ar{text-align:center;color:#9ca3af;font-size:12px;font-weight:800;padding:4px 0;line-height:1.2}
+.ar i{display:block;font-style:normal;font-size:18px;color:#a5b4fc}
+.rw{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--bd)}
+.rw:first-child{border-top:0;padding-top:2px}
+.rw .tx{flex:1;min-width:0}
+.rw .tx b{display:block;font-size:13.5px;font-weight:800;overflow-wrap:anywhere}
+.rw .tx small{font-size:11.5px;color:var(--mu);font-weight:600}
+.rw .am{font-weight:800;font-size:14px;white-space:nowrap}
+.ib{width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;border:0}
+.ib.cl{background:var(--gl)}.ib.wa{background:#dcfce7}.ib.na{opacity:.3;pointer-events:none}
+.note{font-size:12px;color:var(--mu);line-height:1.55;font-weight:600;margin:0 4px 10px}
+/* login */
+.lg{max-width:380px;margin:12vh auto 0;padding:0 16px}
+.lg .card{padding:22px 18px}
+.lg h2{font-size:20px;font-weight:800;margin-bottom:4px}
+.lg p{font-size:13px;color:var(--mu);margin-bottom:16px;line-height:1.5}
+.lg input{width:100%;border:1.5px solid var(--bd);border-radius:12px;padding:12px;font-size:15px;font-family:inherit;margin-bottom:10px;outline:none;background:#fff;color:var(--tx)}
+.lg input:focus{border-color:var(--pr)}
+.lg button{width:100%;border:0;border-radius:12px;background:var(--pr);color:#fff;font-size:16px;font-weight:800;padding:13px}
+.lg button:disabled{opacity:.5}
+.lg .er{color:var(--r);font-size:13px;font-weight:700;min-height:20px;margin-top:8px}
+.ver{text-align:center;font-size:11px;color:#9ca3af;margin:18px 0 4px}
+/* mind map */
+.hd .hb{border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:10px;width:36px;height:36px;font-size:17px;display:flex;align-items:center;justify-content:center}
+.mm{position:relative;padding:4px 0 6px}
+.mm-svg{position:absolute;left:0;top:0;pointer-events:none;z-index:0}
+.mroot{position:relative;z-index:1;display:block;width:100%;border:0;border-radius:22px;padding:14px 16px 14px 70px;text-align:left;color:#fff;background:linear-gradient(135deg,#1e1b4b,#4338ca);box-shadow:0 8px 24px rgba(67,56,202,.25);margin-bottom:22px}
+.mroot .rc{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:24px}
+.mroot b{display:block;font-size:17px;font-weight:800}
+.mroot small{display:block;font-size:12.5px;opacity:.9;font-weight:600;margin-top:2px}
+.mroot em{display:inline-block;margin-top:8px;font-style:normal;font-size:13px;font-weight:800;background:rgba(255,255,255,.16);border-radius:10px;padding:5px 10px}
+.mroot.r em{background:#fee2e2;color:#991b1b;animation:pr 1.4s infinite}.mroot.o em{background:#fef3c7;color:#92400e}
+.mbr{position:relative;z-index:1;display:flex;align-items:center;gap:26px;margin:0 0 18px 30px}
+.mbn{flex-shrink:0;width:92px;border-radius:18px;padding:10px 6px;text-align:center;background:var(--card);border:2.5px solid #cbd5e1;box-shadow:0 2px 8px rgba(15,23,42,.06)}
+.mbn span{display:block;font-size:24px;line-height:1.1}
+.mbn b{display:block;font-size:12.5px;font-weight:800;margin-top:3px;line-height:1.25}
+.mbn small{display:block;font-size:10.5px;font-weight:700;color:var(--mu)}
+.mbn.r{border-color:#ef4444;background:#fff5f5}.mbn.o{border-color:#f59e0b}.mbn.g{border-color:#22c55e}
+.mks{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.mk{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:2px solid #e2e8f0;background:var(--card);border-radius:14px;padding:7px 10px;min-height:42px;color:var(--tx)}
+.mk .mi{font-size:16px;flex-shrink:0}
+.mk .mt{flex:1;min-width:0}
+.mk .mt b{display:block;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk .mt small{display:block;font-size:11px;font-weight:700;color:var(--mu)}
+.mk .mv{font-size:13.5px;font-weight:800;white-space:nowrap}
+.mk.g{border-color:#86efac}.mk.g .mv{color:var(--g)}
+.mk.o{border-color:#fcd34d;background:#fffbeb}.mk.o .mv{color:var(--o)}
+.mk.r{border-color:#ef4444;background:#fef2f2;animation:pr 1.4s infinite}.mk.r .mv{color:var(--r)}
+.mk.b{border-color:#93c5fd;background:#eff6ff}.mk.b .mv{color:var(--b)}
+.mk.z{opacity:.6}
+.lgd{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:8px 0 0;font-size:11.5px;font-weight:700;color:var(--mu)}
+.lgd span{display:flex;align-items:center;gap:4px}.lgd i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.lgd .g{background:#22c55e}.lgd .o{background:#f59e0b}.lgd .r{background:#ef4444}.lgd .z{background:#cbd5e1}
+/* sheet */
+.sh{position:fixed;inset:0;z-index:50;display:none}
+.sh.on{display:block}
+.sh-bg{position:absolute;inset:0;background:rgba(15,23,42,.45)}
+.sh-p{position:absolute;left:0;right:0;bottom:0;max-height:88vh;background:var(--bg);border-radius:22px 22px 0 0;display:flex;flex-direction:column;animation:up .22s ease-out;max-width:640px;margin:0 auto}
+@keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+.sh-h{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--bd)}
+.sh-h b{flex:1;font-size:16px;font-weight:800}
+.sh-h button{border:0;background:#e5e7eb;border-radius:50%;width:34px;height:34px;font-size:15px}
+.sh-b{overflow-y:auto;padding:12px 12px calc(20px + env(safe-area-inset-bottom))}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#111827;color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+<script>
+// ═══ 👑 சிட்டை Boss — உரிமையாளருக்கான முழுப் பார்வை (படிக்க மட்டும்; ஆர்டர் / பணம் எதையும் இங்கிருந்து மாற்ற முடியாது)
+// எங்கே நிற்கிறது → அங்கேயே அழை / WhatsApp. Admin login-ஐயே பயன்படுத்துகிறது (admin.html-ல் login செய்திருந்தால் இங்கே மீண்டும் தேவையில்லை).
+const VER='பதிப்பு 10-10-2026.2';
+const SB_URL='https://cerstnckjygvcfekfxcp.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcnN0bmNranlndmNmZWtmeGNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTY2NDEsImV4cCI6MjA5Mzk3MjY0MX0.Yl-5QyyEyiwmXG9u1kL08CxIanU-22Fx-HicEe2VYi8';
+const SKEY='kd_admin_sess';
+const ACTIVE=['ORDER_RECEIVED','SHOP_ACCEPTED','READY_FOR_PICKUP','OUT_FOR_DELIVERY'];
+const ST={sess:null,ok:false,tab:'alert',orders:[],shops:[],riders:[],admin:'',acc:null,stats:{},at:0,err:'',busy:false,showSnoozed:false,lastRed:-1,loginErr:''};
+
+// ── சிறு உதவிகள் ──
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rs=n=>'₹'+(Math.round((+n||0)*100)/100).toLocaleString('en-IN');
+function hm(t){if(!t)return '';const d=new Date(t);if(isNaN(d))return '';return d.toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit',hour12:true}).replace(/\s?(am|pm)/i,(m,a)=>a.toLowerCase());}
+function mins(t){return t?Math.max(0,Math.round((Date.now()-new Date(t))/60000)):0;}
+function dur(m){m=Math.round(m);return m<60?m+' நி':Math.floor(m/60)+' ம '+(m%60)+' நி';}
+function gap(a,b){if(!a||!b)return '';const m=Math.round((new Date(b)-new Date(a))/60000);return m>=0?'+'+dur(m):'';}
+function ph(v){let d=String(v||'').replace(/\D/g,'');if(d.length===10)d='91'+d;if(d.length===11&&d[0]==='0')d='91'+d.slice(1);return /^91[6-9]\d{9}$/.test(d)?d:'';}
+function telA(p,label,cls){const n=ph(p);return n?`<a class="${cls||'cl'}" href="tel:+${n}">📞 ${esc(label)}</a>`:`<span class="no ${cls||''}" style="display:inline-flex;align-items:center;border-radius:10px;padding:8px 11px;font-size:12.5px;font-weight:800;background:#f1f5f9;color:#94a3b8">📵 ${esc(label)} எண் இல்லை</span>`;}
+function waA(p,msg,label){const n=ph(p);return n?`<a class="wa" href="https://wa.me/${n}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">💬 ${esc(label||'WhatsApp')}</a>`:'';}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),2200);}
+function istDay(off){const d=new Date(Date.now()+5.5*3600e3-(off||0)*864e5);return d.toISOString().slice(0,10);}
+function todayStartISO(){const s=new Date();s.setHours(0,0,0,0);return s.toISOString();}
+
+// ── login (admin.html-ன் அதே session) ──
+function readSess(){try{const s=JSON.parse(localStorage.getItem(SKEY)||'null');if(s&&s.access_token&&s.user_id)return{access_token:s.access_token,refresh_token:s.refresh_token||'',user_id:s.user_id,email:s.email||'',expires_at:+s.expires_at||0};}catch(e){}return null;}
+function saveSess(s){ST.sess=s;try{localStorage.setItem(SKEY,JSON.stringify(s));}catch(e){}}
+function hdr(){return{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+(ST.sess?ST.sess.access_token:SB_KEY)};}
+let _rp=null;
+function refresh(){if(_rp)return _rp;_rp=(async()=>{
+  const s=ST.sess;if(!s||!s.refresh_token)return false;const used=s.refresh_token;
+  try{const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify({refresh_token:used})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok){if(r.status>=400&&r.status<500){const st=readSess();if(st&&st.refresh_token&&st.refresh_token!==used){ST.sess=st;return true;}ST.sess=null;ST.ok=false;try{localStorage.removeItem(SKEY);}catch(e){}}return false;}
+    if(!d.access_token||!d.user)return false;
+    saveSess({access_token:d.access_token,refresh_token:d.refresh_token,user_id:d.user.id,email:d.user.email,expires_at:Date.now()+(d.expires_in||3600)*1000});return true;
+  }catch(e){return false;}})().finally(()=>{_rp=null;});return _rp;}
+async function fresh(){if(!ST.sess)return false;if(ST.sess.expires_at-Date.now()<60000)return await refresh();return true;}
+async function checkAdmin(){
+  if(!await fresh())return false;
+  try{const r=await fetch(`${SB_URL}/rest/v1/profiles?id=eq.${ST.sess.user_id}&select=role,approved`,{headers:hdr()});
+    if(!r.ok)return null;const p=(await r.json())[0];return !!(p&&p.approved&&p.role==='admin');}catch(e){return null;}
+}
+window.doLogin=async function(){
+  const em=$('lg-em').value.trim(),pw=$('lg-pw').value;const b=$('lg-b');
+  if(!em||!pw){ST.loginErr='மின்னஞ்சல், கடவுச்சொல் இரண்டும் தேவை';render();return;}
+  b.disabled=true;b.textContent='சரிபார்க்கிறது…';
+  try{const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify({email:em,password:pw})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok){ST.loginErr='❌ மின்னஞ்சல் அல்லது கடவுச்சொல் தவறு';render();return;}
+    saveSess({access_token:d.access_token,refresh_token:d.refresh_token,user_id:d.user.id,email:d.user.email,expires_at:Date.now()+(d.expires_in||3600)*1000});
+    const ok=await checkAdmin();
+    if(ok===false){ST.sess=null;try{localStorage.removeItem(SKEY);}catch(e){}ST.loginErr='❌ இந்த account-க்கு அனுமதி இல்லை (அட்மின் மட்டும்)';render();return;}
+    ST.ok=true;ST.loginErr='';render();load(true);
+  }catch(e){ST.loginErr='📴 Network பிரச்சனை';render();}
+};
+window.doLogout=function(){if(!confirm('வெளியேறவா? (admin.html-லிருந்தும் வெளியேறும்)'))return;ST.sess=null;ST.ok=false;try{localStorage.removeItem(SKEY);}catch(e){}render();};
+
+// ── "பேசிவிட்டேன்" — அந்த எச்சரிக்கையைச் சிறிது நேரம் மறை (இந்த phone-ல் மட்டும்) ──
+function snzGet(){try{const o=JSON.parse(localStorage.getItem('boss_snz')||'{}');const n=Date.now();for(const k in o)if(o[k]<n)delete o[k];return o;}catch(e){return {};}}
+window.snooze=function(k,min){const o=snzGet();o[k]=Date.now()+min*60000;try{localStorage.setItem('boss_snz',JSON.stringify(o));}catch(e){}toast(min>=600?'✔ சரிபார்க்கப்பட்டது':'✔ '+dur(min)+' மறைக்கப்பட்டது');render();};
+window.showSnz=function(){ST.showSnoozed=!ST.showSnoozed;render();};
+
+// ── தரவு ──
+async function get(path){const r=await fetch(`${SB_URL}/rest/v1/${path}`,{headers:hdr()});if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
+async function load(manual){
+  if(ST.busy||!ST.ok)return;ST.busy=true;
+  try{
+    if(!await fresh()){ST.err='🔒 மீண்டும் login செய்யுங்கள்';if(!ST.sess)ST.ok=false;return;}
+    const since=new Date(Date.now()-3*864e5).toISOString();
+    const orQ=`or=(created_at.gte.${todayStartISO()},and(order_status.in.(${ACTIVE.join(',')}),created_at.gte.${since}))`;
+    const slow=manual||Date.now()-ST.at>120000||!ST.shops.length;
+    const jobs=[get(`orders?select=*&${encodeURI(orQ)}&order=created_at.desc&limit=300`)];
+    if(slow){
+      jobs.push(get('shops?select=id,name,phone,hidden').catch(()=>ST.shops));
+      jobs.push(get('profiles?select=id,full_name,phone&role=eq.delivery&approved=eq.true&order=full_name').catch(()=>ST.riders));
+      jobs.push(get('app_settings?select=support_phone&id=eq.1').then(r=>(r[0]||{}).support_phone||'').catch(()=>ST.admin));
+      jobs.push(fetch(`${SB_URL}/rest/v1/rpc/admin_accounts`,{method:'POST',headers:hdr(),body:JSON.stringify({p_from:istDay(29),p_to:istDay(0)})}).then(r=>r.ok?r.json():null).then(d=>d&&d.ok!==false?d:ST.acc).catch(()=>ST.acc));
+    }
+    const res=await Promise.all(jobs);
+    ST.orders=res[0]||[];
+    if(slow){ST.shops=res[1]||[];ST.riders=res[2]||[];ST.admin=res[3]||'';ST.acc=res[4]||null;ST.at=Date.now();}
+    // புதிய வாடிக்கையாளரா? (இதுவரை டெலிவரி ஆன ஆர்டர் இல்லை)
+    const need=[...new Set(ST.orders.filter(o=>ACTIVE.includes(o.order_status)&&o.customer_phone).map(o=>String(o.customer_phone)))].filter(p=>!(p in ST.stats));
+    if(need.length){try{const r=await fetch(`${SB_URL}/rest/v1/rpc/admin_phone_stats`,{method:'POST',headers:hdr(),body:JSON.stringify({p_phones:need})});
+      if(r.ok){const d=await r.json()||{};need.forEach(p=>ST.stats[p]=d[p]||{n:0,dlv:0,cxl:0});}}catch(e){}}
+    ST.err='';ST.loadedAt=Date.now();
+  }catch(e){ST.err='📴 ஏற்ற முடியவில்லை — Network சரிபாருங்கள்';}
+  finally{ST.busy=false;render();}
+}
+
+// ── யார் யார் ──
+const shopOf=o=>ST.shops.find(s=>s.id===o.shop_id)||{name:'கடை',phone:''};
+const riderOf=id=>ST.riders.find(r=>r.id===id)||null;
+const rName=id=>{const r=riderOf(id);return r?(r.full_name||'டெலிவரி'):'';};
+const schedFuture=o=>o.scheduled_for&&new Date(o.scheduled_for).getTime()-Date.now()>45*60000;
+
+// ── எங்கே நிற்கிறது? → எச்சரிக்கைகள் ──
+function alerts(){
+  const A=[];const add=a=>A.push(a);
+  ST.orders.filter(o=>ACTIVE.includes(o.order_status)).forEach(o=>{
+    const sh=shopOf(o),rd=riderOf(o.delivery_partner_id),no='#'+(o.order_number||''),cn=o.customer_name||'வாடிக்கையாளர்';
+    const sub=`${no} · ${cn} · ${rs(o.total)} · ${sh.name}`;
+    const sf=schedFuture(o);
+    const stt=ST.stats[String(o.customer_phone)];
+    if(stt&&stt.dlv===0&&(o.order_status==='ORDER_RECEIVED'||o.order_status==='SHOP_ACCEPTED')){
+      add({k:'nc:'+o.id,lv:stt.cxl>0?1:3,ic:'🆕',t:stt.cxl>0?`புதிய வாடிக்கையாளர் — முன்பு ${stt.cxl} ஆர்டர் ரத்து!`:'புதிய வாடிக்கையாளர் — அழைத்து உறுதி செய்யுங்கள்',s:sub+(o.customer_address?' · '+o.customer_address:''),tm:'',
+        ct:[telA(o.customer_phone,cn),waA(o.customer_phone,`வணக்கம் ${cn}, சிட்டை-யிலிருந்து பேசுகிறோம். உங்கள் ஆர்டர் ${no} (${rs(o.total)}) கிடைத்தது. முகவரி சரியா என்று உறுதி செய்ய முடியுமா? 🙏`)],ok:['✔ உறுதி செய்தேன்',24*60]});
+    }
+    if(o.order_status==='ORDER_RECEIVED'){const m=mins(o.created_at);if(m>=5)add({k:'acc:'+o.id,lv:m>=10?1:2,ic:'🏪',t:`${sh.name} இன்னும் ஆர்டரை ஏற்கவில்லை`,s:sub,tm:dur(m),
+      ct:[telA(sh.phone,sh.name),waA(sh.phone,`வணக்கம் ${sh.name}, சிட்டை ஆர்டர் ${no} (${cn}, ${rs(o.total)}) ${dur(m)}-ஆக காத்திருக்கிறது. தயவுசெய்து shop app-ல் ✅ ஏற்கவும்.`),telA(ST.admin,'அட்மின்')],ok:['✔ பேசினேன்',10]});}
+    if((o.order_status==='SHOP_ACCEPTED'||o.order_status==='READY_FOR_PICKUP')&&!o.delivery_partner_id&&!sf){const m=mins(o.approved_at||o.created_at);if(m>=3)add({k:'dp:'+o.id,lv:o.order_status==='READY_FOR_PICKUP'?1:2,ic:'🛵',t:'டெலிவரி நபர் இன்னும் போடவில்லை',s:sub,tm:dur(m),
+      ct:[telA(ST.admin,'அட்மின்'),waA(ST.admin,`ஆர்டர் ${no} (${sh.name} → ${cn}) — டெலிவரி நபர் இன்னும் போடவில்லை. உடனே ஒதுக்குங்கள்.`)],ok:['✔ பேசினேன்',10]});}
+    if(o.order_status==='SHOP_ACCEPTED'&&!sf){const m=mins(o.approved_at||o.created_at);if(m>=20)add({k:'rd:'+o.id,lv:m>=35?1:2,ic:'📦',t:`${sh.name} — பார்சல் இன்னும் ரெடி ஆகவில்லை`,s:sub,tm:dur(m),
+      ct:[telA(sh.phone,sh.name),waA(sh.phone,`வணக்கம் ${sh.name}, ஆர்டர் ${no} (${cn}) ஏற்று ${dur(m)} ஆகிறது. எப்போது ரெடியாகும்?`)],ok:['✔ பேசினேன்',15]});}
+    if(o.order_status==='READY_FOR_PICKUP'&&o.delivery_partner_id&&!sf){const m=mins(o.ready_at||o.approved_at||o.created_at);if(m>=10){const nm=rd?(rd.full_name||'டெலிவரி'):'டெலிவரி';add({k:'pk:'+o.id,lv:m>=20?1:2,ic:'🛵',t:`ரெடி — ${nm} இன்னும் எடுக்கவில்லை`,s:sub,tm:dur(m),
+      ct:[telA(rd&&rd.phone,nm),waA(rd&&rd.phone,`${nm}, ${sh.name}-ல் ஆர்டர் ${no} ரெடியாக ${dur(m)} காத்திருக்கிறது. உடனே எடுங்கள்.`),telA(sh.phone,sh.name)],ok:['✔ பேசினேன்',10]});}}
+    if(o.order_status==='OUT_FOR_DELIVERY'){const m=mins(o.picked_at||o.ready_at||o.created_at);if(m>=30){const nm=rd?(rd.full_name||'டெலிவரி'):'டெலிவரி';add({k:'ow:'+o.id,lv:m>=45?1:2,ic:'🏠',t:`வழியில் ${dur(m)} — இன்னும் கொடுக்கவில்லை`,s:sub+' · '+nm,tm:dur(m),
+      ct:[telA(rd&&rd.phone,nm),telA(o.customer_phone,cn),waA(rd&&rd.phone,`${nm}, ஆர்டர் ${no} (${cn}) எங்கே இருக்கிறீர்கள்? ${dur(m)} ஆகிறது.`)],ok:['✔ பேசினேன்',15]});}}
+  });
+  // 💰 பணம் எங்கே நிற்கிறது
+  const acc=ST.acc;
+  if(acc){
+    (acc.riders||[]).filter(r=>(+r.cash)>=1000).forEach(r=>{const p=r.phone||(riderOf(r.id)||{}).phone;add({k:'rc:'+r.id+':'+Math.floor(+r.cash/500),lv:(+r.cash)>=3000?1:2,ic:'💵',t:`${r.name||'டெலிவரி'} கையில் ${rs(r.cash)} — இன்னும் ஒப்படைக்கவில்லை`,s:'வாடிக்கையாளரிடம் வாங்கிய பணம் சிட்டையிடம் வந்து சேரவில்லை',tm:'',
+      ct:[telA(p,r.name||'டெலிவரி'),waA(p,`${r.name||''}, உங்களிடம் ${rs(r.cash)} வசூல் பணம் உள்ளது. இன்று ஒப்படையுங்கள். நன்றி 🙏`),telA(ST.admin,'அட்மின்')],ok:['✔ பேசினேன்',180]});});
+    (acc.shops||[]).filter(s=>(+s.due)>0).forEach(s=>{const sp=(ST.shops.find(x=>x.id===s.id)||{}).phone;add({k:'sd:'+s.id+':'+Math.round(+s.due),lv:3,ic:'🏪',t:`${s.name}-க்கு ${rs(s.due)} இன்னும் போய் சேரவில்லை`,s:'கடைக்குக் கொடுக்க வேண்டிய தொகை (கமிஷன் போக)',tm:'',
+      ct:[telA(ST.admin,'அட்மின்'),waA(ST.admin,`${s.name}-க்கு ${rs(s.due)} நிலுவை உள்ளது. இன்று கொடுத்துவிட்டு கணக்கில் "கொடுத்தேன்" பதிவு செய்யுங்கள்.`),telA(sp,s.name)],ok:['✔ பேசினேன்',240]});});
+  }
+  A.sort((a,b)=>a.lv-b.lv);
+  return A;
+}
+
+// ── ஆர்டர் வரைபடம் ──
+function steps(o){
+  const sh=shopOf(o),upi=o.pay_mode==='upi',rn=o.delivery_partner_id?(rName(o.delivery_partner_id)||'டெலிவரி'):'';
+  const S=[{i:'🛒',l:'ஆர்டர்',t:o.created_at},{i:'🏪',l:sh.name,t:o.approved_at},{i:'📦',l:'ரெடி',t:o.ready_at},{i:'🛵',l:rn||'கிளம்பியது',t:o.picked_at},{i:'🏠',l:'கொடுத்தது',t:o.delivered_at},{i:upi?'📲':'💵',l:upi?'UPI':'பணம்',t:o.order_status==='DELIVERED'?(o.delivered_at||o.updated_at):null}];
+  if(o.order_status==='DELIVERED'){S.forEach(s=>s.c='d');return {S,cur:-1};}
+  if(o.order_status==='CANCELLED'){let ix=-1;for(let k=4;k>=0;k--)if(S[k].t){ix=k;break;}S.forEach((s,k)=>s.c=k<=ix?'d':'');const k=Math.min(ix+1,5);S[k]={i:'✕',l:'ரத்து',t:o.updated_at,c:'x'};return {S,cur:-1};}
+  const ix=ACTIVE.indexOf(o.order_status);S.forEach((s,k)=>s.c=k<=ix?'d':(k===ix+1?'c':''));return {S,cur:ix+1};
+}
+function orderCard(o,stuckIds){
+  const {S,cur}=steps(o),sh=shopOf(o),rd=riderOf(o.delivery_partner_id),st=stuckIds.has(o.id);
+  const nodes=S.map((s,k)=>{const g=k>0&&k<5&&s.t&&S[k-1].t&&s.c!=='x'?gap(S[k-1].t,s.t):'';
+    const tm=s.c==='c'?(cur>0&&S[cur-1].t?dur(mins(S[cur-1].t)):'…'):hm(s.t);
+    return `<div class="on_ ${s.c||''}${s.c==='c'&&st?' late':''}"><div class="oo">${s.i}</div><div class="ol">${esc(s.l)}</div><div class="ot">${esc(tm)}</div>${g?`<div class="og">${g}</div>`:''}</div>`;}).join('');
+  const tg=[];
+  if(o.scheduled_slot)tg.push(`<span class="s">📅 ${esc(o.scheduled_slot)}</span>`);
+  const stt=ST.stats[String(o.customer_phone)];if(stt&&stt.dlv===0&&ACTIVE.includes(o.order_status))tg.push(`<span class="n">🆕 புதிய வாடிக்கையாளர்</span>`);
+  if(o.order_status==='CANCELLED'&&o.cancel_reason)tg.push(`<span class="r">${esc(o.cancel_reason)}</span>`);
+  if(o.order_status==='DELIVERED'&&o.delivered_at)tg.push(`<span>✅ ${esc(gap(o.created_at,o.delivered_at).replace('+',''))}-ல் கொடுக்கப்பட்டது</span>`);
+  if((o.customer_note||'').trim())tg.push(`<span>📝 ${esc(String(o.customer_note).slice(0,60))}</span>`);
+  const c=(p,l)=>{const n=ph(p);return n?`<a href="tel:+${n}">📞 ${esc(l)}</a>`:`<a class="na">📵 ${esc(l)}</a>`;};
+  const live=ACTIVE.includes(o.order_status);
+  return `<div class="card${st?' st':''}"><div class="oh"><b>#${esc(o.order_number||'')}</b><span>${esc(o.customer_name||'')}</span><em>${rs(o.total)}</em></div><div class="of">${nodes}</div>${tg.length?`<div class="tg">${tg.join('')}</div>`:''}
+    ${live?`<div class="oc">${c(sh.phone,sh.name)}${c(rd&&rd.phone,rd?(rd.full_name||'டெலிவரி'):'டெலிவரி')}${c(o.customer_phone,'வாடிக்கையாளர்')}</div>`:''}</div>`;
+}
+
+// ── திரைகள் ──
+function viewAlerts(A){
+  const sz=snzGet();const vis=A.filter(a=>!sz[a.k]),hid=A.filter(a=>sz[a.k]);
+  let h='';
+  if(!vis.length)h+=`<div class="card empty"><b>✅</b>எல்லாம் சரியாக ஓடுகிறது<br><small style="font-weight:600">எங்காவது தாமதம் ஆனால் இங்கே உடனே வரும்</small></div>`;
+  else h+=`<div class="sec">🚨 கவனிக்க வேண்டியவை (${vis.length})</div>`+vis.map(a=>alertCard(a)).join('');
+  if(hid.length){h+=`<div class="snz"><button onclick="showSnz()">${ST.showSnoozed?'▲ மறைத்தவற்றை மூடு':'▼ பேசி முடித்தவை ('+hid.length+')'}</button></div>`;if(ST.showSnoozed)h+=hid.map(a=>alertCard(a,true)).join('');}
+  return h;
+}
+function alertCard(a,snz){
+  return `<div class="card al l${a.lv}"${snz?' style="opacity:.6"':''}><div class="al-h"><div class="al-i">${a.ic}</div><div class="al-t"><b>${esc(a.t)}</b><small>${esc(a.s)}</small></div>${a.tm?`<div class="al-tm">⏳ ${esc(a.tm)}</div>`:''}</div>
+    <div class="ct">${a.ct.filter(Boolean).join('')}${snz?'':`<button class="ok" onclick="snooze('${esc(a.k)}',${a.ok[1]})">${esc(a.ok[0])}</button>`}</div></div>`;
+}
+function viewOrders(A){
+  const stuck=new Set();A.forEach(a=>{const m=/^(acc|dp|rd|pk|ow):(.+)$/.exec(a.k);if(m&&a.lv<=2)stuck.add(m[2]);});
+  const R=ST.orders,act=R.filter(o=>ACTIVE.includes(o.order_status)).sort((a,b)=>(stuck.has(b.id)-stuck.has(a.id))||new Date(a.created_at)-new Date(b.created_at));
+  const dn=R.filter(o=>o.order_status==='DELIVERED'),xs=R.filter(o=>o.order_status==='CANCELLED');
+  let h='';
+  if(!R.length)return `<div class="card empty"><b>🗺️</b>இன்று இன்னும் ஆர்டர் இல்லை</div>`;
+  if(act.length)h+=`<div class="sec">🟠 நடப்பில் (${act.length})${stuck.size?` · <span style="color:var(--r)">🔴 ${stuck.size} தாமதம்</span>`:''}</div>`+act.map(o=>orderCard(o,stuck)).join('');
+  if(dn.length)h+=`<div class="sec">🟢 இன்று கொடுத்தவை (${dn.length})</div>`+dn.map(o=>orderCard(o,stuck)).join('');
+  if(xs.length)h+=`<div class="sec">🔴 ரத்து (${xs.length})</div>`+xs.map(o=>orderCard(o,stuck)).join('');
+  return h;
+}
+function viewMoney(){
+  const today=ST.orders.filter(o=>o.order_status==='DELIVERED'&&new Date(o.delivered_at||o.created_at)>=new Date(todayStartISO()));
+  const tot=today.reduce((a,o)=>a+(+o.total||0),0),upi=today.filter(o=>o.pay_mode==='upi').reduce((a,o)=>a+(+o.total||0),0),cash=tot-upi;
+  const acc=ST.acc;
+  const rc=acc?(acc.riders||[]).filter(r=>(+r.cash)>0):[],sd=acc?(acc.shops||[]).filter(s=>(+s.due)>0):[];
+  const rcT=rc.reduce((a,r)=>a+(+r.cash||0),0),sdT=sd.reduce((a,s)=>a+(+s.due||0),0);
+  const pend=ST.orders.filter(o=>ACTIVE.includes(o.order_status)).reduce((a,o)=>a+(+o.total||0),0);
+  let h=`<div class="sec">💰 பணம் எங்கே இருக்கிறது — இன்று</div>
+  <div class="mf">
+    <div class="mb ${pend>0?'wt':'ok'}"><div class="ic">👤</div><div class="tx"><b>வாடிக்கையாளர்களிடம்</b><small>இன்னும் டெலிவரி ஆகாத ${ST.orders.filter(o=>ACTIVE.includes(o.order_status)).length} ஆர்டர்</small></div><div class="am">${rs(pend)}</div></div>
+    <div class="ar"><i>↓</i>இன்று வசூல் ${rs(tot)} (💵 ${rs(cash)} · 📲 UPI ${rs(upi)})</div>
+    <div class="mb ${rcT>0?'wt':'ok'}"><div class="ic">🛵</div><div class="tx"><b>டெலிவரி நண்பர்கள் கையில்</b><small>${rcT>0?'சிட்டையிடம் இன்னும் ஒப்படைக்காத பணம்':'✅ எல்லாம் ஒப்படைக்கப்பட்டது'}</small></div><div class="am">${acc?rs(rcT):'—'}</div></div>
+    <div class="ar"><i>↓</i>ஒப்படைப்பு</div>
+    <div class="mb ok"><div class="ic">👑</div><div class="tx"><b>சிட்டை (அட்மின்)</b><small>இன்று UPI-ல் நேரடியாக வந்தது + டெலிவரி நண்பர்கள் ஒப்படைக்கும் பணம்</small></div><div class="am">${rs(upi)}</div></div>
+    <div class="ar"><i>↓</i>கமிஷன் போக கடைக்கு</div>
+    <div class="mb ${sdT>0?'wt':'ok'}"><div class="ic">🏪</div><div class="tx"><b>கடைகளுக்கு இன்னும் சேர வேண்டியது</b><small>${sdT>0?sd.length+' கடை நிலுவை':'✅ எல்லாக் கடைக்கும் கொடுத்தாயிற்று'}</small></div><div class="am">${acc?rs(sdT):'—'}</div></div>
+  </div>`;
+  if(!acc)h+=`<div class="note" style="margin-top:10px">⚠️ கணக்கு விவரம் ஏற்ற முடியவில்லை (accounts.sql run ஆகியிருக்க வேண்டும்).</div>`;
+  if(rc.length)h+=`<div class="sec">🛵 யார் கையில் எவ்வளவு</div><div class="card">${rc.sort((a,b)=>b.cash-a.cash).map(r=>{const p=r.phone||(riderOf(r.id)||{}).phone,n=ph(p);
+    return `<div class="rw"><div class="tx"><b>${esc(r.name||'டெலிவரி')}</b><small>${r.deliveries||0} டெலிவரி (30 நாள்)</small></div><div class="am" style="color:var(--o)">${rs(r.cash)}</div>${n?`<a class="ib cl" href="tel:+${n}">📞</a><a class="ib wa" href="https://wa.me/${n}?text=${encodeURIComponent((r.name||'')+', உங்களிடம் '+rs(r.cash)+' வசூல் பணம் உள்ளது. இன்று ஒப்படையுங்கள். நன்றி 🙏')}" target="_blank" rel="noopener">💬</a>`:'<span class="ib na">📵</span>'}</div>`;}).join('')}</div>`;
+  if(sd.length)h+=`<div class="sec">🏪 எந்தக் கடைக்கு எவ்வளவு நிலுவை</div><div class="card">${sd.sort((a,b)=>b.due-a.due).map(s=>{const n=ph((ST.shops.find(x=>x.id===s.id)||{}).phone);
+    return `<div class="rw"><div class="tx"><b>${esc(s.name)}</b><small>விற்பனை ${rs(s.sales)} · கமிஷன் ${+s.pct||0}%</small></div><div class="am" style="color:var(--o)">${rs(s.due)}</div>${n?`<a class="ib cl" href="tel:+${n}">📞</a>`:'<span class="ib na">📵</span>'}</div>`;}).join('')}</div>
+    <div class="note">கடைக்குப் பணம் கொடுத்ததும் அட்மின் ஆப் → 💰 கணக்கு-ல் "கொடுத்தேன்" தட்ட வேண்டும்; அப்போதுதான் இங்கே ✅ ஆகும்.</div>`;
+  const U=acc?(acc.upi_orders||[]):[];
+  if(U.length)h+=`<div class="sec">📲 UPI-ல் வந்தவை — வங்கியில் வந்ததா பாருங்கள்</div><div class="card">${U.slice(0,30).map(x=>`<div class="rw"><div class="tx"><b>#${esc(x.order_number||'')}</b><small>${esc(x.rider||'')}${x.at?' · '+new Date(x.at).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'}):''}</small></div><div class="am" style="color:var(--b)">${rs(x.total)}</div></div>`).join('')}</div>`;
+  return h;
+}
+function viewPeople(){
+  const row=(ic,nm,sub,p,msg)=>{const n=ph(p);return `<div class="rw"><div style="font-size:22px">${ic}</div><div class="tx"><b>${esc(nm)}</b><small>${esc(sub)}</small></div>${n?`<a class="ib cl" href="tel:+${n}">📞</a><a class="ib wa" href="https://wa.me/${n}${msg?'?text='+encodeURIComponent(msg):''}" target="_blank" rel="noopener">💬</a>`:'<span class="ib na">📵</span>'}</div>`;};
+  const busy=id=>ST.orders.filter(o=>o.delivery_partner_id===id&&ACTIVE.includes(o.order_status)).length;
+  const sAct=id=>ST.orders.filter(o=>o.shop_id===id&&ACTIVE.includes(o.order_status)).length;
+  let h=`<div class="sec">👑 அட்மின்</div><div class="card">${row('🧑‍💼','அட்மின் / Support',ph(ST.admin)?'+'+ph(ST.admin):'எண் வைக்கவில்லை',ST.admin,'')}</div>`;
+  h+=`<div class="sec">🏪 கடைகள் (${ST.shops.filter(s=>!s.hidden).length})</div><div class="card">${ST.shops.filter(s=>!s.hidden).map(s=>row('🏪',s.name,sAct(s.id)?sAct(s.id)+' ஆர்டர் நடப்பில்':'நடப்பில் ஆர்டர் இல்லை',s.phone,'')).join('')||'<div class="note">கடை இல்லை</div>'}</div>`;
+  h+=`<div class="sec">🛵 டெலிவரி நண்பர்கள் (${ST.riders.length})</div><div class="card">${ST.riders.map(r=>row('🛵',r.full_name||'டெலிவரி',busy(r.id)?busy(r.id)+' ஆர்டர் கையில்':'சும்மா இருக்கிறார்',r.phone,'')).join('')||'<div class="note">டெலிவரி கணக்கு இல்லை</div>'}</div>`;
+  h+=`<div class="ver">சிட்டை Boss · ${VER}${ST.sess&&ST.sess.email?' · '+esc(ST.sess.email):''}<br><button onclick="doLogout()" style="border:0;background:none;color:var(--r);font-weight:800;font-size:12px;padding:8px">வெளியேறு</button></div>`;
+  return h;
+}
+
+// ── 🧠 மைண்ட் மேப் — ஒரே திரை: நடுவில் சிட்டை, அதிலிருந்து 4 கிளைகள். ஏதாவது ஒன்றைத் தட்டினால் விவரம் + அழைப்பு ──
+let SHEET=null; // {kind,id}
+window.openSheet=function(kind,id){const was=!!SHEET;SHEET={kind,id:id==null?'':String(id)};if(!was)try{history.pushState({sheet:1},'');}catch(e){}renderSheet();};
+window.closeSheet=function(){if(!SHEET)return;try{history.back();}catch(e){SHEET=null;renderSheet();}};
+window.addEventListener('popstate',function(){if(SHEET){SHEET=null;renderSheet();}});
+function stuckSets(A){
+  const ord=new Set(),shop=new Set(),rider=new Set(),stage=new Set();
+  A.forEach(a=>{const m=/^(acc|dp|rd|pk|ow):(.+)$/.exec(a.k);if(!m||a.lv>2)return;const o=ST.orders.find(x=>x.id===m[2]);if(!o)return;
+    ord.add(o.id);stage.add(o.order_status);
+    if(m[1]==='acc'||m[1]==='rd')shop.add(o.shop_id);
+    if((m[1]==='pk'||m[1]==='ow')&&o.delivery_partner_id)rider.add(o.delivery_partner_id);});
+  return {ord,shop,rider,stage};
+}
+function mmData(){
+  const A=alerts(),sz=snzGet(),vis=A.filter(a=>!sz[a.k]),S=stuckSets(vis);
+  const act=ST.orders.filter(o=>ACTIVE.includes(o.order_status));
+  const t0=new Date(todayStartISO());
+  const dn=ST.orders.filter(o=>o.order_status==='DELIVERED'&&new Date(o.delivered_at||o.created_at)>=t0);
+  const xs=ST.orders.filter(o=>o.order_status==='CANCELLED'&&new Date(o.created_at)>=t0);
+  const cnt=s=>act.filter(o=>o.order_status===s).length;
+  const acc=ST.acc||{},rcash=id=>+(((acc.riders||[]).find(r=>r.id===id)||{}).cash||0),sdue=id=>+(((acc.shops||[]).find(s=>s.id===id)||{}).due||0);
+  const newC=act.filter(o=>{const s=ST.stats[String(o.customer_phone)];return s&&s.dlv===0&&!sz['nc:'+o.id]&&(o.order_status==='ORDER_RECEIVED'||o.order_status==='SHOP_ACCEPTED');}).length;
+  const st=(red,warn,live)=>red?'r':warn?'o':live?'g':'z';
+  const B=[];
+  // 1) ஆர்டர் பயணம்
+  const stages=[['ORDER_RECEIVED','🛒','புதிது'],['SHOP_ACCEPTED','🏪','கடையில்'],['READY_FOR_PICKUP','📦','ரெடி'],['OUT_FOR_DELIVERY','🛵','வழியில்']];
+  B.push({ic:'📦',t:'ஆர்டர் பயணம்',s:act.length+' நடப்பில்',c:st(S.stage.size,0,act.length),kids:[
+    ...stages.map(([k,i,l])=>({ic:i,t:l,v:cnt(k),c:st(S.stage.has(k),0,cnt(k)),on:`openSheet('stage','${k}')`})),
+    {ic:'🏠',t:'கொடுத்தது',v:dn.length,c:dn.length?'g':'z',on:`openSheet('stage','DELIVERED')`},
+    ...(xs.length?[{ic:'✕',t:'ரத்து',v:xs.length,c:'z',on:`openSheet('stage','CANCELLED')`}]:[]),
+    ...(newC?[{ic:'🆕',t:'புதிய வாடிக்கையாளர்',v:newC,c:'b',on:`openSheet('alerts','')`}]:[])]});
+  // 2) கடைகள்
+  const shops=ST.shops.filter(s=>!s.hidden);
+  B.push({ic:'🏪',t:'கடைகள்',s:shops.length+' கடை',c:st(S.shop.size,0,1),kids:shops.map(s=>{const n=act.filter(o=>o.shop_id===s.id).length,d=sdue(s.id);
+    return {ic:'🏪',t:s.name,v:n?n+' ஆர்டர்':'',sub:d>0?'நிலுவை '+rs(d):'',c:st(S.shop.has(s.id),d>0,n),on:`openSheet('shop','${esc(s.id)}')`};})});
+  // 3) டெலிவரி
+  B.push({ic:'🛵',t:'டெலிவரி',s:ST.riders.length+' பேர்',c:st(S.rider.size,ST.riders.some(r=>rcash(r.id)>=1000),1),kids:ST.riders.map(r=>{const n=act.filter(o=>o.delivery_partner_id===r.id).length,cs=rcash(r.id);
+    return {ic:'🛵',t:r.full_name||'டெலிவரி',v:n?n+' கையில்':'',sub:cs>0?'💵 '+rs(cs):'',c:st(S.rider.has(r.id)||cs>=3000,cs>=1000,n),on:`openSheet('rider','${esc(r.id)}')`};})});
+  // 4) பணம்
+  const pend=act.reduce((a,o)=>a+(+o.total||0),0),upi=dn.filter(o=>o.pay_mode==='upi').reduce((a,o)=>a+(+o.total||0),0),tot=dn.reduce((a,o)=>a+(+o.total||0),0);
+  const rcT=(acc.riders||[]).reduce((a,r)=>a+Math.max(0,+r.cash||0),0),sdT=(acc.shops||[]).reduce((a,s)=>a+Math.max(0,+s.due||0),0);
+  B.push({ic:'💰',t:'பணம்',s:'இன்று '+rs(tot),c:st(rcT>=3000,rcT>=1000||sdT>0,1),kids:[
+    {ic:'👤',t:'வாங்க வேண்டியது',v:rs(pend),c:pend?'o':'z',on:`openSheet('money','')`},
+    {ic:'🛵',t:'டெலிவரி கையில்',v:ST.acc?rs(rcT):'—',c:rcT>=3000?'r':rcT>0?'o':'g',on:`openSheet('money','')`},
+    {ic:'📲',t:'UPI வந்தது',v:rs(upi),c:upi?'g':'z',on:`openSheet('money','')`},
+    {ic:'🏪',t:'கடைக்கு நிலுவை',v:ST.acc?rs(sdT):'—',c:sdT>0?'o':'g',on:`openSheet('money','')`}]});
+  return {A,vis,B,act,dn,tot};
+}
+function render(){
+  const app=$('app');
+  if(!ST.ok){
+    document.title='சிட்டை Boss';
+    app.innerHTML=ST.checking?`<div class="lg"><div class="card empty"><b>👑</b>சரிபார்க்கிறது…</div></div>`:
+      `<div class="lg"><div class="card"><h2>👑 சிட்டை Boss</h2><p>முழு நிலவரம் ஒரே படத்தில் — எந்த ஆர்டர் எங்கே, பணம் யாரிடம், எங்கே தாமதம். அட்மின் கணக்கில் உள்நுழையுங்கள்.</p>
+      <input id="lg-em" type="email" autocomplete="username" placeholder="மின்னஞ்சல்"><input id="lg-pw" type="password" autocomplete="current-password" placeholder="கடவுச்சொல்" onkeydown="if(event.key==='Enter')doLogin()">
+      <button id="lg-b" onclick="doLogin()">உள்நுழை</button><div class="er">${esc(ST.loginErr)}</div></div><div class="ver">${VER}</div></div>`;
+    renderSheet();return;
+  }
+  const D=mmData(),red=D.vis.filter(a=>a.lv===1).length;
+  if(ST.lastRed>=0&&red>ST.lastRed){try{navigator.vibrate&&navigator.vibrate([250,120,250]);}catch(e){}}
+  ST.lastRed=red;
+  document.title=(D.vis.length?'('+D.vis.length+') ':'')+'சிட்டை Boss';
+  const adm=ph(ST.admin);
+  const kid=k=>`<button class="mk ${k.c}" onclick="${k.on}"><span class="mi">${k.ic}</span><span class="mt"><b>${esc(k.t)}</b>${k.sub?`<small>${esc(k.sub)}</small>`:''}</span>${k.v!==''&&k.v!=null?`<span class="mv">${esc(k.v)}</span>`:''}</button>`;
+  const branch=(b,i)=>`<div class="mbr"><div class="mbn ${b.c}" data-b="${i}"><span>${b.ic}</span><b>${esc(b.t)}</b><small>${esc(b.s)}</small></div><div class="mks" data-k="${i}">${b.kids.length?b.kids.map(kid).join(''):'<div class="mk z"><span class="mt"><small>எதுவும் இல்லை</small></span></div>'}</div></div>`;
+  app.innerHTML=`<div class="hd"><div class="hd-r"><h1>👑 சிட்டை Boss</h1><span class="lv${ST.err?' off':''}"><i></i>${ST.err?'இணைப்பு இல்லை':ST.loadedAt?hm(ST.loadedAt):'…'}</span>${adm?`<a class="hb" href="tel:+${adm}" aria-label="அட்மின்">🧑‍💼</a>`:''}<button onclick="load(true)" aria-label="புதுப்பி">⟳</button></div></div>
+    <div class="wrap">${ST.err?`<div class="card" style="color:var(--r);font-weight:700;font-size:13px">${esc(ST.err)}</div>`:''}
+    ${!ST.loadedAt?'<div class="card empty"><b>⏳</b>ஏற்றுகிறது…</div>':`
+    <div class="mm" id="mm"><svg class="mm-svg" id="mm-svg"></svg>
+      <button class="mroot ${red?'r':D.vis.length?'o':'g'}" id="mroot" onclick="openSheet('alerts','')">
+        <span class="rc">👑</span><b>சிட்டை · இன்று</b>
+        <small>${D.dn.length} கொடுத்தது · ${D.act.length} நடப்பில் · ${rs(D.tot)}</small>
+        <em>${D.vis.length?(red?'🔴 ':'🟠 ')+D.vis.length+' இடத்தில் கவனம் தேவை':'✅ எல்லாம் சரியாக ஓடுகிறது'}</em></button>
+      ${D.B.map(branch).join('')}
+    </div>
+    <div class="lgd"><span><i class="g"></i>சரி</span><span><i class="o"></i>காத்திருக்கிறது</span><span><i class="r"></i>நிற்கிறது — அழை</span><span><i class="z"></i>சும்மா</span></div>
+    <div class="ver">தட்டினால் விவரம் + 📞 அழைப்பு · ${VER}<br><button onclick="doLogout()" style="border:0;background:none;color:var(--r);font-weight:800;font-size:12px;padding:8px">வெளியேறு</button></div>`}
+    </div>`;
+  requestAnimationFrame(drawLines);
+  renderSheet();
+}
+// கிளைகளை இணைக்கும் வளைந்த கோடுகள்
+const LC={r:'#ef4444',o:'#f59e0b',g:'#22c55e',z:'#cbd5e1',b:'#3b82f6'};
+function drawLines(){
+  const mm=$('mm'),svg=$('mm-svg'),root=$('mroot');if(!mm||!svg||!root)return;
+  const R=mm.getBoundingClientRect(),P=e=>{const b=e.getBoundingClientRect();return {l:b.left-R.left,r:b.right-R.left,t:b.top-R.top,b:b.bottom-R.top,cx:(b.left+b.right)/2-R.left,cy:(b.top+b.bottom)/2-R.top};};
+  svg.setAttribute('width',R.width);svg.setAttribute('height',mm.scrollHeight);svg.setAttribute('viewBox',`0 0 ${R.width} ${mm.scrollHeight}`);
+  const rp=P(root);let d='';
+  const cls=e=>(['r','o','g','z','b'].find(c=>e.classList.contains(c)))||'z';
+  mm.querySelectorAll('.mbn').forEach(bn=>{
+    const bp=P(bn),x0=14,y0=rp.b;
+    d+=`<path d="M${rp.l+28} ${y0} C ${x0} ${y0+30}, ${x0} ${bp.cy-30}, ${bp.l} ${bp.cy}" stroke="${LC[cls(bn)]}" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>`;
+    const ks=mm.querySelector(`.mks[data-k="${bn.dataset.b}"]`);if(!ks)return;
+    ks.querySelectorAll('.mk').forEach(k=>{const kp=P(k),mx=(bp.r+kp.l)/2;
+      d+=`<path d="M${bp.r} ${bp.cy} C ${mx} ${bp.cy}, ${mx} ${kp.cy}, ${kp.l} ${kp.cy}" stroke="${LC[cls(k)]}" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".8"/>`;});
+  });
+  svg.innerHTML=d;
+}
+window.addEventListener('resize',()=>requestAnimationFrame(drawLines));
+// ── விவரத் தாள் (கீழிருந்து மேலே வரும்) ──
+function renderSheet(){
+  let el=$('sheet');
+  if(!SHEET||!ST.ok){if(el){el.classList.remove('on');document.body.style.overflow='';}return;}
+  if(!el){el=document.createElement('div');el.id='sheet';el.className='sh';document.body.appendChild(el);}
+  const A=alerts(),stk=new Set();A.forEach(a=>{const m=/^(acc|dp|rd|pk|ow):(.+)$/.exec(a.k);if(m&&a.lv<=2)stk.add(m[2]);});
+  const k=SHEET.kind,id=SHEET.id;let t='',b='';
+  const t0=new Date(todayStartISO());
+  const list=os=>os.length?os.map(o=>orderCard(o,stk)).join(''):'<div class="card empty"><b>✅</b>எதுவும் இல்லை</div>';
+  const contact=(ic,nm,p,msg)=>{const n=ph(p);return `<div class="card" style="display:flex;align-items:center;gap:10px"><span style="font-size:24px">${ic}</span><div style="flex:1;min-width:0"><b style="font-size:15px;font-weight:800">${esc(nm)}</b><br><small style="color:var(--mu);font-weight:600">${n?'+'+n:'எண் வைக்கவில்லை'}</small></div>${n?`<a class="ib cl" href="tel:+${n}">📞</a><a class="ib wa" href="https://wa.me/${n}${msg?'?text='+encodeURIComponent(msg):''}" target="_blank" rel="noopener">💬</a>`:'<span class="ib na">📵</span>'}</div>`;};
+  const relAlerts=f=>{const sz=snzGet(),v=A.filter(a=>!sz[a.k]&&f(a));return v.length?`<div class="sec">🚨 கவனிக்க வேண்டியவை</div>`+v.map(a=>alertCard(a)).join(''):'';};
+  if(k==='alerts'){t='🚨 எங்கே நிற்கிறது';b=viewAlerts(A);}
+  else if(k==='money'){t='💰 பணம் எங்கே இருக்கிறது';b=viewMoney();}
+  else if(k==='stage'){
+    const L={ORDER_RECEIVED:'🛒 புதிய ஆர்டர்கள் — கடை ஏற்க வேண்டும்',SHOP_ACCEPTED:'🏪 கடையில் தயாராகிறது',READY_FOR_PICKUP:'📦 ரெடி — டெலிவரி எடுக்க வேண்டும்',OUT_FOR_DELIVERY:'🛵 வழியில்',DELIVERED:'🏠 இன்று கொடுத்தவை',CANCELLED:'✕ இன்று ரத்து'};
+    t=L[id]||id;let os=ST.orders.filter(o=>o.order_status===id);
+    if(id==='DELIVERED')os=os.filter(o=>new Date(o.delivered_at||o.created_at)>=t0);
+    if(id==='CANCELLED')os=os.filter(o=>new Date(o.created_at)>=t0);
+    os.sort((a,b2)=>(stk.has(b2.id)-stk.has(a.id))||new Date(a.created_at)-new Date(b2.created_at));
+    b=list(os);
+  }else if(k==='shop'){
+    const s=ST.shops.find(x=>String(x.id)===id)||{name:'கடை'};t='🏪 '+s.name;
+    const d=+((((ST.acc||{}).shops||[]).find(x=>String(x.id)===id))||{}).due||0;
+    b=contact('🏪',s.name,s.phone,'')+(d>0?`<div class="card" style="font-weight:800;color:var(--o)">💰 இந்தக் கடைக்கு நிலுவை ${rs(d)} ${ph(ST.admin)?`<a class="ib cl" style="float:right;margin-top:-8px" href="tel:+${ph(ST.admin)}">🧑‍💼</a>`:''}</div>`:'')
+      +relAlerts(a=>{const o=ST.orders.find(x=>a.k.endsWith(':'+x.id));return o&&String(o.shop_id)===id;})
+      +`<div class="sec">📦 நடப்பில் உள்ள ஆர்டர்கள்</div>`+list(ST.orders.filter(o=>String(o.shop_id)===id&&ACTIVE.includes(o.order_status)));
+  }else if(k==='rider'){
+    const r=ST.riders.find(x=>String(x.id)===id)||{full_name:'டெலிவரி'};t='🛵 '+(r.full_name||'டெலிவரி');
+    const ra=((ST.acc||{}).riders||[]).find(x=>String(x.id)===id)||{},cs=+ra.cash||0;
+    b=contact('🛵',r.full_name||'டெலிவரி',r.phone,cs>0?`${r.full_name||''}, உங்களிடம் ${rs(cs)} வசூல் பணம் உள்ளது. இன்று ஒப்படையுங்கள். நன்றி 🙏`:'')
+      +`<div class="card" style="font-weight:800;color:${cs>0?'var(--o)':'var(--g)'}">💵 கையில் உள்ள வசூல் பணம்: ${rs(cs)}${cs>0?'':' ✅'}</div>`
+      +relAlerts(a=>a.k==='rc:'+id||a.k.startsWith('rc:'+id+':')||(()=>{const o=ST.orders.find(x=>a.k.endsWith(':'+x.id));return o&&String(o.delivery_partner_id)===id;})())
+      +`<div class="sec">📦 இவர் கையில் உள்ள ஆர்டர்கள்</div>`+list(ST.orders.filter(o=>String(o.delivery_partner_id)===id&&ACTIVE.includes(o.order_status)));
+  }
+  const _ob=el.querySelector('.sh-b'),_st=_ob&&el.dataset.k===k+':'+id?_ob.scrollTop:0;el.dataset.k=k+':'+id;
+  el.innerHTML=`<div class="sh-bg" onclick="closeSheet()"></div><div class="sh-p"><div class="sh-h"><b>${esc(t)}</b><button onclick="closeSheet()" aria-label="மூடு">✕</button></div><div class="sh-b">${b}</div></div>`;
+  if(_st){const nb=el.querySelector('.sh-b');if(nb)nb.scrollTop=_st;}
+  el.classList.add('on');document.body.style.overflow='hidden';
+}
+
+// ── தொடக்கம் ──
+(async function(){
+  try{const bad=/(^|[?#&])(access_token|refresh_token|token)=/;if(bad.test(location.hash)||bad.test(location.search))history.replaceState(null,'',location.pathname);}catch(e){}
+  ST.sess=readSess();
+  if(ST.sess){ST.checking=true;render();const ok=await checkAdmin();ST.checking=false;
+    if(ok===true){ST.ok=true;render();load(true);}
+    else if(ok===null&&ST.sess){ST.ok=true;ST.err='📴 Network பிரச்சனை';render();load(true);} // offline: try again
+    else{ST.sess=null;ST.loginErr=ok===false?'❌ இந்த account-க்கு அனுமதி இல்லை':'';render();}
+  }else render();
+  setInterval(()=>{if(!document.hidden)load(false);},30000);
+  setInterval(()=>{if(!document.hidden&&ST.ok&&!ST.busy)render();},60000); // "X நிமிடம் ஆகிறது" எண்ணிக்கை புதுப்பிக்க
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)load(false);});
+  window.addEventListener('online',()=>load(true));
+  window.addEventListener('storage',e=>{if(e.key===SKEY&&!e.newValue){ST.sess=null;ST.ok=false;render();}});
+})();
+</script>
+</body>
+</html>
