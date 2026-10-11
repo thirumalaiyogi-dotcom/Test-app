@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>சிட்டை பில்</title>
+<meta name="theme-color" content="#0b5d4b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="சிட்டை பில்">
+<link rel="manifest" href="manifest-billing.webmanifest">
+<link rel="icon" href="icon-shop-192.png">
+<link rel="apple-touch-icon" href="icon-shop-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f3f5f4;--card:#fff;--soft:#f5f7f6;--bd:#e3e8e6;--tx:#101a17;--mu:#6b7873;--mu2:#45524d;
+  --g:#0f8a6c;--g2:#0b5d4b;--gs:#e7f5f0;--or:#c2410c;--ors:#fff1e6;--bl:#1d4ed8;--bls:#e8efff;--rd:#dc2626;--rds:#fdecec;--yl:#a16207;--yls:#fef6dc;
+  --sh:0 1px 3px rgba(16,26,23,.08);--nav:64px}
+html,body{background:var(--bg)}
+body{font-family:'Noto Sans Tamil',system-ui,sans-serif;color:var(--tx);max-width:560px;margin:0 auto;min-height:100vh;font-size:14px;line-height:1.45;padding-bottom:calc(var(--nav) + 70px + env(safe-area-inset-bottom))}
+button{font-family:inherit;cursor:pointer;color:inherit}
+input,select{font-family:inherit}
+.hide{display:none!important}
+.num{font-variant-numeric:tabular-nums}
+/* header */
+.hd{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--g2),var(--g));color:#fff;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:10px}
+.hd .av{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.hd .tt{flex:1;min-width:0}
+.hd .tt b{display:block;font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hd .tt small{font-size:11.5px;opacity:.9;font-weight:600}
+.sync{border:0;border-radius:20px;padding:6px 10px;font-size:11.5px;font-weight:800;background:rgba(255,255,255,.16);color:#fff;white-space:nowrap}
+.sync.w{background:#fef3c7;color:#92400e}.sync.off{background:#fee2e2;color:#991b1b}
+.hd a.bk{color:#fff;text-decoration:none;font-size:20px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(255,255,255,.12)}
+.wrap{padding:12px}
+/* tabs */
+.tb{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:560px;margin:0 auto;background:var(--card);border-top:1px solid var(--bd);display:grid;grid-template-columns:repeat(3,1fr);padding:6px 6px calc(6px + env(safe-area-inset-bottom));height:calc(var(--nav) + env(safe-area-inset-bottom))}
+.tb button{border:0;background:none;border-radius:12px;font-size:12px;font-weight:800;color:var(--mu);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.tb button span{font-size:21px;line-height:1}
+.tb button.on{color:var(--g2);background:var(--gs)}
+/* search */
+.sr{display:flex;gap:8px;margin-bottom:10px}
+.sr .in{flex:1;display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:0 12px;min-height:50px}
+.sr .in:focus-within{border-color:var(--g)}
+.sr input{flex:1;border:0;outline:none;font-size:16px;background:none;min-width:0;color:var(--tx)}
+.sr .x{border:0;background:var(--soft);border-radius:50%;width:28px;height:28px;font-size:12px;color:var(--mu)}
+.sr .sc{border:0;border-radius:14px;width:54px;background:var(--g);color:#fff;font-size:22px;flex-shrink:0}
+.sec{font-size:12.5px;font-weight:800;color:var(--mu);margin:14px 2px 8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sec:first-child{margin-top:2px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:var(--sh)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.qk{border:1.5px solid var(--bd);background:var(--card);border-radius:14px;padding:10px 6px;text-align:center;min-height:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.qk .e{font-size:24px;line-height:1}
+.qk img{width:34px;height:34px;object-fit:cover;border-radius:8px}
+.qk b{font-size:12.5px;font-weight:800;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.qk.out{opacity:.45}
+.row{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--bd);width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left}
+.row:last-child{border-bottom:0}
+.row .im{width:42px;height:42px;border-radius:12px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;overflow:hidden}
+.row .im img{width:100%;height:100%;object-fit:cover}
+.row .tx{flex:1;min-width:0}
+.row .tx b{display:block;font-size:14.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .tx small{display:block;font-size:12px;color:var(--mu);font-weight:600}
+.row .rt{text-align:right;font-weight:800;font-size:13.5px;white-space:nowrap}
+.st-g{color:var(--g)}.st-o{color:var(--or)}.st-r{color:var(--rd)}.st-z{color:var(--mu)}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-size:15px;font-weight:800;background:var(--g);color:#fff;min-height:50px}
+.btn.sm{padding:8px 12px;font-size:13px;min-height:38px;border-radius:11px}
+.btn.gh{background:var(--soft);color:var(--tx);border:1px solid var(--bd)}
+.btn.rd{background:var(--rds);color:var(--rd)}
+.btn.or{background:var(--or)}
+.btn.bl{background:var(--bl)}
+.btn:disabled{opacity:.5}
+.blk{display:block;width:100%}
+.add-free{width:100%;border:1.5px dashed var(--bd);background:none;border-radius:14px;padding:12px;font-weight:800;color:var(--mu2);margin-top:8px}
+/* cart bar */
+.cb{position:fixed;left:0;right:0;bottom:calc(var(--nav) + env(safe-area-inset-bottom));z-index:29;max-width:560px;margin:0 auto;padding:8px 10px;background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.cb button{width:100%;border:0;border-radius:16px;background:var(--g2);color:#fff;display:flex;align-items:center;gap:10px;padding:12px 16px;min-height:58px;box-shadow:0 6px 18px rgba(11,93,75,.3)}
+.cb .c{background:rgba(255,255,255,.18);border-radius:10px;padding:3px 9px;font-weight:800;font-size:13px}
+.cb .t{flex:1;text-align:left;font-size:19px;font-weight:800}
+.cb .g{font-weight:800;font-size:15px}
+/* sheet */
+.sh{position:fixed;inset:0;z-index:50;display:none}
+.sh.on{display:block}
+.sh-bg{position:absolute;inset:0;background:rgba(16,26,23,.45)}
+.sh-p{position:absolute;left:0;right:0;bottom:0;max-width:560px;margin:0 auto;max-height:92vh;background:var(--bg);border-radius:22px 22px 0 0;display:flex;flex-direction:column}
+.sh-p.an{animation:up .2s ease-out}
+@keyframes up{from{transform:translateY(40px);opacity:.5}to{transform:none;opacity:1}}
+.sh-h{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--bd)}
+.sh-h b{flex:1;font-size:16.5px;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sh-h button{border:0;background:#e5e7eb;border-radius:50%;width:34px;height:34px;font-size:15px;flex-shrink:0}
+.sh-b{overflow-y:auto;padding:12px 12px 14px}
+.sh-f{padding:10px 12px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--bd);background:var(--card);display:flex;gap:8px}
+.sh-f .btn{flex:1}
+/* pack lines */
+.pk{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1.5px solid var(--bd);border-radius:14px;margin-bottom:8px}
+.pk.on{border-color:var(--g);background:var(--gs)}
+.pk .w{flex:1;min-width:0}
+.pk .w b{display:block;font-size:15px;font-weight:800}
+.pk .w small{color:var(--mu);font-weight:700;font-size:12px}
+.stp{display:flex;align-items:center;gap:6px}
+.stp button{width:40px;height:40px;border-radius:12px;border:1.5px solid var(--bd);background:var(--card);font-size:20px;font-weight:800}
+.stp button.p{background:var(--g);border-color:var(--g);color:#fff}
+.stp span{min-width:26px;text-align:center;font-weight:800;font-size:16px}
+.lbl{display:block;font-size:12px;font-weight:800;color:var(--mu);margin:10px 2px 6px}
+.inp{width:100%;border:1.5px solid var(--bd);border-radius:12px;padding:12px;font-size:16px;background:var(--card);outline:none;color:var(--tx)}
+.inp:focus{border-color:var(--g)}
+.ig{display:flex;gap:8px;align-items:center}
+.ig .inp{flex:1}
+.ig .u{font-weight:800;color:var(--mu2);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--bd);background:var(--card);border-radius:20px;padding:7px 12px;font-size:13px;font-weight:800;color:var(--mu2)}
+.chip.on{background:var(--g);border-color:var(--g);color:#fff}
+.chip.r.on{background:var(--rd);border-color:var(--rd)}.chip.o.on{background:var(--or);border-color:var(--or)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{border:1.5px solid var(--bd);background:var(--card);border-radius:12px;padding:10px 4px;font-weight:800;font-size:13px}
+.seg button.on{border-color:var(--g);background:var(--gs);color:var(--g2)}
+.seg button small{display:block;font-size:11px;color:var(--mu);font-weight:700}
+.prev{margin-top:10px;font-weight:800;font-size:15px;text-align:right}
+/* cart lines */
+.cl{display:flex;align-items:center;gap:8px;padding:10px 2px;border-bottom:1px solid var(--bd)}
+.cl .tx{flex:1;min-width:0}
+.cl .tx b{display:block;font-size:14px;font-weight:800}
+.cl .tx small{color:var(--mu);font-weight:700;font-size:12px}
+.cl .am{font-weight:800;min-width:64px;text-align:right}
+.cl .rm{border:0;background:var(--rds);color:var(--rd);border-radius:10px;width:34px;height:34px;font-size:14px}
+.tot{display:flex;justify-content:space-between;align-items:baseline;padding:12px 2px 4px;font-size:15px;font-weight:800}
+.tot b{font-size:26px}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.pay button{border:2px solid var(--bd);background:var(--card);border-radius:14px;padding:12px 4px;font-weight:800;font-size:14px}
+.pay button span{display:block;font-size:22px}
+.pay button.on{border-color:var(--g);background:var(--gs);color:var(--g2)}
+.pay button.cr.on{border-color:var(--or);background:var(--ors);color:var(--or)}
+/* receipt */
+.rc{background:#fff;border:1px dashed #cbd5e1;border-radius:14px;padding:14px;font-size:13.5px}
+.rc h3{text-align:center;font-size:16px;font-weight:800}
+.rc .m{text-align:center;color:var(--mu);font-size:12px;font-weight:700;margin-bottom:8px}
+.rc .l{display:flex;justify-content:space-between;gap:10px;padding:3px 0}
+.rc .l span:first-child{flex:1;min-width:0}
+.rc hr{border:0;border-top:1px dashed #cbd5e1;margin:8px 0}
+.rc .T{font-size:17px;font-weight:800}
+.okb{text-align:center;padding:4px 0 10px}
+.okb b{display:block;font-size:44px;line-height:1.1}
+.okb span{font-weight:800;font-size:16px}
+/* report */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px}
+.tile small{display:block;font-size:12px;font-weight:800;color:var(--mu)}
+.tile b{display:block;font-size:22px;font-weight:800;margin-top:2px}
+.tile i{font-style:normal;font-size:11.5px;color:var(--mu);font-weight:700}
+.tile.big{grid-column:1/-1;background:linear-gradient(135deg,var(--g2),var(--g));color:#fff;border:0}
+.tile.big small,.tile.big i{color:rgba(255,255,255,.85)}
+.empty{text-align:center;padding:30px 12px;color:var(--mu);font-weight:700}
+.empty b{display:block;font-size:40px;margin-bottom:6px}
+.note{font-size:12.5px;color:var(--mu);font-weight:600;line-height:1.55;margin:0 2px 10px}
+/* scanner */
+.scan{position:relative;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:4/3}
+.scan video{width:100%;height:100%;object-fit:cover}
+.scan .ln{position:absolute;left:10%;right:10%;top:50%;height:2px;background:#22c55e;box-shadow:0 0 12px #22c55e;animation:sl 1.6s ease-in-out infinite alternate}
+@keyframes sl{from{top:30%}to{top:70%}}
+/* auth */
+.lg{max-width:400px;margin:10vh auto 0;padding:0 16px}
+.lg h2{font-size:21px;font-weight:800;margin-bottom:4px}
+.lg p{font-size:13px;color:var(--mu);margin-bottom:14px;line-height:1.55}
+.lg .inp{margin-bottom:10px}
+.er{color:var(--rd);font-weight:700;font-size:13px;min-height:20px;margin-top:8px}
+.ver{text-align:center;font-size:11px;color:#9ca3af;margin:16px 0 4px}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav) + 84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#101a17;color:#fff;padding:10px 16px;border-radius:12px;font-size:13.5px;font-weight:700;z-index:70;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="sh" id="sheet"></div>
+<div class="toast" id="toast"></div>
+<script>
+// ═══ 🧾 சிட்டை பில் — கடைக்கான கவுண்டர் பில் · சரக்கு · கணக்கு (எல்லாக் கடைக்கும் பொருந்தும்: கிலோ / லிட்டர் / எண்ணிக்கை)
+//     கடை app (shop.html)-ன் அதே login. Net இல்லாமலும் பில் போடலாம் — net வந்ததும் தானாக அனுப்பப்படும்.
+//     Server: inventory.sql (inv · counter_sales · counter_sale() · inv_set() · inv_add() · barcode_set())
+const VER='பதிப்பு 11-10-2026';
+const SB_URL='https://cerstnckjygvcfekfxcp.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlcnN0bmNranlndmNmZWtmeGNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzOTY2NDEsImV4cCI6MjA5Mzk3MjY0MX0.Yl-5QyyEyiwmXG9u1kL08CxIanU-22Fx-HicEe2VYi8';
+const AKEY='sitta_shop_auth'; // shop.html (supabase-js) சேமிக்கும் அதே இடம் — ஒருமுறை login போதும்
+const UNIT={kg:{s:'கி.கி',n:'கிலோ',sub:'அரிசி, பருப்பு, காய்கறி'},l:{s:'லி',n:'லிட்டர்',sub:'எண்ணெய், பால்'},pc:{s:'பீஸ்',n:'எண்ணிக்கை',sub:'பாக்கெட், சோப்பு, முட்டை'}};
+const PAY={cash:['💵','பணம்'],upi:['📲','UPI'],credit:['📒','கடன்']};
+
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r2=n=>Math.round((+n||0)*100)/100;
+const r3=n=>Math.round((+n||0)*1000)/1000;
+const rs=n=>'₹'+r2(n).toLocaleString('en-IN',{maximumFractionDigits:2});
+function lsGet(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),2400);}
+function uuid(){try{return crypto.randomUUID();}catch(e){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==='x'?r:(r&3|8)).toString(16);});}}
+function hm(t){const d=new Date(t);return isNaN(d)?'':d.toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit',hour12:true}).replace(/\s?(am|pm)/i,(m,a)=>a.toLowerCase());}
+function dayStart(off){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-(off||0));return d;}
+function ph10(v){let d=String(v||'').replace(/\D/g,'');if(d.length===12&&d.startsWith('91'))d=d.slice(2);return /^[6-9]\d{9}$/.test(d)?d:'';}
+
+// ── அளவு: பாக்கெட் ஒன்றில் எவ்வளவு (inventory.sql pack_factor-ன் அதே விதி) ──
+function packFactor(w,unit,packq){
+  const v=packq&&+packq[w];if(v>0)return v;
+  const s=String(w||'').toLowerCase();const m=s.match(/(\d+(?:\.\d+)?)/);let n=m?parseFloat(m[1]):1;if(!(n>0))n=1;
+  if(unit==='kg'){if(/(கி\.?\s?கி|கிலோ|kg|kilo)/.test(s))return n;if(/(கிராம்|கி|gm|gram|\d\s?g(\W|$))/.test(s))return n/1000;return 1;}
+  if(unit==='l'){if(/(மி\.?\s?லி|ml)/.test(s))return n/1000;if(/(லிட்டர்|லி|ltr|lit|\d\s?l(\W|$))/.test(s))return n;return 1;}
+  if(/(பீஸ்|pcs|pc|nos|piece|எண்ணம்)/.test(s))return n;return 1;
+}
+function guessUnit(p){const t=(p.packs||[]).map(k=>String(k.w||'').toLowerCase()).join(' ');
+  if(/(கி\.?\s?கி|கிலோ|kg|கிராம்|\dg\b|\d g\b|gm)/.test(t)||/கி(\s|$)/.test(t))return 'kg';
+  if(/(லி|ml|ltr|லிட்டர்)/.test(t))return 'l';return 'pc';}
+function fq(q,unit){q=r3(q);if(unit==='kg'&&q>0&&q<1)return r3(q*1000)+' கி';if(unit==='l'&&q>0&&q<1)return r3(q*1000)+' மி.லி';return q+' '+(UNIT[unit]||UNIT.pc).s;}
+
+// ── login (shop.html-ன் supabase-js session-ஐயே படிக்கிறது / எழுதுகிறது) ──
+const S={sess:null,me:null,shop:null,prods:[],inv:{},bc:{},cart:[],pay:'cash',cname:'',cphone:'',tab:'bill',q:'',sf:'all',sq:'',day:0,sales:[],orders:[],loaded:false,net:navigator.onLine,flushing:false,loginErr:'',checking:true};
+function readSess(){const s=lsGet(AKEY,null);if(s&&s.access_token&&s.user&&s.user.id)return s;return null;}
+function saveSess(d){S.sess={access_token:d.access_token,refresh_token:d.refresh_token,token_type:'bearer',expires_in:d.expires_in||3600,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600),user:d.user};lsSet(AKEY,S.sess);}
+function hdr(x){return Object.assign({'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+(S.sess?S.sess.access_token:SB_KEY)},x||{});}
+let _rp=null;
+function refresh(){if(_rp)return _rp;_rp=(async()=>{
+  const st=readSess();if(st&&st.access_token!==(S.sess&&S.sess.access_token)&&(st.expires_at*1000-Date.now()>60000)){S.sess=st;return true;} // shop.html ஏற்கனவே புதுப்பித்திருக்கலாம்
+  if(!S.sess||!S.sess.refresh_token)return false;const used=S.sess.refresh_token;
+  try{const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify({refresh_token:used})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok){if(r.status>=400&&r.status<500){const st2=readSess();if(st2&&st2.refresh_token!==used){S.sess=st2;return true;}S.sess=null;}return false;}
+    saveSess(d);return true;}catch(e){return false;}})().finally(()=>{_rp=null;});return _rp;}
+async function fresh(){if(!S.sess)return false;if(S.sess.expires_at*1000-Date.now()<60000)return await refresh();return true;}
+async function api(path,opt){if(!await fresh())throw new Error('auth');const r=await fetch(`${SB_URL}/rest/v1/${path}`,Object.assign({headers:hdr()},opt||{}));
+  if(r.status===401){if(await refresh()){const r2_=await fetch(`${SB_URL}/rest/v1/${path}`,Object.assign({},opt||{},{headers:hdr()}));if(!r2_.ok)throw new Error('HTTP '+r2_.status);return r2_.json();}throw new Error('auth');}
+  if(!r.ok){let m='';try{m=(await r.json()).message||'';}catch(e){}throw new Error(m||('HTTP '+r.status));}return r.status===204?null:r.json();}
+const rpc=(fn,args)=>api('rpc/'+fn,{method:'POST',body:JSON.stringify(args)});
+window.doLogin=async function(){
+  const em=$('lg-em').value.trim(),pw=$('lg-pw').value,b=$('lg-b');
+  if(!em||!pw){S.loginErr='Email, password இரண்டும் தேவை';render();return;}
+  b.disabled=true;b.textContent='சரிபார்க்கிறது…';
+  try{const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify({email:em,password:pw})});
+    const d=await r.json().catch(()=>({}));if(!r.ok){S.loginErr='❌ Email அல்லது password தவறு';render();return;}
+    saveSess(d);S.loginErr='';await boot();
+  }catch(e){S.loginErr='📴 Network பிரச்சனை';render();}
+};
+window.doLogout=function(){if(!confirm('வெளியேறவா? (கடை app-லிருந்தும் வெளியேறும்)'))return;if(queue().length&&!confirm('⚠️ இன்னும் '+queue().length+' பில் அனுப்பப்படவில்லை! வெளியேறினால் அவை இந்த phone-ல் இருக்கும், மீண்டும் login செய்தால் அனுப்பப்படும். தொடரவா?'))return;S.sess=null;S.me=null;S.shop=null;try{localStorage.removeItem(AKEY);}catch(e){}render();};
+
+// ── தொடக்கம் ──
+const CKEY=()=>'sitta_bill_cache_'+(S.shop?S.shop.id:'');
+async function boot(){
+  S.checking=true;S.sess=S.sess||readSess();
+  const cachedMe=lsGet('sitta_bill_me',null);
+  if(!S.sess){S.checking=false;render();return;}
+  try{
+    const p=(await api(`profiles?id=eq.${S.sess.user.id}&select=id,full_name,role,shop_id,approved`))[0];
+    if(!p||!p.approved||p.role!=='merchant'||!p.shop_id){S.checking=false;S.me=null;S.loginErr=p&&p.role==='admin'?'இது அட்மின் கணக்கு — கடைக்காரர் கணக்கில் உள்நுழையுங்கள்':'இந்தக் கணக்குக்கு கடை அனுமதி இல்லை';S.sess=null;render();return;}
+    S.me=p;const s=(await api(`shops?id=eq.${encodeURIComponent(p.shop_id)}&select=id,name,logo`))[0]||{id:p.shop_id,name:'கடை'};
+    S.shop=s;lsSet('sitta_bill_me',{me:p,shop:s,uid:S.sess.user.id});
+  }catch(e){
+    if(String(e.message)==='auth'&&!S.sess){S.checking=false;render();return;}
+    if(cachedMe&&cachedMe.uid===S.sess.user.id){S.me=cachedMe.me;S.shop=cachedMe.shop;S.net=false;} // net இல்லை: கடைசியாகச் சேமித்ததை வைத்து
+    else{S.checking=false;S.loginErr='📴 Network பிரச்சனை — net வந்ததும் மீண்டும் திறக்கவும்';render();return;}
+  }
+  S.checking=false;
+  const c=lsGet(CKEY(),null);if(c){S.prods=c.prods||[];S.inv=c.inv||{};S.bc=c.bc||{};S.loaded=true;}
+  render();loadData();flush();
+}
+async function loadData(){
+  if(!S.shop)return;
+  try{
+    const sid=encodeURIComponent(S.shop.id);
+    const [pr,iv,bc]=await Promise.all([
+      api(`products?select=id,name,brand,emoji,photo,hidden,stock,packs&shop_id=eq.${sid}&order=name`),
+      api(`inv?select=product_id,unit,qty,low_at,packq,products!inner(shop_id)&products.shop_id=eq.${sid}`).catch(e=>{if(/inv|relation|schema/i.test(e.message))S.noSql=true;return [];}),
+      api(`barcodes?select=code,product_id,pack&shop_id=eq.${sid}`).catch(()=>[])]);
+    S.prods=pr||[];S.inv={};(iv||[]).forEach(x=>{S.inv[x.product_id]={unit:x.unit,qty:+x.qty,low_at:+x.low_at,packq:x.packq||{}};});
+    // அனுப்பக் காத்திருக்கும் பில்கள் இன்னும் server-ல் கழிக்கப்படவில்லை → இங்கே மட்டும் கழித்துக் காட்டு
+    queue().forEach(b=>applyLocal(b.items,-1));
+    S.bc={};(bc||[]).forEach(x=>{S.bc[x.code]={pid:x.product_id,pk:x.pack};});
+    S.loaded=true;S.net=true;lsSet(CKEY(),{prods:S.prods,inv:S.inv,bc:S.bc,at:Date.now()});
+  }catch(e){S.net=false;}
+  render();
+}
+async function loadReport(){
+  if(!S.shop)return;
+  const a=dayStart(S.day).toISOString(),b=dayStart(S.day-1).toISOString(),sid=encodeURIComponent(S.shop.id);
+  try{
+    const [sa,od]=await Promise.all([
+      api(`counter_sales?select=*&shop_id=eq.${sid}&sold_at=gte.${encodeURIComponent(a)}&sold_at=lt.${encodeURIComponent(b)}&order=sold_at.desc&limit=1000`),
+      api(`orders?select=id,order_number,total,order_status,created_at,delivered_at,pay_mode&shop_id=eq.${sid}&created_at=gte.${encodeURIComponent(a)}&created_at=lt.${encodeURIComponent(b)}&limit=1000`).catch(()=>[])]);
+    S.sales=sa||[];S.orders=od||[];S.repErr='';
+    const since=new Date(Date.now()-90*864e5).toISOString();
+    S.credit=await api(`counter_sales?select=customer_name,customer_phone,total,sold_at,bill_no&shop_id=eq.${sid}&pay_mode=eq.credit&voided=eq.false&sold_at=gte.${encodeURIComponent(since)}&order=sold_at.desc&limit=1000`).catch(()=>[]);
+  }catch(e){S.repErr='📴 கணக்கை ஏற்ற net தேவை';}
+  render();
+}
+
+// ── உள்ளூர் கையிருப்பு (பில் போட்டதும் உடனே குறைந்து தெரிய) ──
+function applyLocal(items,sign){(items||[]).forEach(it=>{const v=it.pid&&S.inv[it.pid];if(!v)return;const f=it.pk?packFactor(it.pk,v.unit,v.packq):1;v.qty=Math.max(0,r3(v.qty+sign*it.q*f));});}
+function stockOf(p){const v=S.inv[p.id];if(!v)return null;return v;}
+function stCls(v){return !v?'st-z':v.qty<=0?'st-r':v.qty<=v.low_at?'st-o':'st-g';}
+
+// ── அனுப்பக் காத்திருக்கும் பில்கள் (net இல்லாத போது) ──
+const QKEY='sitta_bill_q';
+function queue(){return lsGet(QKEY,[]).filter(b=>!S.shop||b.shop===S.shop.id);}
+function qAll(){return lsGet(QKEY,[]);}
+async function flush(){
+  if(S.flushing||!S.sess||!S.shop)return;const q=queue();if(!q.length){renderSync();return;}
+  S.flushing=true;renderSync();
+  try{
+    for(const b of q){
+      let d;try{d=await rpc('counter_sale',{p_id:b.id,p_shop:b.shop,p_items:b.items,p_pay:b.pay,p_name:b.name||null,p_phone:b.phone||null,p_at:b.at});}
+      catch(e){if(/counter_sale|function/i.test(e.message)&&!/fetch|network/i.test(e.message)){S.noSql=true;}S.net=false;break;}
+      const all=qAll();const i=all.findIndex(x=>x.id===b.id);
+      if(d&&d.ok){if(i>=0)all.splice(i,1);lsSet(QKEY,all);const last=lsGet('sitta_bill_last',null);if(last&&last.id===b.id){last.no=d.bill_no;lsSet('sitta_bill_last',last);}S.net=true;}
+      else{if(i>=0){all[i].err=(d&&d.msg)||'பிழை';lsSet(QKEY,all);}toast('⚠️ பில் சேமிக்க முடியவில்லை: '+((d&&d.msg)||''));break;}
+    }
+  }finally{S.flushing=false;renderSync();if(S.tab==='rep')loadReport();}
+}
+setInterval(()=>{if(!document.hidden)flush();},20000);
+window.addEventListener('online',()=>{S.net=true;flush();loadData();});
+window.addEventListener('offline',()=>{S.net=false;renderSync();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S.shop){flush();}});
+
+// ── பில் (cart) ──
+function cartTotal(){return r2(S.cart.reduce((a,l)=>a+r2(l.q*l.p),0));}
+function addLine(l){
+  const ex=l.pk!=null&&S.cart.find(x=>x.pid===l.pid&&x.pk===l.pk&&x.p===l.p);
+  if(ex)ex.q=r3(ex.q+l.q);else S.cart.push(l);
+  const f=lsGet('sitta_bill_freq',{});if(l.pid){f[l.pid]=(f[l.pid]||0)+1;lsSet('sitta_bill_freq',f);}
+  renderCartBar();
+}
+function lineLabel(l){if(l.pk)return l.pk+(l.q!==1?' × '+l.q:'');const v=l.pid&&S.inv[l.pid];return v?fq(l.q,v.unit):(l.q!==1?'× '+l.q:'');}
+
+// ── திரை ──
+window.setTab=function(t){S.tab=t;render();window.scrollTo(0,0);if(t==='rep')loadReport();if(t==='stk'&&!S.loaded)loadData();};
+function render(){
+  const app=$('app');
+  if(!S.me){
+    document.title='சிட்டை பில்';
+    app.innerHTML=S.checking?`<div class="lg"><div class="card empty"><b>🧾</b>திறக்கிறது…</div></div>`:
+      `<div class="lg"><div class="card" style="padding:20px"><h2>🧾 சிட்டை பில்</h2><p>கடையில் நேரில் விற்பதற்கு பில் · சரக்கு வரவு · இன்றைய கணக்கு. கடை app-ன் அதே email / password.</p>
+      <input class="inp" id="lg-em" type="email" autocomplete="username" placeholder="Email"><input class="inp" id="lg-pw" type="password" autocomplete="current-password" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn blk" id="lg-b" onclick="doLogin()">உள்நுழை →</button><div class="er">${esc(S.loginErr)}</div></div><div class="ver">${VER}</div></div>`;
+    return;
+  }
+  const body=S.tab==='bill'?viewBill():S.tab==='stk'?viewStock():viewReport();
+  app.innerHTML=`<div class="hd"><a class="bk" href="shop.html" aria-label="கடை app">‹</a><div class="av">${esc(S.shop.logo||'🏪')}</div><div class="tt"><b>${esc(S.shop.name||'')}</b><small>🧾 பில் & சரக்கு</small></div><button class="sync" id="sync" onclick="flush()"></button></div>
+    <div class="wrap">${S.noSql?`<div class="card" style="background:var(--yls);border-color:#fcd34d;color:var(--yl);font-weight:700;font-size:13px">⚠️ inventory.sql இன்னும் run செய்யப்படவில்லை — அட்மினிடம் சொல்லுங்கள். அதுவரை பில் சேமிக்க முடியாது.</div>`:''}${body}</div>
+    <div class="cb${S.tab==='bill'&&S.cart.length?'':' hide'}" id="cb"></div>
+    <nav class="tb"><button class="${S.tab==='bill'?'on':''}" onclick="setTab('bill')"><span>🧾</span>பில்</button><button class="${S.tab==='stk'?'on':''}" onclick="setTab('stk')"><span>📦</span>சரக்கு</button><button class="${S.tab==='rep'?'on':''}" onclick="setTab('rep')"><span>📊</span>கணக்கு</button></nav>`;
+  renderSync();renderCartBar();
+  if(S.tab==='bill'){const i=$('q');if(i&&S._keepFocus){i.focus();const n=i.value.length;try{i.setSelectionRange(n,n);}catch(e){}}}
+  S._keepFocus=false;
+}
+function renderSync(){const b=$('sync');if(!b)return;const n=queue().length;
+  b.className='sync'+(n?' w':(!S.net?' off':''));
+  b.textContent=S.flushing?'⏳ அனுப்புகிறது…':n?`⏳ ${n} பில் காத்திருக்கிறது`:(!S.net?'📴 net இல்லை':'✅ சேமிக்கப்பட்டது');}
+function renderCartBar(){const c=$('cb');if(!c)return;const n=S.cart.length;c.classList.toggle('hide',!(S.tab==='bill'&&n));
+  if(n)c.innerHTML=`<button onclick="openCheckout()"><span class="c">${n} பொருள்</span><span class="t num">${rs(cartTotal())}</span><span class="g">பில் போடு ›</span></button>`;}
+const pImg=p=>p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${esc(p.emoji||'🛒')}'))">`:esc(p.emoji||'🛒');
+function viewBill(){
+  const q=S.q.trim().toLowerCase();
+  let h=`<div class="sr"><div class="in">🔍<input id="q" type="text" placeholder="பொருள் பெயர் தேடுங்கள்…" value="${esc(S.q)}" oninput="S.q=this.value;S._keepFocus=true;render()" autocomplete="off" enterkeyhint="search">${S.q?`<button class="x" onclick="S.q='';render()">✕</button>`:''}</div>${('BarcodeDetector' in window)?`<button class="sc" onclick="openScan()" aria-label="Barcode">📷</button>`:''}</div>`;
+  if(!S.loaded)return h+`<div class="card empty"><b>⏳</b>பொருட்களை ஏற்றுகிறது…</div>`;
+  if(q){
+    const L=S.prods.filter(p=>(p.name+' '+(p.brand||'')).toLowerCase().includes(q)).slice(0,40);
+    h+=L.length?`<div class="card" style="padding:4px 10px">${L.map(p=>{const v=stockOf(p);return `<button class="row" onclick="openAdd(${p.id})"><div class="im">${pImg(p)}</div><div class="tx"><b>${esc(p.name)}</b><small>${esc(p.brand||'')}${(p.packs||[]).length?(p.brand?' · ':'')+(p.packs||[]).length+' அளவு':''}</small></div><div class="rt ${stCls(v)}">${v?fq(v.qty,v.unit):''}</div></button>`;}).join('')}</div>`
+      :`<div class="card empty"><b>🔍</b>"${esc(S.q)}" கிடைக்கவில்லை</div>`;
+    h+=`<button class="add-free" onclick="openFree('${esc(S.q).replace(/'/g,'')}')">➕ பட்டியலில் இல்லாத பொருள் / வேறு</button>`;
+    return h;
+  }
+  const f=lsGet('sitta_bill_freq',{});
+  const top=S.prods.filter(p=>!p.hidden).sort((a,b)=>(f[b.id]||0)-(f[a.id]||0)||String(a.name).localeCompare(String(b.name))).slice(0,15);
+  h+=`<div class="sec">⚡ அடிக்கடி விற்பவை <small style="font-weight:700">தட்டினால் சேர்க்கலாம்</small></div>`;
+  h+=top.length?`<div class="grid">${top.map(p=>{const v=stockOf(p);return `<button class="qk${v&&v.qty<=0?' out':''}" onclick="openAdd(${p.id})">${p.photo?`<img src="${esc(p.photo)}" alt="" loading="lazy">`:`<span class="e">${esc(p.emoji||'🛒')}</span>`}<b>${esc(p.name)}</b></button>`;}).join('')}</div>`:`<div class="card empty"><b>📦</b>இந்தக் கடையில் பொருட்கள் இல்லை<br><small>அட்மின் பொருட்களைச் சேர்க்க வேண்டும்</small></div>`;
+  h+=`<button class="add-free" onclick="openFree('')">➕ பட்டியலில் இல்லாத பொருள் / வேறு</button>`;
+  const last=lsGet('sitta_bill_last',null);
+  if(last&&last.shop===S.shop.id&&Date.now()-last.at<12*3600e3)h+=`<div class="sec">கடைசி பில்</div><button class="card row" style="border:1px solid var(--bd)" onclick="openReceipt()"><div class="im">🧾</div><div class="tx"><b>${last.no?'பில் #'+last.no:'⏳ அனுப்பக் காத்திருக்கிறது'} · ${rs(last.total)}</b><small>${hm(last.at)} · ${PAY[last.pay][0]} ${PAY[last.pay][1]}${last.phone?' · '+last.phone:''}</small></div><div class="rt">›</div></button>`;
+  return h;
+}
+
+// ── தாள் (sheet) ──
+let SH=null;
+function sheet(title,body,foot){const el=$('sheet');const op=el.classList.contains('on');el.innerHTML=`<div class="sh-bg" onclick="closeSheet()"></div><div class="sh-p${op?'':' an'}"><div class="sh-h"><b>${title}</b><button onclick="closeSheet()" aria-label="மூடு">✕</button></div><div class="sh-b" id="shb">${body}</div>${foot?`<div class="sh-f">${foot}</div>`:''}</div>`;
+  if(!el.classList.contains('on')){el.classList.add('on');try{history.pushState({sh:1},'');}catch(e){}}}
+window.closeSheet=function(){stopScan();const el=$('sheet');if(!el.classList.contains('on'))return;el.classList.remove('on');SH=null;try{if(history.state&&history.state.sh)history.back();}catch(e){}};
+window.addEventListener('popstate',()=>{const el=$('sheet');if(el.classList.contains('on')){stopScan();el.classList.remove('on');SH=null;}});
+
+// ── பொருள் சேர் (பாக்கெட் / தளர்வாக) ──
+function loosePrice(p,v){
+  const saved=lsGet('sitta_bill_lp',{})[p.id];if(saved>0)return saved;
+  const u=v?v.unit:guessUnit(p);let best=null,bd=1e9;
+  (p.packs||[]).forEach(k=>{const pr=+k.price;if(!(pr>0))return;const f=packFactor(k.w,u,v&&v.packq);if(!(f>0))return;const d=Math.abs(Math.log(f));if(d<bd){bd=d;best=pr/f;}});
+  return best?r2(best):'';
+}
+window.openAdd=function(pid){
+  const p=S.prods.find(x=>x.id===pid);if(!p)return;const v=stockOf(p);const u=v?v.unit:guessUnit(p);
+  SH={k:'add',pid,cnt:{},lq:'',lu:u==='kg'?'g':u==='l'?'ml':'pc',lp:loosePrice(p,v)};
+  renderAdd();
+};
+function renderAdd(){
+  const p=S.prods.find(x=>x.id===SH.pid);const v=stockOf(p);const u=v?v.unit:guessUnit(p);
+  const packs=(p.packs||[]).filter(k=>k&&k.w);
+  let b=v?`<div class="note ${stCls(v)}" style="font-weight:800">📦 கையிருப்பு: ${fq(v.qty,v.unit)}${v.qty<=0?' — தீர்ந்தது (இருந்தாலும் பில் போடலாம்)':''}</div>`:'';
+  if(packs.length)b+=`<div class="lbl">பாக்கெட் / அளவு</div>`+packs.map((k,i)=>{const n=SH.cnt[i]||0;return `<div class="pk${n?' on':''}"><div class="w"><b>${esc(k.w)}</b><small>${k.price!=null&&k.price!==''?rs(k.price):'விலை இல்லை'}</small></div><div class="stp"><button onclick="addCnt(${i},-1)" ${n?'':'style="visibility:hidden"'}>−</button><span>${n||''}</span><button class="p" onclick="addCnt(${i},1)">+</button></div></div>`;}).join('');
+  const lu=SH.lu,unitTxt=u==='kg'?(lu==='g'?'கிராம்':'கிலோ'):u==='l'?(lu==='ml'?'மி.லி':'லிட்டர்'):'எண்ணிக்கை';
+  const quick=u==='kg'?[['g',100],['g',250],['g',500],['kg',1],['kg',2],['kg',5]]:u==='l'?[['ml',100],['ml',200],['ml',500],['l',1],['l',2],['l',5]]:[['pc',1],['pc',2],['pc',5],['pc',10],['pc',12]];
+  const qb=lq(u),lt=r2(qb*(+SH.lp||0));
+  b+=`<div class="lbl">${packs.length?'அல்லது ':''}தளர்வாக (${u==='pc'?'எண்ணிக்கை':'எடை / அளவு'})</div><div class="card" style="margin:0">
+    <div class="chips" style="margin-bottom:8px">${quick.map(([uu,n])=>`<button class="chip${SH.lu===uu&&+SH.lq===n?' on':''}" onclick="setLoose('${uu}',${n})">${n} ${uu==='g'?'கி':uu==='kg'?'கி.கி':uu==='ml'?'மி.லி':uu==='l'?'லி':'பீஸ்'}</button>`).join('')}</div>
+    <div class="ig"><input class="inp num" id="lq" type="number" inputmode="decimal" min="0" placeholder="0" value="${esc(SH.lq)}" oninput="SH.lq=this.value;updLoose()">${u!=='pc'?`<select class="inp" style="flex:0 0 108px" onchange="SH.lu=this.value;updLoose()">${(u==='kg'?[['g','கிராம்'],['kg','கிலோ']]:[['ml','மி.லி'],['l','லிட்டர்']]).map(([k,t])=>`<option value="${k}"${SH.lu===k?' selected':''}>${t}</option>`).join('')}</select>`:`<span class="u">${unitTxt}</span>`}</div>
+    <label class="lbl">விலை — ஒரு ${UNIT[u].s}க்கு ₹</label><input class="inp num" id="lp" type="number" inputmode="decimal" min="0" placeholder="0" value="${esc(SH.lp)}" oninput="SH.lp=this.value;updLoose()">
+    <div class="prev num" id="lprev">${qb>0?`${fq(qb,u)} = ${rs(lt)}`:''}</div></div>`;
+  sheet(esc(p.name),b,`<button class="btn gh" onclick="closeSheet()">ரத்து</button><button class="btn" style="flex:2" id="addbtn" onclick="addAll()"></button>`);
+  updAddBtn();
+}
+function addSel(){const p=S.prods.find(x=>x.id===SH.pid);const v=stockOf(p);const u=v?v.unit:guessUnit(p);
+  const n=Object.values(SH.cnt).reduce((a,x)=>a+x,0),qb=lq(u),lok=qb>0&&SH.lp!==''&&+SH.lp>=0;return {n,qb,lok,u};}
+function updAddBtn(){const b=$('addbtn');if(!b)return;const x=addSel();const parts=[];if(x.n)parts.push(x.n+' பாக்கெட்');if(x.lok)parts.push(fq(x.qb,x.u));
+  b.disabled=!parts.length;b.textContent=parts.length?'சேர் ✓ ('+parts.join(' + ')+')':(x.qb>0?'விலை போடுங்கள்':'அளவு தேர்ந்தெடுங்கள்');}
+function lq(u){const n=+SH.lq;if(!(n>0))return 0;if(SH.lu==='g'||SH.lu==='ml')return r3(n/1000);return r3(n);}
+window.addCnt=function(i,d){SH.cnt[i]=Math.max(0,(SH.cnt[i]||0)+d);const sc=$('shb').scrollTop;renderAdd();$('shb').scrollTop=sc;};
+window.setLoose=function(uu,n){SH.lu=uu;SH.lq=String(n);const sc=$('shb').scrollTop;renderAdd();$('shb').scrollTop=sc;};
+window.updLoose=function(){const p=S.prods.find(x=>x.id===SH.pid);const v=stockOf(p);const u=v?v.unit:guessUnit(p);const qb=lq(u);
+  $('lprev').textContent=qb>0?`${fq(qb,u)} = ${rs(qb*(+SH.lp||0))}`:'';updAddBtn();};
+window.addAll=function(){const p=S.prods.find(x=>x.id===SH.pid);const v=stockOf(p);const x=addSel();const packs=(p.packs||[]).filter(k=>k&&k.w);const msg=[];
+  Object.keys(SH.cnt).forEach(i=>{const c=SH.cnt[i];const k=packs[i];if(!c||!k)return;addLine({pid:p.id,n:p.name,pk:k.w,q:c,p:r2(+k.price||0)});msg.push(k.w+(c>1?' ×'+c:''));});
+  if(x.lok){const pr=r2(+SH.lp||0);const lp=lsGet('sitta_bill_lp',{});lp[p.id]=pr;lsSet('sitta_bill_lp',lp);
+    if(!v&&x.u!=='pc')addLine({pid:p.id,n:p.name+' ('+fq(x.qb,x.u)+')',pk:null,q:1,p:r2(x.qb*pr)});   // கணக்கு இல்லாத பொருள்: தொகையாக மட்டும்
+    else addLine({pid:p.id,n:p.name,pk:null,q:x.qb,p:pr});msg.push(fq(x.qb,x.u));}
+  if(!msg.length)return;closeSheet();S.q='';render();toast('✅ '+p.name+' — '+msg.join(', '));};
+window.openFree=function(nm){
+  SH={k:'free'};
+  sheet('➕ வேறு பொருள்',`<div class="note">பட்டியலில் இல்லாத பொருள் / சில்லறை. இது கையிருப்பில் சேராது.</div>
+    <label class="lbl">பெயர்</label><input class="inp" id="fn" type="text" maxlength="60" placeholder="உதா: பை, சில்லறை பொருள்" value="${esc(nm)}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label class="lbl">விலை ₹</label><input class="inp num" id="fp" type="number" inputmode="decimal" min="0" placeholder="0"></div><div><label class="lbl">எண்ணிக்கை</label><input class="inp num" id="fq" type="number" inputmode="decimal" min="0" value="1"></div></div>`,
+    `<button class="btn gh" onclick="closeSheet()">ரத்து</button><button class="btn" onclick="addFree()">சேர் ✓</button>`);
+  setTimeout(()=>{const e=$(nm?'fp':'fn');if(e)e.focus();},250);
+};
+window.addFree=function(){const n=($('fn').value||'').trim()||'வேறு பொருள்',p=r2($('fp').value),q=r3($('fq').value||1);
+  if(!(p>=0)||$('fp').value===''){toast('விலை போடுங்கள்');return;}if(!(q>0)){toast('எண்ணிக்கை சரியில்லை');return;}
+  addLine({pid:null,n,pk:null,q,p});closeSheet();S.q='';render();};
+
+// ── பில் போடு ──
+window.openCheckout=function(){SH={k:'co'};renderCheckout();};
+function renderCheckout(){
+  if(!S.cart.length){closeSheet();render();return;}
+  const b=`${S.cart.map((l,i)=>`<div class="cl"><div class="tx"><b>${esc(l.n)}</b><small>${[esc(lineLabel(l)),rs(l.p)+(l.pk||!l.pid||!S.inv[l.pid]?'':' / '+UNIT[S.inv[l.pid].unit].s)].filter(Boolean).join(' · ')}</small></div>
+      ${l.pk||!l.pid||!S.inv[l.pid]?`<div class="stp"><button onclick="cq(${i},-1)">−</button><span>${l.q}</span><button class="p" onclick="cq(${i},1)">+</button></div>`:''}<div class="am num">${rs(l.q*l.p)}</div><button class="rm" onclick="crm(${i})" aria-label="நீக்கு">✕</button></div>`).join('')}
+    <div class="tot"><span>மொத்தம்</span><b class="num">${rs(cartTotal())}</b></div>
+    <div class="lbl">பணம்</div><div class="pay">${Object.keys(PAY).map(k=>`<button class="${k==='credit'?'cr ':''}${S.pay===k?'on':''}" onclick="setPay('${k}')"><span>${PAY[k][0]}</span>${PAY[k][1]}</button>`).join('')}</div>
+    <label class="lbl">வாடிக்கையாளர் மொபைல் ${S.pay==='credit'?'* (கடனுக்குத் தேவை)':'(விருப்பம் — WhatsApp பில் அனுப்ப)'}</label>
+    <input class="inp num" id="cph" type="tel" inputmode="numeric" maxlength="10" placeholder="9XXXXXXXXX" value="${esc(S.cphone)}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,10);S.cphone=this.value">
+    ${S.pay==='credit'?`<label class="lbl">பெயர்</label><input class="inp" id="cnm" type="text" maxlength="60" placeholder="வாடிக்கையாளர் பெயர்" value="${esc(S.cname)}" oninput="S.cname=this.value">`:''}`;
+  sheet('🧾 பில் — '+S.cart.length+' பொருள்',b,`<button class="btn gh" onclick="clearCart()">அழி</button><button class="btn" style="flex:2" id="savebtn" onclick="saveBill()">✅ பில் சேமி · ${rs(cartTotal())}</button>`);
+}
+window.cq=function(i,d){const l=S.cart[i];if(!l)return;l.q=r3(l.q+d);if(l.q<=0)S.cart.splice(i,1);const sc=$('shb').scrollTop;renderCheckout();renderCartBar();const e=$('shb');if(e)e.scrollTop=sc;};
+window.crm=function(i){S.cart.splice(i,1);renderCheckout();renderCartBar();};
+window.setPay=function(k){S.pay=k;const sc=$('shb').scrollTop;renderCheckout();$('shb').scrollTop=sc;};
+window.clearCart=function(){if(!confirm('பில்லில் உள்ள எல்லாவற்றையும் அழிக்கவா?'))return;S.cart=[];closeSheet();render();};
+window.saveBill=function(){
+  if(!S.cart.length)return;const phone=ph10(S.cphone);
+  if(S.cphone&&!phone){toast('மொபைல் எண் சரியில்லை');return;}
+  if(S.pay==='credit'&&!phone){toast('கடனுக்கு மொபைல் எண் தேவை');return;}
+  const items=S.cart.map(l=>({pid:l.pid,n:l.n,pk:l.pk,q:r3(l.q),p:r2(l.p)}));
+  const b={id:uuid(),shop:S.shop.id,items,pay:S.pay,name:S.pay==='credit'?(S.cname||'').trim():'',phone,at:new Date().toISOString(),total:cartTotal()};
+  const all=qAll();all.push(b);lsSet(QKEY,all);        // முதலில் phone-ல் சேமி — net போனாலும் பில் இழக்காது
+  applyLocal(items,-1);lsSet(CKEY(),{prods:S.prods,inv:S.inv,bc:S.bc,at:Date.now()});
+  lsSet('sitta_bill_last',{...b,no:null});
+  S.cart=[];S.cphone='';S.cname='';S.pay='cash';
+  openReceipt(true);render();flush().then(()=>{if(SH&&SH.k==='rc')openReceipt(true);});
+};
+function billText(b){
+  const L=b.items.map(l=>{const v=l.pid&&S.inv[l.pid];const qty=l.pk?(l.pk+(l.q!==1?' × '+l.q:'')):(v?fq(l.q,v.unit):(l.q!==1?'× '+l.q:''));return `${l.n}${qty?' — '+qty:''} = ${rs(l.q*l.p)}`;}).join('\n');
+  return `🧾 ${S.shop.name}\n${b.no?'பில் #'+b.no+' · ':''}${new Date(b.at).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}\n————————\n${L}\n————————\nமொத்தம்: ${rs(b.total)} (${PAY[b.pay][1]})\nநன்றி 🙏`;
+}
+window.openReceipt=function(fresh_){
+  const b=lsGet('sitta_bill_last',null);if(!b)return;SH={k:'rc'};
+  const body=`${fresh_?`<div class="okb"><b>✅</b><span>பில் சேமிக்கப்பட்டது${b.no?'':' — net வந்ததும் அனுப்பப்படும்'}</span></div>`:''}
+    <div class="rc"><h3>${esc(S.shop.name)}</h3><div class="m">${b.no?'பில் #'+b.no:'⏳ அனுப்பக் காத்திருக்கிறது'} · ${new Date(b.at).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}</div>
+      ${b.items.map(l=>`<div class="l"><span>${esc(l.n)} <small style="color:var(--mu)">${esc(lineLabel(l))}</small></span><span class="num">${rs(l.q*l.p)}</span></div>`).join('')}
+      <hr><div class="l T"><span>மொத்தம்</span><span class="num">${rs(b.total)}</span></div><div class="l"><span>${PAY[b.pay][0]} ${PAY[b.pay][1]}</span><span>${esc(b.name||'')} ${b.phone||''}</span></div></div>
+    <label class="lbl">WhatsApp-ல் அனுப்ப மொபைல் எண்</label><input class="inp num" id="rph" type="tel" inputmode="numeric" maxlength="10" placeholder="9XXXXXXXXX" value="${esc(b.phone||'')}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,10)">`;
+  sheet('🧾 பில்',body,`<button class="btn" style="background:#25d366" onclick="sendWA()">💬 WhatsApp</button><button class="btn gh" onclick="closeSheet();setTab('bill')">🆕 புதிய பில்</button>`);
+};
+window.sendWA=function(){const b=lsGet('sitta_bill_last',null);if(!b)return;const p=ph10($('rph').value);if(!p){toast('சரியான மொபைல் எண் போடுங்கள்');return;}
+  window.open('https://wa.me/91'+p+'?text='+encodeURIComponent(billText(b)),'_blank');};
+
+// ── 📷 Barcode ──
+let SCN=null;
+function stopScan(){if(SCN){SCN.stop=true;try{SCN.stream.getTracks().forEach(t=>t.stop());}catch(e){}SCN=null;}}
+async function startScan(onCode){
+  stopScan();const v=$('scv');if(!v)return;
+  try{
+    const det=new BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e','code_128','code_39','qr_code']});
+    const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    SCN={stream:st,stop:false};v.srcObject=st;await v.play();
+    const loop=async()=>{if(!SCN||SCN.stop)return;try{const c=await det.detect(v);if(c&&c.length&&c[0].rawValue){const code=c[0].rawValue;try{navigator.vibrate&&navigator.vibrate(80);}catch(e){}stopScan();onCode(code);return;}}catch(e){}setTimeout(loop,180);};loop();
+  }catch(e){const sb=$('shb');if(sb)sb.insertAdjacentHTML('afterbegin',`<div class="card" style="color:var(--rd);font-weight:700">📷 Camera திறக்க முடியவில்லை — அனுமதி கொடுங்கள்</div>`);}
+}
+window.openScan=function(){
+  SH={k:'scan'};sheet('📷 Barcode scan',`<div class="scan"><video id="scv" playsinline muted></video><div class="ln"></div></div><div class="note" style="margin-top:10px">பாக்கெட்டின் barcode-ஐ camera முன் காட்டுங்கள். ஒருமுறை இணைத்தால் அடுத்த முறை தானாகச் சேரும்.</div>`,`<button class="btn gh" onclick="closeSheet()">மூடு</button>`);
+  startScan(code=>{
+    const m=S.bc[code];const p=m&&S.prods.find(x=>x.id===m.pid);
+    if(p){if(m.pk){const k=(p.packs||[]).find(x=>x.w===m.pk);addLine({pid:p.id,n:p.name,pk:m.pk,q:1,p:r2(k?+k.price||0:0)});toast('✅ '+p.name+' '+m.pk);setTimeout(openScan,350);render();}else{closeSheet();setTimeout(()=>openAdd(p.id),300);}return;}
+    linkCode(code);
+  });
+};
+function linkCode(code,q){
+  SH={k:'link',code,q:q||''};const qq=(SH.q||'').toLowerCase();
+  const L=qq?S.prods.filter(p=>(p.name+' '+(p.brand||'')).toLowerCase().includes(qq)).slice(0,25):[];
+  sheet('🔗 புதிய barcode',`<div class="note">Barcode <b>${esc(code)}</b> — இது எந்தப் பொருள்? ஒருமுறை தேர்ந்தெடுத்தால் போதும்.</div>
+    <input class="inp" id="lkq" type="text" placeholder="பொருள் பெயர் தேடுங்கள்…" value="${esc(SH.q)}" oninput="linkCode('${esc(code)}',this.value)">
+    <div class="card" style="padding:4px 10px;margin-top:8px">${L.map(p=>`<div style="padding:8px 0;border-bottom:1px solid var(--bd)"><b style="font-size:14px">${esc(p.name)}</b><div class="chips" style="margin-top:6px">${(p.packs||[]).filter(k=>k&&k.w).map(k=>`<button class="chip" onclick="doLink('${esc(code)}',${p.id},'${esc(k.w).replace(/'/g,'')}')">${esc(k.w)}</button>`).join('')}<button class="chip" onclick="doLink('${esc(code)}',${p.id},'')">தளர்வாக</button></div></div>`).join('')||'<div class="note" style="margin:8px 0">மேலே பெயர் எழுதுங்கள்</div>'}</div>`,`<button class="btn gh" onclick="closeSheet()">ரத்து</button>`);
+  const i=$('lkq');if(i){i.focus();const n=i.value.length;try{i.setSelectionRange(n,n);}catch(e){}}
+}
+window.linkCode=linkCode;
+window.doLink=async function(code,pid,pk){
+  try{const d=await rpc('barcode_set',{p_code:code,p_product:pid,p_pack:pk||null});if(!d||!d.ok)throw new Error(d&&d.msg);
+    S.bc[code]={pid,pk:pk||null};lsSet(CKEY(),{prods:S.prods,inv:S.inv,bc:S.bc,at:Date.now()});
+    const p=S.prods.find(x=>x.id===pid);toast('🔗 இணைக்கப்பட்டது — '+(p?p.name:''));
+    if(pk){const k=(p.packs||[]).find(x=>x.w===pk);addLine({pid,n:p.name,pk,q:1,p:r2(k?+k.price||0:0)});closeSheet();render();}else{closeSheet();setTimeout(()=>openAdd(pid),300);}
+  }catch(e){toast('⚠️ இணைக்க net தேவை'+(e&&e.message&&!/fetch/i.test(e.message)?' — '+e.message:''));}
+};
+
+// ── 📦 சரக்கு ──
+function viewStock(){
+  if(!S.loaded)return `<div class="card empty"><b>⏳</b>ஏற்றுகிறது…</div>`;
+  const P=S.prods,tr=P.filter(p=>S.inv[p.id]),low=tr.filter(p=>S.inv[p.id].qty>0&&S.inv[p.id].qty<=S.inv[p.id].low_at),out=tr.filter(p=>S.inv[p.id].qty<=0);
+  const C=[['all','எல்லாம்',P.length,''],['tr','கணக்கில்',tr.length,''],['low','⚠️ குறைவு',low.length,'o'],['out','⛔ தீர்ந்தது',out.length,'r'],['no','கணக்கு இல்லை',P.length-tr.length,'']];
+  let L=S.sf==='tr'?tr:S.sf==='low'?low:S.sf==='out'?out:S.sf==='no'?P.filter(p=>!S.inv[p.id]):P;
+  const q=S.sq.trim().toLowerCase();if(q)L=L.filter(p=>(p.name+' '+(p.brand||'')).toLowerCase().includes(q));
+  let h=`<div class="note">ஒவ்வொரு பொருளுக்கும் <b>கிலோ / லிட்டர் / எண்ணிக்கை</b> தேர்ந்தெடுத்து கையிருப்பு போடுங்கள். கவுண்டர் பில்லும் சிட்டை ஆர்டரும் இதைத் தானாகக் குறைக்கும்; 0 ஆனால் சிட்டை app-ல் "இல்லை" ஆகும்.</div>
+    <div class="chips" style="margin-bottom:10px">${C.map(([k,t,n,cl])=>`<button class="chip ${cl}${S.sf===k?' on':''}" onclick="S.sf='${k}';render()">${t} ${n}</button>`).join('')}</div>
+    <div class="sr"><div class="in">🔍<input id="sq" type="text" placeholder="தேடுங்கள்…" value="${esc(S.sq)}" oninput="S.sq=this.value;clearTimeout(window._sqT);window._sqT=setTimeout(()=>{render();const i=$('sq');if(i){i.focus();const n=i.value.length;i.setSelectionRange(n,n);}},250)"></div></div>`;
+  h+=L.length?`<div class="card" style="padding:4px 10px">${L.map(p=>{const v=S.inv[p.id];
+    return `<div class="row"><button class="im" style="border:0" onclick="openSetup(${p.id})">${pImg(p)}</button><button class="tx" style="border:0;background:none;text-align:left" onclick="openSetup(${p.id})"><b>${esc(p.name)}</b><small>${v?`குறைவு எல்லை ${fq(v.low_at,v.unit)}`:'தட்டி கணக்கு அமையுங்கள்'}</small></button>
+      ${v?`<div class="rt ${stCls(v)}">${fq(v.qty,v.unit)}</div><button class="btn sm" onclick="openIn(${p.id})">＋ வரவு</button>`:`<button class="btn sm gh" onclick="openSetup(${p.id})">அமை</button>`}</div>`;}).join('')}</div>`:`<div class="card empty"><b>📦</b>பொருள் இல்லை</div>`;
+  return h;
+}
+window.openSetup=function(pid){
+  const p=S.prods.find(x=>x.id===pid);if(!p)return;const v=S.inv[pid];
+  SH={k:'setup',pid,unit:v?v.unit:guessUnit(p),qty:v?String(v.qty):'',low:v?String(v.low_at):'',pq:Object.assign({},v?v.packq:{})};
+  renderSetup();
+};
+function renderSetup(){
+  const p=S.prods.find(x=>x.id===SH.pid);const v=S.inv[SH.pid];const u=SH.unit;const packs=(p.packs||[]).filter(k=>k&&k.w);
+  const bcs=Object.keys(S.bc).filter(c=>S.bc[c].pid===p.id);
+  const b=`<div class="lbl">எப்படி அளப்பீர்கள்?</div><div class="seg">${Object.keys(UNIT).map(k=>`<button class="${u===k?'on':''}" onclick="SH.unit='${k}';renderSetup()">${UNIT[k].n}<small>${UNIT[k].s}</small></button>`).join('')}</div>
+    <div class="note" style="margin-top:6px">${UNIT[u].sub}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><label class="lbl">இப்போது கையிருப்பு</label><div class="ig"><input class="inp num" id="su-q" type="number" inputmode="decimal" min="0" placeholder="0" value="${esc(SH.qty)}" oninput="SH.qty=this.value"><span class="u">${UNIT[u].s}</span></div></div>
+      <div><label class="lbl">குறைவு எல்லை 🔔</label><div class="ig"><input class="inp num" id="su-l" type="number" inputmode="decimal" min="0" placeholder="0" value="${esc(SH.low)}" oninput="SH.low=this.value"><span class="u">${UNIT[u].s}</span></div></div></div>
+    ${packs.length?`<div class="lbl">ஒரு பாக்கெட்டில் எவ்வளவு? <small style="font-weight:600">(விற்கும்போது இவ்வளவு குறையும்)</small></div><div class="card" style="margin:0;padding:6px 12px">${packs.map((k,i)=>{const auto=packFactor(k.w,u,{});const cur=SH.pq[k.w]!=null?SH.pq[k.w]:'';
+      return `<div class="ig" style="padding:6px 0;border-bottom:1px solid var(--bd)"><b style="flex:1;font-size:14px">${esc(k.w)}</b><input class="inp num" style="flex:0 0 96px;padding:9px" type="number" inputmode="decimal" min="0" placeholder="${auto}" value="${esc(cur)}" oninput="spq(${i},this.value)"><span class="u" style="width:38px">${UNIT[u].s}</span></div>`;}).join('')}<div class="note" style="margin:6px 0 2px">காலியாக விட்டால் பெயரிலிருந்து தானாக (சாம்பல் எண்)</div></div>`:''}
+    ${('BarcodeDetector' in window)?`<div class="lbl">Barcode</div><div class="card" style="margin:0">${bcs.length?bcs.map(c=>`<div style="font-size:13px;font-weight:700">🔗 ${esc(c)} ${S.bc[c].pk?'· '+esc(S.bc[c].pk):''}</div>`).join(''):'<div class="note" style="margin:0">இணைக்கவில்லை</div>'}<div class="note" style="margin:6px 0 0">பில் திரையில் 📷 தட்டி scan செய்தால் இணைக்கலாம்</div></div>`:''}
+    ${v?`<button class="btn rd blk" style="margin-top:14px" onclick="stopTrack()">கணக்கு வைப்பதை நிறுத்து</button>`:''}`;
+  sheet('📦 '+esc(p.name),b,`<button class="btn gh" onclick="closeSheet()">ரத்து</button><button class="btn" style="flex:2" onclick="saveSetup()">சேமி ✓</button>`);
+}
+window.spq=function(i,val){const p=S.prods.find(x=>x.id===SH.pid);const k=(p.packs||[]).filter(k=>k&&k.w)[i];if(!k)return;if(val===''||!(+val>0))delete SH.pq[k.w];else SH.pq[k.w]=+val;};
+window.saveSetup=async function(){
+  const q=SH.qty===''?NaN:+SH.qty,l=SH.low===''?0:+SH.low;
+  if(!(q>=0)){toast('இப்போதைய கையிருப்பு போடுங்கள் (0 என்றாலும்)');return;}if(!(l>=0)){toast('குறைவு எல்லை சரியில்லை');return;}
+  try{const d=await rpc('inv_set',{p_product:SH.pid,p_unit:SH.unit,p_qty:r3(q),p_low:r3(l),p_packq:SH.pq});if(!d||!d.ok)throw new Error(d&&d.msg);
+    S.inv[SH.pid]={unit:SH.unit,qty:r3(q),low_at:r3(l),packq:SH.pq};const p=S.prods.find(x=>x.id===SH.pid);if(p&&q>0&&p.stock==='out')p.stock='ok';
+    lsSet(CKEY(),{prods:S.prods,inv:S.inv,bc:S.bc,at:Date.now()});closeSheet();render();toast('✅ சேமிக்கப்பட்டது');
+  }catch(e){toast('⚠️ சேமிக்க net தேவை'+(e&&e.message&&!/fetch/i.test(e.message)?' — '+e.message:''));}
+};
+window.stopTrack=async function(){if(!confirm('இந்தப் பொருளுக்குக் கையிருப்புக் கணக்கை நிறுத்தவா?'))return;
+  try{const d=await rpc('inv_set',{p_product:SH.pid,p_unit:null,p_qty:0});if(!d||!d.ok)throw new Error(d&&d.msg);delete S.inv[SH.pid];closeSheet();render();toast('கணக்கு நிறுத்தப்பட்டது');}
+  catch(e){toast('⚠️ net தேவை');}};
+window.openIn=function(pid){const p=S.prods.find(x=>x.id===pid);const v=S.inv[pid];if(!p||!v)return;SH={k:'in',pid,sign:1,val:''};renderIn();};
+function renderIn(){const p=S.prods.find(x=>x.id===SH.pid);const v=S.inv[SH.pid];const u=UNIT[v.unit].s;const quick=v.unit==='pc'?[1,5,10,12,24,50]:[1,5,10,25,50,100];
+  sheet((SH.sign>0?'＋ சரக்கு வரவு — ':'− குறைப்பு — ')+esc(p.name),`<div class="note">இப்போது: <b>${fq(v.qty,v.unit)}</b></div>
+    <div class="seg" style="grid-template-columns:1fr 1fr"><button class="${SH.sign>0?'on':''}" onclick="SH.sign=1;renderIn()">＋ சரக்கு வந்தது</button><button class="${SH.sign<0?'on':''}" onclick="SH.sign=-1;renderIn()">− சேதம் / குறைப்பு</button></div>
+    <label class="lbl">எவ்வளவு?</label><div class="ig"><input class="inp num" id="inv-v" type="number" inputmode="decimal" min="0" placeholder="0" value="${esc(SH.val)}" oninput="SH.val=this.value"><span class="u">${u}</span></div>
+    <div class="chips" style="margin-top:8px">${quick.map(n=>`<button class="chip" onclick="SH.val=String((+SH.val||0)+${n});renderIn()">+${n}</button>`).join('')}</div>`,
+    `<button class="btn gh" onclick="closeSheet()">ரத்து</button><button class="btn${SH.sign<0?' or':''}" style="flex:2" onclick="saveIn()">${SH.sign>0?'வரவு சேர் ✓':'குறை ✓'}</button>`);
+  setTimeout(()=>{const e=$('inv-v');if(e&&!SH.val)e.focus();},200);}
+window.saveIn=async function(){const n=+SH.val;if(!(n>0)){toast('எவ்வளவு என்று போடுங்கள்');return;}
+  try{const d=await rpc('inv_add',{p_product:SH.pid,p_delta:SH.sign*r3(n),p_note:null});if(!d||!d.ok)throw new Error(d&&d.msg);
+    S.inv[SH.pid].qty=+d.qty;const p=S.prods.find(x=>x.id===SH.pid);if(p&&+d.qty>0&&p.stock==='out')p.stock='ok';lsSet(CKEY(),{prods:S.prods,inv:S.inv,bc:S.bc,at:Date.now()});
+    closeSheet();render();toast('✅ இப்போது '+fq(+d.qty,S.inv[SH.pid]?S.inv[SH.pid].unit:'pc'));}
+  catch(e){toast('⚠️ சேமிக்க net தேவை'+(e&&e.message&&!/fetch/i.test(e.message)?' — '+e.message:''));}};
+
+// ── 📊 கணக்கு ──
+function viewReport(){
+  const pend=queue();const sa=S.sales.filter(x=>!x.voided);
+  const by=k=>sa.filter(x=>x.pay_mode===k).reduce((a,x)=>a+(+x.total||0),0);
+  const ct=sa.reduce((a,x)=>a+(+x.total||0),0);
+  const dl=S.orders.filter(o=>o.order_status==='DELIVERED'),ot=dl.reduce((a,o)=>a+(+o.total||0),0);
+  const low=S.prods.filter(p=>{const v=S.inv[p.id];return v&&v.qty<=v.low_at;});
+  let h=`<div class="chips" style="margin-bottom:10px">${[[0,'இன்று'],[1,'நேற்று'],[2,'முந்தைய நாள்']].map(([d,t])=>`<button class="chip${S.day===d?' on':''}" onclick="S.day=${d};S.sales=[];S.orders=[];render();loadReport()">${t}</button>`).join('')}</div>`;
+  if(S.repErr)h+=`<div class="card" style="color:var(--rd);font-weight:700">${esc(S.repErr)}</div>`;
+  if(pend.length)h+=`<div class="card" style="background:var(--yls);border-color:#fcd34d"><b style="color:var(--yl)">⏳ ${pend.length} பில் இன்னும் அனுப்பப்படவில்லை (${rs(pend.reduce((a,b)=>a+b.total,0))})</b><div class="note" style="margin:4px 0 0">net வந்ததும் தானாக அனுப்பப்படும். ${pend.some(b=>b.err)?'⚠️ '+esc(pend.find(b=>b.err).err):''}</div></div>`;
+  h+=`<div class="tiles"><div class="tile big"><small>மொத்த விற்பனை</small><b class="num">${rs(ct+ot)}</b><i>கவுண்டர் ${rs(ct)} + சிட்டை ${rs(ot)}</i></div>
+    <div class="tile"><small>🧾 கவுண்டர் பில்</small><b class="num">${rs(ct)}</b><i>${sa.length} பில்</i></div>
+    <div class="tile"><small>🛵 சிட்டை ஆர்டர்</small><b class="num">${rs(ot)}</b><i>${dl.length} கொடுத்தது</i></div>
+    <div class="tile"><small>💵 பணம் · 📲 UPI</small><b class="num" style="font-size:16px">${rs(by('cash'))} · ${rs(by('upi'))}</b></div>
+    <div class="tile"><small>📒 கடன்</small><b class="num" style="color:var(--or)">${rs(by('credit'))}</b></div></div>`;
+  if(low.length){const txt='🛒 வாங்க வேண்டிய சரக்கு — '+S.shop.name+'\n'+low.map(p=>'• '+p.name+' (இருப்பு '+fq(S.inv[p.id].qty,S.inv[p.id].unit)+')').join('\n');
+    h+=`<div class="sec">⚠️ குறைவான / தீர்ந்த சரக்கு (${low.length})<a class="btn sm" style="background:#25d366;text-decoration:none" href="https://wa.me/?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">💬 பட்டியல் அனுப்பு</a></div><div class="card" style="padding:4px 10px">${low.slice(0,40).map(p=>{const v=S.inv[p.id];return `<div class="row"><div class="tx"><b>${esc(p.name)}</b></div><div class="rt ${stCls(v)}">${fq(v.qty,v.unit)}</div><button class="btn sm" onclick="openIn(${p.id})">＋ வரவு</button></div>`;}).join('')}</div>`;}
+  h+=`<div class="sec">🧾 பில்கள் (${S.sales.length})</div>`;
+  h+=S.sales.length?`<div class="card" style="padding:4px 10px">${S.sales.map(x=>`<button class="row" onclick="openSale('${x.id}')"${x.voided?' style="opacity:.45"':''}><div class="tx"><b>#${x.bill_no||''} · ${rs(x.total)}${x.voided?' · ரத்து':''}</b><small>${hm(x.sold_at)} · ${PAY[x.pay_mode][0]} ${PAY[x.pay_mode][1]} · ${(x.items||[]).length} பொருள்${x.customer_phone?' · '+x.customer_phone:''}</small></div><div class="rt">›</div></button>`).join('')}</div>`:`<div class="card empty"><b>🧾</b>${S.repErr?'':'இந்த நாளில் பில் இல்லை'}</div>`;
+  const C={};(S.credit||[]).forEach(x=>{const k=x.customer_phone||'?';(C[k]=C[k]||{ph:k,nm:'',t:0,n:0,last:x.sold_at});C[k].t+=+x.total||0;C[k].n++;if(!C[k].nm&&x.customer_name)C[k].nm=x.customer_name;});
+  const CL=Object.values(C).sort((a,b)=>b.t-a.t);
+  if(CL.length)h+=`<div class="sec">📒 கடன் புத்தகம் (90 நாள்)</div><div class="card" style="padding:4px 10px">${CL.map(c=>`<div class="row"><div class="tx"><b>${esc(c.nm||c.ph)}</b><small>${c.ph} · ${c.n} பில்</small></div><div class="rt st-o">${rs(c.t)}</div><a class="btn sm" style="background:#25d366;text-decoration:none" href="https://wa.me/91${c.ph}?text=${encodeURIComponent('வணக்கம் '+(c.nm||'')+' 🙏 '+S.shop.name+'-ல் உங்கள் கடன் நிலுவை '+rs(c.t)+'. வசதிப்படும்போது கொடுத்துவிடுங்கள். நன்றி')}" target="_blank" rel="noopener">💬</a></div>`).join('')}</div><div class="note">கடன் திரும்ப வந்ததும் அந்தப் பில்லைத் திறந்து "வசூலானது" என்று மாற்றும் வசதி அடுத்த பதிப்பில்.</div>`;
+  h+=`<div class="ver">${VER} · <button style="border:0;background:none;color:var(--rd);font-weight:800;font-size:12px" onclick="doLogout()">வெளியேறு</button></div>`;
+  return h;
+}
+window.openSale=function(id){const x=S.sales.find(s=>s.id===id);if(!x)return;SH={k:'sale',id};
+  sheet('🧾 பில் #'+(x.bill_no||''),`<div class="rc"><h3>${esc(S.shop.name)}</h3><div class="m">${new Date(x.sold_at).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}${x.voided?' · ❌ ரத்து செய்யப்பட்டது':''}</div>
+    ${(x.items||[]).map(l=>`<div class="l"><span>${esc(l.n)} <small style="color:var(--mu)">${esc(lineLabel(l))}</small></span><span class="num">${rs(l.t!=null?l.t:l.q*l.p)}</span></div>`).join('')}
+    <hr><div class="l T"><span>மொத்தம்</span><span class="num">${rs(x.total)}</span></div><div class="l"><span>${PAY[x.pay_mode][0]} ${PAY[x.pay_mode][1]}</span><span>${esc(x.customer_name||'')} ${x.customer_phone||''}</span></div></div>`,
+    x.voided?`<button class="btn gh" onclick="closeSheet()">மூடு</button>`:`<button class="btn rd" onclick="voidSale('${x.id}')">❌ பில் ரத்து</button><button class="btn gh" onclick="closeSheet()">மூடு</button>`);};
+window.voidSale=async function(id){if(!confirm('இந்தப் பில்லை ரத்து செய்யவா? பொருட்கள் கையிருப்பில் திரும்பச் சேரும்.'))return;
+  try{const d=await rpc('counter_void',{p_id:id});if(!d||!d.ok)throw new Error(d&&d.msg);closeSheet();toast('❌ பில் ரத்து செய்யப்பட்டது');loadReport();loadData();}
+  catch(e){toast('⚠️ ரத்து செய்ய net தேவை');}};
+
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{});});}
+boot();
+</script>
+</body>
+</html>

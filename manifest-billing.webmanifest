@@ -1,0 +1,19 @@
+{
+ "id": "./billing.html?pwa=sittai-bill-1",
+ "name": "சிட்டை பில்",
+ "short_name": "சிட்டை பில்",
+ "description": "கடை கவுண்டர் பில் · சரக்கு · கணக்கு",
+ "lang": "ta",
+ "dir": "ltr",
+ "start_url": "./billing.html?src=pwa",
+ "scope": "./billing.html",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#ffffff",
+ "theme_color": "#0b5d4b",
+ "icons": [
+  {"src": "icon-shop-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+  {"src": "icon-shop-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+  {"src": "icon-shop-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+ ]
+}
