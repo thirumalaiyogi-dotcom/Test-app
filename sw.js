@@ -3,6 +3,7 @@
 // 2) Customer app opens instantly: the last copy of index.html + fonts is kept on the phone and shown at once,
 //    while a fresh copy downloads in the background (the new version appears from the next open).
 //    Only the customer page and fonts are cached — admin / shop / delivery and all Supabase data always come live.
+// 3) 🧾 billing.html: net இருந்தால் புதிய copy; net இல்லையென்றால் கடைசியாகச் சேமித்த copy (கடையில் net போனாலும் பில் போடலாம்).
 var CACHE = 'sittai-shell-v1';
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
@@ -34,6 +35,14 @@ self.addEventListener('fetch', function (e) {
         return net;
       });
     }));
+    return;
+  }
+  if (url.origin === self.location.origin && req.method === 'GET' && req.mode === 'navigate' && /\/billing\.html$/.test(url.pathname)) {
+    var bkey = new URL('billing.html', self.registration.scope).href;
+    e.respondWith(fetch(req).then(function (res) {
+      if (res && res.ok) { var cp = res.clone(); caches.open(CACHE).then(function (c) { c.put(bkey, cp); }); }
+      return res;
+    }).catch(function () { return caches.open(CACHE).then(function (c) { return c.match(bkey); }); }));
     return;
   }
   if (isFont(url) && req.method === 'GET') {
